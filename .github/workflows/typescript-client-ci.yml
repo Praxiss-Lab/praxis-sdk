@@ -121,6 +121,7 @@ jobs:
               uses: actions/upload-artifact@v7
               with:
                   name: dist
+                  overwrite: true
                   path: clients/typescript/dist/
                   retention-days: 7
 

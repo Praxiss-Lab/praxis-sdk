@@ -23,9 +23,10 @@ function classifyFiles(files) {
   return scopes;
 }
 
-function reusableEvidence(evidence, {repository, runId, pullNumber, headSha, tree}) {
+function reusableEvidence(evidence, {repository, runId, pullNumber, headSha, tree,
+  event = 'pull_request'}) {
   return evidence.version === 1 && evidence.repository === repository &&
-    evidence.run_id === runId && evidence.event === 'pull_request' &&
+    evidence.run_id === runId && evidence.event === event &&
     evidence.pull_number === pullNumber && evidence.head_sha === headSha &&
     evidence.tree === tree;
 }
@@ -51,6 +52,20 @@ async function readEvidence(github, repo, runId) {
 async function findValidatedMerge(github, context, tree, read = readEvidence) {
   const {owner, repo} = context.repo;
   const params = {owner, repo};
+  const {data: groups} = await github.rest.actions.listWorkflowRuns({
+    ...params, workflow_id: 'sdk-validation.yml', event: 'merge_group',
+    head_sha: context.sha, per_page: 100,
+  });
+  const latestGroup = groups.workflow_runs.filter(run => run.head_sha === context.sha)
+    .sort((a, b) => b.id - a.id)[0];
+  if (latestGroup) {
+    if (latestGroup.status !== 'completed' || latestGroup.conclusion !== 'success') return '';
+    const evidence = await read(github, params, latestGroup.id);
+    return evidence && reusableEvidence(evidence, {
+      repository: `${owner}/${repo}`, runId: latestGroup.id, pullNumber: 0,
+      headSha: context.sha, tree, event: 'merge_group',
+    }) ? latestGroup.html_url : '';
+  }
   const {data: pulls} = await github.rest.repos.listPullRequestsAssociatedWithCommit(
     {...params, commit_sha: context.sha, per_page: 100});
   for (const pull of pulls) {
@@ -62,7 +77,10 @@ async function findValidatedMerge(github, context, tree, read = readEvidence) {
       head_sha: pull.head.sha, per_page: 100,
     });
     const latest = data.workflow_runs
-      .filter(run => run.pull_requests.some(pr => pr.number === pull.number))
+      // GitHub can omit PR associations, especially after a PR is closed.
+      // The run artifact below must still identify this exact PR and tree.
+      .filter(run => run.head_sha === pull.head.sha &&
+        (!run.pull_requests.length || run.pull_requests.some(pr => pr.number === pull.number)))
       .sort((a, b) => b.id - a.id)[0];
     // A failed, pending, cancelled or superseded latest run is never reusable.
     if (!latest || latest.status !== 'completed' || latest.conclusion !== 'success') continue;

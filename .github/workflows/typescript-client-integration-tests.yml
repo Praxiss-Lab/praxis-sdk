@@ -3,6 +3,10 @@ name: TypeScript client integration tests
 
 on:
     workflow_call:
+        inputs:
+            reuse_build:
+                type: boolean
+                default: false
         secrets:
             LLM_API_KEY:
                 required: false
@@ -64,9 +68,18 @@ jobs:
             - name: Build package
               run: npm run build
 
-              if: github.event_name == 'workflow_dispatch'
+              if: ${{ !inputs.reuse_build }}
+            - name: Save the standalone TypeScript build
+              if: ${{ !inputs.reuse_build }}
+              uses: actions/upload-artifact@v7
+              with:
+                  name: dist
+                  path: clients/typescript/dist/
+                  overwrite: true
+                  retention-days: 7
+                  if-no-files-found: error
             - name: Reuse the validated TypeScript build
-              if: github.event_name != 'workflow_dispatch'
+              if: inputs.reuse_build
               uses: actions/download-artifact@v8
               with:
                   name: dist
@@ -176,7 +189,9 @@ jobs:
 
                   npm run test:integration:llm
 
-              if: github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+              if: >-
+                  ${{ !inputs.reuse_build && github.event_name == 'workflow_dispatch' &&
+                      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) }}
             - name: Upload test results
               if: always()
               uses: actions/upload-artifact@v7
@@ -205,7 +220,9 @@ jobs:
                   rm -rf ${{ env.HOST_WORKSPACE_DIR }} || true
 
   # Separate job for quick smoke test without LLM
-        if: github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        if: >-
+            inputs.reuse_build || github.event_name != 'workflow_dispatch' ||
+            github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     smoke-test:
         runs-on: ubuntu-latest
         timeout-minutes: 10
@@ -250,12 +267,7 @@ jobs:
                     exit 1
                   fi
 
-            - name: Build package
-              run: npm run build
-
-              if: github.event_name == 'workflow_dispatch'
             - name: Reuse the validated TypeScript build
-              if: github.event_name != 'workflow_dispatch'
               uses: actions/download-artifact@v8
               with:
                   name: dist

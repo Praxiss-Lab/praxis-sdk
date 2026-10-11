@@ -51,6 +51,7 @@ jobs:
               uses: actions/upload-artifact@v7
               with:
                   name: sdk-ci-evidence
+                  overwrite: true
                   path: ${{ runner.temp }}/evidence.json
                   retention-days: 14
                   if-no-files-found: error
@@ -134,6 +135,8 @@ jobs:
         if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
             needs.plan.outputs.typescript == 'true' }}
         uses: ./.github/workflows/typescript-client-integration-tests.yml
+        with:
+            reuse_build: true
     server:
         needs:
             - plan
@@ -195,8 +198,12 @@ jobs:
                   plan = results['plan']
                   if plan['result'] != 'success':
                       raise SystemExit('CI planning failed or was cancelled')
-                  if plan['outputs'].get('validate') == 'false':
-                      print('Exact successful PR validation reused for this merged tree')
+                  outputs = plan['outputs']
+                  flags = ['validate', 'python', 'typescript', 'server', 'examples', 'storage', 'security']
+                  if any(outputs.get(flag) not in ('true', 'false') for flag in flags):
+                      raise SystemExit('CI planning returned missing or invalid scope outputs')
+                  if outputs['validate'] == 'false':
+                      print('Exact successful validation reused for this merged tree')
                       raise SystemExit(0)
                   required = {'lint'}
                   scopes = {'python': ['docstrings', 'deprecations', 'settings', 'rest-api', 'python-tests'],
