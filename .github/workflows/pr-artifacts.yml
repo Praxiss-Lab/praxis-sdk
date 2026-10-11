@@ -292,3 +292,6 @@ jobs:
                           body: body,
                         });
                       }
+concurrency:
+    group: pr-artifacts-${{ github.event.pull_request.number || github.ref }}-${{ github.event_name }}
+    cancel-in-progress: false

@@ -3,8 +3,6 @@ name: Run Eval
 run-name: Run Eval (${{ github.event.label.name || 'release' }})
 
 on:
-    pull_request_target:
-        types: [labeled]
     release:
         types: [published]
 
@@ -14,14 +12,15 @@ env:
 
 jobs:
     print-parameters:
-        if: >
-            (github.event_name == 'release' &&
+        if: >-
+            github.repository_owner == 'OpenHands' && ((github.event_name == 'release' &&
              startsWith(github.event.release.tag_name, 'v')) ||
             (github.event_name == 'pull_request_target' &&
              (github.event.label.name == 'run-eval-1' ||
               github.event.label.name == 'run-eval-50' ||
               github.event.label.name == 'run-eval-200' ||
               github.event.label.name == 'run-eval-500'))
+            )
         runs-on: ubuntu-latest
         steps:
             - name: Print all parameters
@@ -73,6 +72,7 @@ jobs:
                   echo "=== Label (for PR events) ==="
                   echo "Label: $LABEL_NAME"
 
+        timeout-minutes: 30
     build-and-evaluate:
         needs: print-parameters
         runs-on: ubuntu-latest
@@ -250,3 +250,8 @@ jobs:
                     -H "Authorization: Bearer $GITHUB_TOKEN" \
                     "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
                     -d "$(jq -n --arg body "$COMMENT_BODY" '{body: $body}')"
+        if: github.repository_owner == 'OpenHands' && (true)
+        timeout-minutes: 30
+concurrency:
+    group: sdk-upstream-evaluation
+    cancel-in-progress: false

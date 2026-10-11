@@ -21,6 +21,8 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Get version from release or input
               id: get_version
               env:
@@ -659,6 +661,10 @@ jobs:
                   echo "❌ One or more version bump PRs failed (see Summary step). Marking the run as failed."
                   exit 1
 
+        if: >-
+            github.repository_owner == 'OpenHands' &&
+            github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        timeout-minutes: 30
     bump-typescript-client:
         # Open a PR in this repository bumping the TypeScript client's pinned
         # agent-server image and generated contract to this SDK release.
@@ -673,6 +679,7 @@ jobs:
                   # The default GITHUB_TOKEN cannot push the bump branch.
                   token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
 
+                  persist-credentials: false
             - name: Install Node.js
               uses: actions/setup-node@v7
               with:
@@ -811,6 +818,7 @@ jobs:
               run: |
                   echo "TypeScript client bump: https://github.com/${{ github.repository }}/pulls?q=is%3Apr+bump-typescript-agent-server-$VERSION" >> "$GITHUB_STEP_SUMMARY"
 
+        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && (true)
     bump-cloud-chart:
         # After an SDK release, bump the agent-server image tag pinned in the
         # openhands-cloud charts (three locations) so the Check agent-server sync
@@ -942,3 +950,6 @@ jobs:
                   URL: ${{ steps.cpr.outputs.pull-request-url }}
               run: |
                   echo "Cloud chart bump (agent-server → ${IMAGE_TAG}): ${URL}" >> "$GITHUB_STEP_SUMMARY"
+        if: >-
+            github.repository_owner == 'OpenHands' &&
+            github.ref == format('refs/heads/{0}', github.event.repository.default_branch)

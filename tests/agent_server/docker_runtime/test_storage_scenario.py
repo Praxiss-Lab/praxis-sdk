@@ -179,37 +179,54 @@ def _snapshot(root: Path) -> dict[str, str]:
     return snapshot
 
 
+@contextmanager
+def _paused(client: TestClient, conversation_id: UUID) -> Iterator[None]:
+    """Freeze sandbox writes while retaining its running-runtime protection."""
+    container = _registry(client).get(conversation_id)
+    assert container is not None
+    subprocess.run(["docker", "pause", container.container_id], check=True)
+    try:
+        # Docker's Running state stays true while its processes are frozen.
+        assert container.is_running()
+        yield
+    finally:
+        subprocess.run(["docker", "unpause", container.container_id], check=True)
+
+
 def test_stop_and_budget_drop_only_what_a_runtime_can_rebuild(server):
     with server(OH_CONVERSATION_STORAGE_DISK_BUDGET="0.01") as client:
         stopped, running = _start(client), _start(client)
         for conversation_id in (stopped, running):
             _exec(client, conversation_id, FILL)
         running_dir = _registry(client).provisioning.runtime_dir(running)
-        before = _snapshot(running_dir)
+        # OpenVSCode writes logs in the live home. Freeze those writers so
+        # the full snapshot still detects every change made by reclamation.
+        with _paused(client, running):
+            before = _snapshot(running_dir)
 
-        _stop(client, stopped)
+            _stop(client, stopped)
 
-        home, workspace = _home(client, stopped), _workspace(client, stopped)
-        for name in SHED_ON_STOP:
-            assert not os.path.lexists(home / name), name
-        for name in KEPT_IN_HOME:
-            assert (home / name).is_file(), name
-        for name in (*SHED_OVER_BUDGET, *KEPT_IN_WORKSPACE):
-            assert (workspace / name).exists(), f"{name} must survive a stop"
+            home, workspace = _home(client, stopped), _workspace(client, stopped)
+            for name in SHED_ON_STOP:
+                assert not os.path.lexists(home / name), name
+            for name in KEPT_IN_HOME:
+                assert (home / name).is_file(), name
+            for name in (*SHED_OVER_BUDGET, *KEPT_IN_WORKSPACE):
+                assert (workspace / name).exists(), f"{name} must survive a stop"
 
-        # Any real disk is more than 1% full, so the pass is over budget.
-        _pass(client)
+            # Any real disk is more than 1% full, so the pass is over budget.
+            _pass(client)
 
-        for name in SHED_OVER_BUDGET:
-            assert not (workspace / name).exists(), f"{name} should be shed"
-        for name in KEPT_IN_WORKSPACE:
-            assert (workspace / name).is_file(), f"{name} must never be shed"
-        for name in KEPT_IN_HOME:
-            assert (home / name).is_file(), name
-        # The running conversation is untouched, file for file.
-        assert _registry(client).get(running) is not None
-        assert _snapshot(running_dir) == before
-        assert list(_registry(client).reclaimer.trash.dir.iterdir()) == []
+            for name in SHED_OVER_BUDGET:
+                assert not (workspace / name).exists(), f"{name} should be shed"
+            for name in KEPT_IN_WORKSPACE:
+                assert (workspace / name).is_file(), f"{name} must never be shed"
+            for name in KEPT_IN_HOME:
+                assert (home / name).is_file(), name
+            # The running conversation is untouched, file for file.
+            assert _registry(client).get(running) is not None
+            assert _snapshot(running_dir) == before
+            assert list(_registry(client).reclaimer.trash.dir.iterdir()) == []
 
 
 def test_links_planted_by_the_sandbox_are_removed_not_followed(server, tmp_path):

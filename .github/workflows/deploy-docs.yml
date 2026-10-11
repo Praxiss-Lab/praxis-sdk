@@ -2,11 +2,6 @@
 name: Dispatch to docs repo
 
 on:
-    push:
-        branches:
-            - main
-        paths:
-            - openhands-agent-server/**
     workflow_dispatch:
 jobs:
     dispatch:
@@ -21,3 +16,5 @@ jobs:
                   repository: OpenHands/docs
                   event-type: update
                   client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}"}'
+        if: github.repository_owner == 'OpenHands' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        timeout-minutes: 10

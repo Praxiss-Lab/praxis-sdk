@@ -29,8 +29,6 @@ on:
                 type: string
 
   # Trigger when 'automatic-todo' label is added to a PR
-    pull_request:
-        types: [labeled]
 
   # Scheduled trigger (disabled by default, uncomment and customize as needed)
   # schedule:
@@ -46,10 +44,10 @@ jobs:
     scan-todos:
         runs-on: ubuntu-24.04
     # Only run if triggered manually or if 'automatic-todo' label was added
-        if: >
-            github.event_name == 'workflow_dispatch' ||
-            (github.event_name == 'pull_request' &&
+        if: >-
+            (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' &&
              github.event.label.name == 'automatic-todo')
+            ) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         outputs:
             todos: ${{ steps.scan.outputs.todos }}
             todo-count: ${{ steps.scan.outputs.todo-count }}
@@ -57,8 +55,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
-                  fetch-depth: 0 # Full history for better context
-
+                  ref: ${{ github.sha }}
+                  persist-credentials: false
+                  fetch-depth: 0
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -120,9 +119,10 @@ jobs:
                   " >> $GITHUB_STEP_SUMMARY
                   fi
 
+        timeout-minutes: 60
     process-todos:
         needs: scan-todos
-        if: needs.scan-todos.outputs.todo-count > 0
+        if: (needs.scan-todos.outputs.todo-count > 0) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-24.04
         strategy:
             matrix:
@@ -132,9 +132,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
+                  ref: ${{ github.sha }}
+                  persist-credentials: false
                   fetch-depth: 0
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
-
             - name: Switch to feature branch with TODO management files
               run: |
                   git checkout openhands/todo-management-example
@@ -300,9 +300,10 @@ jobs:
                     "https://api.github.com/repos/${{ github.repository }}/pulls" \
                     -d "$PR_PAYLOAD"
 
+        timeout-minutes: 60
     summary:
         needs: [scan-todos, process-todos]
-        if: always()
+        if: (always()) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-24.04
         steps:
             - name: Generate Summary
@@ -326,3 +327,7 @@ jobs:
                   echo "" >> $GITHUB_STEP_SUMMARY
                   echo "---" >> $GITHUB_STEP_SUMMARY
                   echo "*Workflow completed at $(date)*" >> $GITHUB_STEP_SUMMARY
+        timeout-minutes: 60
+concurrency:
+    group: sdk-manual-todo-management
+    cancel-in-progress: false
