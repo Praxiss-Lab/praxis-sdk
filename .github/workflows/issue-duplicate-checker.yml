@@ -4,8 +4,6 @@ name: Issue Duplicate Check via OpenHands Cloud
 on:
     issues:
         types: [opened]
-    schedule:
-        - cron: 0 9 * * *
     workflow_dispatch:
         inputs:
             mode:
@@ -52,6 +50,7 @@ jobs:
                     echo "- software-agent-sdk cloned to /tmp/software-agent-sdk"
                   } >> "$GITHUB_STEP_SUMMARY"
 
+        timeout-minutes: 30
     issue-duplicate-check:
         if: |
             github.event_name == 'issues' ||

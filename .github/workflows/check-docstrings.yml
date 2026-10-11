@@ -3,10 +3,7 @@
 name: Check Docstrings
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: ['**']
+    workflow_call:
 
 jobs:
     check-docstrings:
@@ -16,6 +13,8 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -23,3 +22,6 @@ jobs:
 
             - name: Check docstring formatting
               run: python .github/scripts/check_docstrings.py
+        timeout-minutes: 30
+permissions:
+    contents: read

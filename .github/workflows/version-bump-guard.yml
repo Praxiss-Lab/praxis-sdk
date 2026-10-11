@@ -2,8 +2,7 @@
 name: Version bump guard
 
 on:
-    pull_request:
-        branches: [main]
+    workflow_call:
 
 jobs:
     version-bump-guard:
@@ -17,10 +16,12 @@ jobs:
               with:
                   fetch-depth: 0
 
+                  persist-credentials: false
             - name: Validate package version changes
               id: version_changes
               env:
-                  VERSION_BUMP_BASE_REF: ${{ github.base_ref }}
+                  VERSION_BUMP_BASE_REF: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD^'
+                      }}
                   PR_TITLE: ${{ github.event.pull_request.title }}
                   PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
               run: python3 .github/scripts/check_version_bumps.py
@@ -38,6 +39,10 @@ jobs:
             - name: Check Python API compatibility
               if: steps.version_changes.outputs.versions_changed == 'true'
               env:
-                  ACP_VERSION_CHECK_BASE_REF: ${{ github.base_ref }}
+                  ACP_VERSION_CHECK_BASE_REF: |-
+                      ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD^' }}
                   ACP_VERSION_CHECK_SKIP: ${{ contains(github.event.pull_request.body || '', 'skip-acp-check') }}
               run: uv run python .github/scripts/check_sdk_api_breakage.py
+        timeout-minutes: 30
+permissions:
+    contents: read

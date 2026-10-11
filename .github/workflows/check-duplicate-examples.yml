@@ -2,23 +2,10 @@
 name: Check duplicate example numbers
 
 on:
-    pull_request:
-        branches:
-            - '**'
-        paths:
-            - examples/**
-            - .github/workflows/check-duplicate-examples.yml
-            - .github/scripts/check_duplicate_example_numbers.py
-    push:
-        branches:
-            - main
-        paths:
-            - examples/**
-    workflow_dispatch:
+    workflow_call:
 
 permissions:
     contents: read
-
 jobs:
     check-duplicates:
         runs-on: ubuntu-latest
@@ -26,6 +13,8 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -33,3 +22,4 @@ jobs:
 
             - name: Check for duplicate example numbers
               run: python .github/scripts/check_duplicate_example_numbers.py
+        timeout-minutes: 30

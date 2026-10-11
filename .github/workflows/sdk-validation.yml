@@ -1,0 +1,215 @@
+---
+name: SDK Validation
+on:
+    pull_request:
+        branches:
+            - '**'
+        types:
+            - opened
+            - synchronize
+            - reopened
+    push:
+        branches:
+            - main
+    merge_group:
+        types:
+            - checks_requested
+    workflow_dispatch:
+permissions:
+    contents: read
+    actions: read
+    pull-requests: read
+concurrency:
+    group: sdk-validation-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+jobs:
+    plan:
+        runs-on: ubuntu-24.04
+        timeout-minutes: 10
+        outputs:
+            validate: ${{ steps.policy.outputs.validate }}
+            python: ${{ steps.policy.outputs.python }}
+            typescript: ${{ steps.policy.outputs.typescript }}
+            server: ${{ steps.policy.outputs.server }}
+            examples: ${{ steps.policy.outputs.examples }}
+            storage: ${{ steps.policy.outputs.storage }}
+            security: ${{ steps.policy.outputs.security }}
+        steps:
+            - uses: actions/checkout@v7.0.1
+              with:
+                  fetch-depth: 0
+                  persist-credentials: false
+            - name: Test CI event and provenance policy
+              run: node --test .github/scripts/ci-policy.test.cjs
+            - name: Evaluate changes and exact-tree CI evidence
+              id: policy
+              uses: actions/github-script@v9
+              with:
+                  script: |-
+                      await require('./.github/scripts/ci-policy.cjs').plan({github, context, core});
+            - name: Save validation provenance
+              uses: actions/upload-artifact@v7
+              with:
+                  name: sdk-ci-evidence
+                  path: ${{ runner.temp }}/evidence.json
+                  retention-days: 14
+                  if-no-files-found: error
+    lint:
+        needs:
+            - plan
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') }}
+        uses: ./.github/workflows/precommit.yml
+    docstrings:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.python == 'true' }}
+        uses: ./.github/workflows/check-docstrings.yml
+    deprecations:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.python == 'true' }}
+        uses: ./.github/workflows/deprecation-check.yml
+    settings:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.python == 'true' }}
+        uses: ./.github/workflows/persisted-settings-compat.yml
+    rest-api:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.python == 'true' }}
+        uses: ./.github/workflows/agent-server-rest-api-breakage.yml
+    versions:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            github.event_name == 'pull_request' }}
+        uses: ./.github/workflows/version-bump-guard.yml
+    security:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.security == 'true' }}
+        uses: ./.github/workflows/security-scan.yml
+    python-tests:
+        needs:
+            - plan
+            - lint
+            - docstrings
+            - deprecations
+            - settings
+            - rest-api
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.python == 'true' }}
+        uses: ./.github/workflows/tests.yml
+    typescript:
+        needs:
+            - plan
+            - lint
+            - python-tests
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.typescript == 'true' }}
+        uses: ./.github/workflows/typescript-client-ci.yml
+    endpoint-audit:
+        needs:
+            - plan
+            - typescript
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.typescript == 'true' }}
+        uses: ./.github/workflows/typescript-client-endpoint-audit.yml
+    integration:
+        needs:
+            - plan
+            - typescript
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.typescript == 'true' }}
+        uses: ./.github/workflows/typescript-client-integration-tests.yml
+    server:
+        needs:
+            - plan
+            - integration
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.server == 'true' }}
+        uses: ./.github/workflows/server-validation.yml
+    example-docs:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.examples == 'true' }}
+        uses: ./.github/workflows/check-documented-examples.yml
+    example-numbers:
+        needs:
+            - plan
+            - lint
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.examples == 'true' }}
+        uses: ./.github/workflows/check-duplicate-examples.yml
+    storage:
+        needs:
+            - plan
+            - server
+        if: ${{ !cancelled() && needs.plan.result == 'success' && needs.plan.outputs.validate == 'true' && !contains(needs.*.result, 'failure') && 
+            needs.plan.outputs.storage == 'true' }}
+        uses: ./.github/workflows/storage-scenario.yml
+    gate:
+        name: SDK CI
+        needs:
+            - plan
+            - lint
+            - docstrings
+            - deprecations
+            - settings
+            - rest-api
+            - versions
+            - security
+            - python-tests
+            - typescript
+            - endpoint-audit
+            - integration
+            - server
+            - example-docs
+            - example-numbers
+            - storage
+        if: ${{ always() }}
+        runs-on: ubuntu-24.04
+        timeout-minutes: 5
+        steps:
+            - name: Require all selected checks to succeed
+              env:
+                  RESULTS: ${{ toJson(needs) }}
+              run: |-
+                  python3 - <<'PYCODE'
+                  import json, os
+                  results = json.loads(os.environ['RESULTS'])
+                  plan = results['plan']
+                  if plan['result'] != 'success':
+                      raise SystemExit('CI planning failed or was cancelled')
+                  if plan['outputs'].get('validate') == 'false':
+                      print('Exact successful PR validation reused for this merged tree')
+                      raise SystemExit(0)
+                  required = {'lint'}
+                  scopes = {'python': ['docstrings', 'deprecations', 'settings', 'rest-api', 'python-tests'],
+                            'typescript': ['typescript', 'endpoint-audit', 'integration'],
+                            'server': ['server'], 'examples': ['example-docs', 'example-numbers'],
+                            'storage': ['storage'], 'security': ['security']}
+                  for scope, checks in scopes.items():
+                      if plan['outputs'].get(scope) == 'true':
+                          required.update(checks)
+                  if os.environ['GITHUB_EVENT_NAME'] == 'pull_request':
+                      required.add('versions')
+                  failed = [name for name in required if results[name]['result'] != 'success']
+                  if failed:
+                      raise SystemExit('Required checks did not succeed: ' + ', '.join(sorted(failed)))
+                  print('All checks selected by the policy passed')
+                  PYCODE

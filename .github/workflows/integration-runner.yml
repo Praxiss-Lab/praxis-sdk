@@ -1,14 +1,12 @@
 ---
 name: Run Integration Tests
 run-name: >-
-    Run Integration Tests ${{ inputs.reason || github.event.label.name || 'manual' }}
+    Run Integration Tests ${{ inputs.reason || github.event.label.name || 'manual'
+    }}
 
 on:
     # Use pull_request_target to access secrets even on fork PRs.
     # Labeled PR runs are gated per job to supported test labels.
-    pull_request_target:
-        types:
-            - labeled
     workflow_dispatch:
         inputs:
             reason:
@@ -59,11 +57,8 @@ env:
 
 jobs:
     setup-matrix:
-        if: >-
-            github.event_name != 'pull_request_target' ||
-            github.event.label.name == 'integration-test' ||
-            github.event.label.name == 'behavior-test' ||
-            github.event.label.name == 'condenser-test'
+        if: |-
+            (github.event_name != 'pull_request_target' || github.event.label.name == 'integration-test' || github.event.label.name == 'behavior-test' || github.event.label.name == 'condenser-test') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-latest
         outputs:
             matrix: ${{ steps.resolve-models.outputs.matrix }}
@@ -72,10 +67,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
-                  repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
+                  ref: ${{ github.sha }}
                   persist-credentials: false
-
+                  fetch-depth: 0
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -184,14 +178,16 @@ jobs:
                   fi
 
     # Post initial comment for label triggers (no dependencies - runs immediately)
+        timeout-minutes: 60
     post-label-comment:
-        if: >
-            github.event_name == 'pull_request_target' && (
+        if: |-
+            (github.event_name == 'pull_request_target' && (
                 github.event.label.name == 'integration-test' ||
                 github.event.label.name == 'behavior-test' ||
                 github.event.label.name == 'condenser-test' ||
                 github.event.label.name == 'api-compliance-test'
             )
+            ) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-latest
         permissions:
             pull-requests: write
@@ -226,9 +222,11 @@ jobs:
                       Hi! I started running the API compliance tests on your PR. You will receive a comment with the results shortly.
 
     # Post initial comment for workflow_dispatch (depends on setup-matrix for issue_number resolution)
+        timeout-minutes: 60
     post-dispatch-comment:
         needs: setup-matrix
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.issue_number != ''
+        if: |-
+            (github.event_name == 'workflow_dispatch' && github.event.inputs.issue_number != '') && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-latest
         permissions:
             issues: write
@@ -262,12 +260,13 @@ jobs:
                   printf '%s' "$COMMENT_BODY" | gh issue comment "$ISSUE_NUMBER" \
                     --repo "$GITHUB_REPOSITORY" --body-file -
 
+        timeout-minutes: 60
     run-integration-tests:
         # Security: Only run when integration-related labels are present or via workflow_dispatch
         # This prevents automatic execution on fork PRs without maintainer approval
         # Note: uses always() to run even when comment jobs are skipped
-        if: |
-            always() && (
+        if: |-
+            (always() && (
                 (
                     github.event_name == 'pull_request_target' && (
                         github.event.label.name == 'integration-test' ||
@@ -277,6 +276,7 @@ jobs:
                 ) ||
                 github.event_name == 'workflow_dispatch'
             ) && needs.setup-matrix.result == 'success'
+            ) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         needs: [setup-matrix, post-label-comment, post-dispatch-comment]
         runs-on: ubuntu-24.04
         timeout-minutes: 180
@@ -290,17 +290,16 @@ jobs:
             matrix:
                 python-version: ['3.13']
                 job-config: ${{ fromJson(needs.setup-matrix.outputs.matrix) }}
+            max-parallel: 2
         steps:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
                   # For pull_request_target: checkout fork PR code (requires explicit repository)
                   # For other events: fallback to current repository and ref
-                  repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
-                  # Security: Don't persist credentials to prevent untrusted PR code from using them
+                  ref: ${{ github.sha }}
                   persist-credentials: false
-
+                  fetch-depth: 0
             - name: Install uv
               uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
               with:
@@ -435,8 +434,8 @@ jobs:
 
     consolidate-results:
         needs: [setup-matrix, run-integration-tests]
-        if: |
-            always() && (
+        if: |-
+            (always() && (
                 (
                     github.event_name == 'pull_request_target' && (
                         github.event.label.name == 'integration-test' ||
@@ -446,6 +445,7 @@ jobs:
                 ) ||
                 github.event_name == 'workflow_dispatch'
             )
+            ) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-24.04
         permissions:
             contents: read
@@ -457,8 +457,9 @@ jobs:
               with:
                   # When using pull_request_target, explicitly checkout the PR branch
                   # This ensures we use the scripts from the actual PR code
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
-
+                  ref: ${{ github.sha }}
+                  persist-credentials: false
+                  fetch-depth: 0
             - name: Install uv
               uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
               with:
@@ -530,12 +531,13 @@ jobs:
                   # Use GitHub CLI to create comment on the specified issue/PR
                   echo "$COMMENT_BODY" | gh issue comment "$ISSUE_NUMBER" --body-file -
 
+        timeout-minutes: 60
     run-api-compliance-tests:
-        if: >-
-            (github.event_name == 'pull_request_target' &&
+        if: |-
+            ((github.event_name == 'pull_request_target' &&
              github.event.label.name == 'api-compliance-test') ||
             (github.event_name == 'workflow_dispatch' &&
-             inputs.run_api_compliance)
+             inputs.run_api_compliance)) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         runs-on: ubuntu-24.04
         timeout-minutes: 60
         permissions:
@@ -546,10 +548,9 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
-                  repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-                  ref: ${{ github.event.pull_request.head.sha || github.ref }}
+                  ref: ${{ github.sha }}
                   persist-credentials: false
-
+                  fetch-depth: 0
             - name: Install uv
               uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
               with:
@@ -606,3 +607,6 @@ jobs:
                         --repo "$GITHUB_REPOSITORY" --body-file -
                     fi
                   fi
+concurrency:
+    group: sdk-manual-integration-runner
+    cancel-in-progress: false

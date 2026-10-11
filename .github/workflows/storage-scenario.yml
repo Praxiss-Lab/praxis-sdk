@@ -2,17 +2,10 @@
 name: Storage scenario
 
 on:
-    pull_request:
-        paths:
-            - openhands-agent-server/openhands/agent_server/storage/**
-            - openhands-agent-server/openhands/agent_server/docker_runtime/**
-            - tests/agent_server/docker_runtime/test_storage_scenario.py
-            - .github/workflows/storage-scenario.yml
-    workflow_dispatch:
+    workflow_call:
 
 permissions:
     contents: read
-
 jobs:
     storage-scenario:
         runs-on: ubuntu-latest
@@ -20,6 +13,8 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Install uv
               uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
               with:
@@ -34,3 +29,4 @@ jobs:
 
             - name: Run storage scenario
               run: uv run pytest -m docker_live tests/agent_server/docker_runtime/test_storage_scenario.py
+        timeout-minutes: 30

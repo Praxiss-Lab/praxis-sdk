@@ -1,0 +1,280 @@
+---
+name: Agent Server validation
+on:
+    workflow_call:
+jobs:
+    build-binary-and-test:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+            max-parallel: 2
+        steps:
+            - uses: actions/checkout@v7.0.1
+
+              with:
+                  persist-credentials: false
+            - name: Install uv
+              uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+              with:
+                  version: latest
+                  python-version: '3.13'
+            - name: Install dependencies
+              run: uv sync --frozen --dev
+
+            - name: Build binary (Unix)
+              if: runner.os != 'Windows'
+              run: make build-server
+
+            # Windows runners have no `make`; invoke PyInstaller directly.
+            - name: Build binary (Windows)
+              if: runner.os == 'Windows'
+              shell: bash
+              run: uv run pyinstaller openhands-agent-server/openhands/agent_server/agent-server.spec
+
+            - name: Test binary
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
+                      BIN=./dist/openhands-agent-server.exe
+                  else
+                      BIN=./dist/openhands-agent-server
+                  fi
+
+                  "$BIN" --help
+
+                  echo "Testing server startup and template loading..."
+                  "$BIN" --port 8002 > server_test.log 2>&1 &
+                  SERVER_PID=$!
+
+                  sleep 5
+
+                  if grep -q "system_prompt.j2.*not found" server_test.log; then
+                      echo "ERROR: Template files not found in binary!"
+                      cat server_test.log
+                      kill "$SERVER_PID" 2>/dev/null || true
+                      exit 1
+                  fi
+
+                  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+                      echo "ERROR: Server failed to start!"
+                      cat server_test.log
+                      exit 1
+                  fi
+
+                  if command -v curl >/dev/null 2>&1; then
+                      echo "Testing basic API endpoint..."
+                      if curl -f -s http://localhost:8002/health >/dev/null 2>&1; then
+                          echo "✓ Health endpoint accessible"
+                      else
+                          echo "⚠ Health endpoint not accessible (may be expected)"
+                      fi
+                  fi
+
+                  kill "$SERVER_PID" 2>/dev/null || true
+                  wait "$SERVER_PID" 2>/dev/null || true
+                  rm -f server_test.log
+
+                  echo "✓ Binary test completed successfully"
+
+            - name: Test --extra-python-path custom tool import
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
+                      BIN=./dist/openhands-agent-server.exe
+                  else
+                      BIN=./dist/openhands-agent-server
+                  fi
+
+                  # A PyInstaller onefile binary unpacks itself to a temp dir on
+                  # first run, and a cold/loaded Windows runner can be 17x slower
+                  # than a warm one at that. The old fixed 45s cap failed
+                  # healthy servers whose log line landed a fraction of a
+                  # second after the deadline, so default high and allow an
+                  # override for tight local runs.
+                  STARTUP_TIMEOUT_SECONDS="${BINARY_STARTUP_TIMEOUT_SECONDS:-300}"
+
+                  wait_for_log() {
+                      local log_file=$1
+                      local pattern=$2
+                      local pid=$3
+                      local timeout_seconds=${4:-$STARTUP_TIMEOUT_SECONDS}
+
+                      for _ in $(seq 1 "$timeout_seconds"); do
+                          if grep -q "$pattern" "$log_file" 2>/dev/null; then
+                              return 0
+                          fi
+                          if ! kill -0 "$pid" 2>/dev/null; then
+                              # The process is gone, so waiting longer cannot
+                              # help. Re-check once to absorb a pending flush.
+                              sleep 1
+                              grep -q "$pattern" "$log_file" 2>/dev/null && return 0
+                              echo "ERROR: process $pid exited before '$pattern' appeared"
+                              return 1
+                          fi
+                          sleep 1
+                      done
+                      echo "ERROR: timed out after ${timeout_seconds}s waiting for '$pattern'"
+                      return 1
+                  }
+
+                  # `cat` on an empty log prints nothing, which made a
+                  # startup-too-slow failure look like a missing-log bug.
+                  dump_log() {
+                      local log_file=$1
+                      if [[ -s "$log_file" ]]; then
+                          tail -100 "$log_file"
+                      else
+                          echo "(no output captured from the binary)"
+                      fi
+                  }
+
+                  stop_process() {
+                      local pid=$1
+                      if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
+                          # The onefile bootloader runs the server in a child
+                          # process. Killing only the bootloader can leave that
+                          # child holding the port (and make the step exit
+                          # non-zero), so terminate the whole tree.
+                          MSYS_NO_PATHCONV=1 taskkill /F /T /PID "$pid" \
+                              >/dev/null 2>&1 || true
+                      fi
+                      kill "$pid" 2>/dev/null || true
+                      wait "$pid" 2>/dev/null || true
+                  }
+
+                  # Create a temporary directory with an external tool module
+                  TOOL_DIR=$(mktemp -d)
+                  EXTRA_TOOL_DIR=$TOOL_DIR
+                  if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
+                      EXTRA_TOOL_DIR=$(cygpath -w "$TOOL_DIR")
+                  fi
+
+                  cat > "$TOOL_DIR/ci_test_tool.py" << 'TOOL_EOF'
+                  """CI smoke-test tool: NOT bundled in the binary.
+
+                  Importing this module proves that --extra-python-path /
+                  OH_EXTRA_PYTHON_PATH correctly extends sys.path at runtime
+                  so external .py files are reachable from a frozen build.
+                  """
+                  CI_TOOL_LOADED = True
+                  TOOL_EOF
+
+                  echo "=== Negative test: import WITHOUT extra path (should fail) ==="
+                  "$BIN" --import-modules ci_test_tool --port 8003 \
+                      > neg_test.log 2>&1 &
+                  NEG_PID=$!
+
+                  if wait_for_log neg_test.log "No module named 'ci_test_tool'" "$NEG_PID"; then
+                      echo "✓ Negative test passed: import correctly failed without --extra-python-path"
+                  else
+                      echo "ERROR: Expected ModuleNotFoundError but got:"
+                      dump_log neg_test.log
+                      stop_process "$NEG_PID"
+                      rm -rf "$TOOL_DIR" neg_test.log
+                      exit 1
+                  fi
+                  stop_process "$NEG_PID"
+                  rm -f neg_test.log
+
+                  echo "=== Positive test: import WITH OH_EXTRA_PYTHON_PATH ==="
+                  OH_EXTRA_PYTHON_PATH="$EXTRA_TOOL_DIR" \
+                      "$BIN" --import-modules ci_test_tool --port 8004 \
+                      > pos_test.log 2>&1 &
+                  POS_PID=$!
+
+                  if wait_for_log pos_test.log "Imported module: ci_test_tool" "$POS_PID"; then
+                      echo "✓ Positive test passed: external module imported via OH_EXTRA_PYTHON_PATH"
+                  else
+                      echo "ERROR: Module was not imported. Server log:"
+                      dump_log pos_test.log
+                      stop_process "$POS_PID"
+                      rm -rf "$TOOL_DIR" pos_test.log
+                      exit 1
+                  fi
+
+                  if grep -q "Added to sys.path:" pos_test.log; then
+                      echo "✓ sys.path was extended with the tool directory"
+                  else
+                      echo "ERROR: sys.path was not extended. Server log:"
+                      dump_log pos_test.log
+                      stop_process "$POS_PID"
+                      rm -rf "$TOOL_DIR" pos_test.log
+                      exit 1
+                  fi
+
+                  stop_process "$POS_PID"
+
+                  echo "=== Positive test: import WITH --extra-python-path CLI flag ==="
+                  "$BIN" --extra-python-path "$EXTRA_TOOL_DIR" \
+                      --import-modules ci_test_tool --port 8005 \
+                      > cli_test.log 2>&1 &
+                  CLI_PID=$!
+
+                  if wait_for_log cli_test.log "Imported module: ci_test_tool" "$CLI_PID"; then
+                      echo "✓ CLI flag test passed: external module imported via --extra-python-path"
+                  else
+                      echo "ERROR: Module was not imported via CLI flag. Server log:"
+                      dump_log cli_test.log
+                      stop_process "$CLI_PID"
+                      rm -rf "$TOOL_DIR" cli_test.log pos_test.log
+                      exit 1
+                  fi
+
+                  stop_process "$CLI_PID"
+
+                  # Cleanup
+                  rm -rf "$TOOL_DIR" pos_test.log neg_test.log cli_test.log
+
+                  echo "✓ All --extra-python-path tests passed"
+
+            - name: Upload binary artifact
+              uses: actions/upload-artifact@v7
+              with:
+                  name: openhands-server-${{ matrix.os }}
+                  path: |
+                      dist/openhands-agent-server*
+                  retention-days: 7
+
+        timeout-minutes: 30
+    check-openapi-schema:
+        name: Check OpenAPI Schema
+        runs-on: ubuntu-24.04
+
+        steps:
+            - name: Checkout PR branch
+              uses: actions/checkout@v7.0.1
+              with:
+                  fetch-depth: 0
+
+                  persist-credentials: false
+            - name: Install uv
+              uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+              with:
+                  version: latest
+                  python-version: '3.13'
+
+            - name: Install Node.js (for npx)
+              uses: actions/setup-node@v7
+              with:
+                  node-version: '24'
+
+
+            - name: Install dependencies
+              run: |-
+                  uv sync --frozen --dev
+
+            - name: Check OpenAPI JSON and build client
+              env:
+                  PYTHONPATH: .
+              run: |
+                  make test-server-schema
+
+        timeout-minutes: 30
+permissions:
+    contents: read

@@ -2,14 +2,11 @@
 name: TypeScript client endpoint audit
 
 on:
-    push:
-        branches: [main]
-    pull_request:
+    workflow_call:
 
 # The audit only reads the checked-out tree and writes to the job summary.
 permissions:
     contents: read
-
 defaults:
     run:
         working-directory: clients/typescript
@@ -24,6 +21,8 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Use Node.js 24
               uses: actions/setup-node@v7
               with:

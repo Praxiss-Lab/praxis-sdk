@@ -2,10 +2,14 @@
 name: TypeScript client integration tests
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+    workflow_call:
+        secrets:
+            LLM_API_KEY:
+                required: false
+            LLM_MODEL:
+                required: false
+            LLM_BASE_URL:
+                required: false
     workflow_dispatch:
         inputs:
             llm_model:
@@ -36,6 +40,8 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Use Node.js 24
               uses: actions/setup-node@v7
               with:
@@ -58,6 +64,13 @@ jobs:
             - name: Build package
               run: npm run build
 
+              if: github.event_name == 'workflow_dispatch'
+            - name: Reuse the validated TypeScript build
+              if: github.event_name != 'workflow_dispatch'
+              uses: actions/download-artifact@v8
+              with:
+                  name: dist
+                  path: clients/typescript/dist
             - name: Create workspace directory
               run: |
                   mkdir -p ${{ env.HOST_WORKSPACE_DIR }}
@@ -141,9 +154,8 @@ jobs:
                   AGENT_SERVER_URL: http://localhost:${{ env.AGENT_SERVER_PORT }}
                   HOST_WORKSPACE_DIR: ${{ env.HOST_WORKSPACE_DIR }}
                   AGENT_WORKSPACE_DIR: ${{ env.AGENT_WORKSPACE_DIR }}
-                  LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-                  LLM_MODEL: ${{ github.event.inputs.llm_model || secrets.LLM_MODEL || 'anthropic/claude-sonnet-4-5-20250929' }}
-                  LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+                  LLM_API_KEY: dummy-key-for-deterministic-tests
+                  LLM_MODEL: dummy/model
                   TEST_TIMEOUT: 180000
               run: npm run test:integration:deterministic
 
@@ -164,6 +176,7 @@ jobs:
 
                   npm run test:integration:llm
 
+              if: github.event_name == 'workflow_dispatch' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
             - name: Upload test results
               if: always()
               uses: actions/upload-artifact@v7
@@ -192,6 +205,7 @@ jobs:
                   rm -rf ${{ env.HOST_WORKSPACE_DIR }} || true
 
   # Separate job for quick smoke test without LLM
+        if: github.event_name != 'workflow_dispatch' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     smoke-test:
         runs-on: ubuntu-latest
         timeout-minutes: 10
@@ -200,6 +214,8 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v7.0.1
 
+              with:
+                  persist-credentials: false
             - name: Use Node.js 24
               uses: actions/setup-node@v7
               with:
@@ -237,6 +253,13 @@ jobs:
             - name: Build package
               run: npm run build
 
+              if: github.event_name == 'workflow_dispatch'
+            - name: Reuse the validated TypeScript build
+              if: github.event_name != 'workflow_dispatch'
+              uses: actions/download-artifact@v8
+              with:
+                  name: dist
+                  path: clients/typescript/dist
             - name: Create workspace directory
               run: |
                   mkdir -p /tmp/agent-workspace
@@ -281,3 +304,6 @@ jobs:
               run: |
                   docker stop agent-server || true
                   docker rm agent-server || true
+        needs: integration-test
+permissions:
+    contents: read

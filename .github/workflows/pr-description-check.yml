@@ -37,3 +37,6 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ github.token }}
               run: python .github/scripts/check_pr_description.py
+concurrency:
+    group: pr-description-check-${{ github.event.pull_request.number || github.ref }}-${{ github.event_name }}
+    cancel-in-progress: true
