@@ -1,4 +1,4 @@
-"""Guards for the agent-server binary smoke test in ``server.yml``.
+"""Guards for the agent-server binary smoke test in ``server-validation.yml``.
 
 These assertions are deliberately textual: the harness is bash that only runs
 inside GitHub Actions, so the invariant that can drift and silently reintroduce
@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SERVER_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "server.yml"
+SERVER_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "server-validation.yml"
 
 
 def _smoke_step() -> str:

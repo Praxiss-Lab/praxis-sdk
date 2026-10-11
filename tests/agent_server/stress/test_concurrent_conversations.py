@@ -85,7 +85,9 @@ async def test_concurrent_conversations_isolated_and_fast(
 ):
     """N concurrent conversations: all complete, no cross-leaks, parallelism."""
     n = CONCURRENT_CONVERSATIONS.n_conversations
-    latency_s = CONCURRENT_CONVERSATIONS.per_call_latency_s
+    # Make the blocking workload dominate shared-runner scheduling overhead.
+    # The unchanged 4x budget still rejects serial execution of 16 calls.
+    latency_s = max(CONCURRENT_CONVERSATIONS.per_call_latency_s, 0.5)
     workspace = str(tmp_path / "ws")
     (tmp_path / "ws").mkdir()
 
