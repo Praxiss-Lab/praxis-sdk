@@ -105,7 +105,14 @@ def _load_baseline_from_git(ref: str) -> Baseline:
 
 
 def _baseline_additions(reference: Baseline, current: Baseline) -> Baseline:
-    return current - reference
+    # The package-root rename preserves existing expressions and occurrence
+    # counts. Normalize only that historical root, never hashes or inner paths.
+    renamed: Baseline = Counter()
+    for (file, name, digest), count in reference.items():
+        if file.startswith("openhands-sdk/"):
+            file = "praxis-sdk/" + file.removeprefix("openhands-sdk/")
+        renamed[(file, name, digest)] += count
+    return current - renamed
 
 
 def _write_baseline(entries: list[tuple[str, str, str]]) -> None:

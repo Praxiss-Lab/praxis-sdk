@@ -207,6 +207,25 @@ def test_duplicate_baseline_addition_is_rejected(checker):
     ) == checker.Counter({key: 1})
 
 
+def test_package_root_rename_preserves_existing_allowance(checker):
+    old = ("openhands-sdk/openhands/sdk/example.py", "getattr", "same")
+    new = ("praxis-sdk/openhands/sdk/example.py", "getattr", "same")
+    assert not checker._baseline_additions(
+        checker.Counter({old: 1}), checker.Counter({new: 1})
+    )
+    assert checker._baseline_additions(
+        checker.Counter({old: 1}), checker.Counter({new: 2})
+    ) == checker.Counter({new: 1})
+
+
+def test_package_root_rename_does_not_allow_changed_expression(checker):
+    old = ("openhands-sdk/openhands/sdk/example.py", "getattr", "old")
+    changed = ("praxis-sdk/openhands/sdk/example.py", "getattr", "changed")
+    assert checker._baseline_additions(
+        checker.Counter({old: 1}), checker.Counter({changed: 1})
+    ) == checker.Counter({changed: 1})
+
+
 def test_baseline_ref_option_rejects_addition(checker, tmp_path: Path, monkeypatch):
     """The CLI guard fails before accepting an expanded baseline."""
     key = ("added.py", "getattr", "new")
