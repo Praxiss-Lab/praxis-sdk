@@ -52,7 +52,7 @@ def get_required_env(name: str) -> str:
     )
 
 
-def get_default_critic(llm: LLM) -> CriticBase | None:
+def get_default_critic() -> CriticBase | None:
     """Configure an optional operator-managed critic service."""
     server_url = os.environ.get("CRITIC_BASE_URL")
     api_key = os.environ.get("CRITIC_API_KEY")
@@ -90,10 +90,10 @@ llm = LLM(
 # model score variance while still exercising the real critic API.
 iterative_config = IterativeRefinementConfig(max_iterations=MAX_REFINEMENTS)
 
-# Auto-configure critic for All-Hands proxy or use explicit env vars
-critic = get_default_critic(llm)
+# Configure critic from operator-managed endpoint or explicit env vars
+critic = get_default_critic()
 if critic is None:
-    print("⚠️  No All-Hands LLM proxy detected, trying explicit env vars...")
+    print("⚠️  No operator-managed critic endpoint configured, trying explicit env vars...")
     critic = SingleRefinementCritic(
         server_url=get_required_env("CRITIC_SERVER_URL"),
         api_key=get_required_env("CRITIC_API_KEY"),
