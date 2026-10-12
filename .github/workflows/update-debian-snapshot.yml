@@ -19,7 +19,7 @@ jobs:
         runs-on: ubuntu-24.04
         timeout-minutes: 45
         env:
-            GH_TOKEN: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+            GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
             BRANCH: chore/update-agent-server-debian-snapshot
             DOCKERFILE: openhands-agent-server/openhands/agent_server/docker/Dockerfile
             IMAGE: openhands/agent-server-binary-minimal:snapshot-update
@@ -27,7 +27,7 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v7.0.1
               with:
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
 
             - name: Select the newest snapshot older than three days
               run: python .github/scripts/update_debian_snapshot.py --dockerfile "$DOCKERFILE"

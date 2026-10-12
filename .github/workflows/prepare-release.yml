@@ -26,7 +26,7 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v7.0.1
               with:
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
 
                   persist-credentials: false
             - name: Install uv
@@ -109,7 +109,7 @@ jobs:
             - name: Create Pull Request
               id: create_pr
               env:
-                  GH_TOKEN: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
                   GITHUB_ACTOR: ${{ github.actor }}
                   INPUTS_VERSION: ${{ inputs.version }}
               run: |

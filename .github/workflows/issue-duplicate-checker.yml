@@ -69,7 +69,7 @@ jobs:
                   issue-number: ${{ github.event.issue.number || inputs.issue_number }}
                   close-after-days: ${{ inputs.close_after_days || '3' }}
                   openhands-api-key: ${{ secrets.OPENHANDS_API_KEY }}
-                  github-token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC || github.token }}
+                  github-token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN || github.token }}
 
     auto-close-duplicates:
         if: |
@@ -87,4 +87,4 @@ jobs:
                   mode: auto-close
                   repository: ${{ github.repository }}
                   close-after-days: ${{ inputs.close_after_days || '3' }}
-                  github-token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC || github.token }}
+                  github-token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN || github.token }}

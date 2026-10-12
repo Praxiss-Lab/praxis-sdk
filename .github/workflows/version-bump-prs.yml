@@ -15,7 +15,7 @@ jobs:
     create-version-bump-prs:
         runs-on: ubuntu-24.04
         env:
-            GH_TOKEN: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+            GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
             SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         steps:
             - name: Checkout
@@ -671,13 +671,13 @@ jobs:
         runs-on: ubuntu-24.04
         timeout-minutes: 60
         env:
-            GH_TOKEN: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+            GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
         steps:
             - name: Checkout SDK release tooling
               uses: actions/checkout@v7.0.1
               with:
                   # The default GITHUB_TOKEN cannot push the bump branch.
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
 
                   persist-credentials: false
             - name: Install Node.js
