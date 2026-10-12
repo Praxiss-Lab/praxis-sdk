@@ -30,7 +30,7 @@ jobs:
             - uses: actions/checkout@v7.0.1
               with:
                   ref: ${{ github.event.pull_request.head.ref }}
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
 
             - name: Remove .pr/ directory
               id: remove
@@ -189,14 +189,14 @@ jobs:
             - uses: actions/checkout@v7.0.1
               with:
                   ref: ${{ github.event.pull_request.base.ref }}
-                  token: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
 
             - name: Create or update cleanup PR
               id: cleanup
               env:
                   BASE_REF: ${{ github.event.pull_request.base.ref }}
                   CLEANUP_BRANCH: automation/remove-pr-artifacts
-                  GH_TOKEN: ${{ secrets.OPENHANDS_BOT_GITHUB_PAT_PUBLIC }}
+                  GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
               run: |
                   if [ ! -d ".pr" ]; then
                     echo "created=false" >> "$GITHUB_OUTPUT"
