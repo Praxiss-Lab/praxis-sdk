@@ -99,7 +99,7 @@ cannot approve their own PR. For a solo-maintainer repository, enforce the PR
 and CI requirements first and enable mandatory approvals when another reviewer
 is available.
 
-Agent Server image publication defaults to `ghcr.io/praxiss-lab/agent-server`.
+Agent Server image publication defaults to `ghcr.io/praxiss-lab/praxis-agent-server`.
 Dispatch `Agent Server` from `main`, supplying the existing `release_tag` to
 produce versioned images. Once that run passes, dispatch the release-artifact
 workflow from `main` with the same tag; its Docker checks target those images.

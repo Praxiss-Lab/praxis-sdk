@@ -22,7 +22,7 @@ jobs:
             GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
             BRANCH: chore/update-agent-server-debian-snapshot
             DOCKERFILE: praxis-agent-server/openhands/agent_server/docker/Dockerfile
-            IMAGE: openhands/agent-server-binary-minimal:snapshot-update
+            IMAGE: praxis/agent-server-binary-minimal:snapshot-update
         steps:
             - name: Checkout
               uses: actions/checkout@v7.0.1

@@ -236,7 +236,7 @@ jobs:
             - name: Upload binary artifact
               uses: actions/upload-artifact@v7
               with:
-                  name: openhands-server-${{ matrix.os }}
+                  name: praxis-server-${{ matrix.os }}
                   path: |
                       dist/praxis-agent-server*
                   retention-days: 7
