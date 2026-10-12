@@ -70,6 +70,24 @@ def test_get_release_pr_version_accepts_title_or_branch():
     assert get_release_pr_version("chore: test", "rel-1.15.0") == ("1.15.0", [])
 
 
+def test_historical_layout_rename_preserves_version_guard(tmp_path: Path):
+    repo = _init_repo_with_versions(tmp_path, "1.54.0")
+    packages = [p for p in _prod.PACKAGE_FILES if p.startswith("praxis-")]
+    for name in packages:
+        (repo / name).rename(repo / name.replace("praxis-", "openhands-", 1))
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "historical layout"], cwd=repo, check=True)
+    subprocess.run(["git", "branch", "-f", "origin/main", "HEAD"], cwd=repo, check=True)
+    for name in packages:
+        (repo / name.replace("praxis-", "openhands-", 1)).rename(repo / name)
+    assert find_version_changes(repo, "main") == []
+    _write_version(repo / "praxis-sdk" / "pyproject.toml", "1.54.1")
+    changes = find_version_changes(repo, "main")
+    assert len(changes) == 1
+    assert changes[0].previous_version == "1.54.0"
+    assert validate_version_changes(changes, "Rebrand", "chore/rebrand")
+
+
 def test_get_release_pr_version_rejects_mismatched_markers():
     version, errors = get_release_pr_version("Release v1.15.0", "rel-1.16.0")
 
