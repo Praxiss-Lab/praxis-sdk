@@ -135,11 +135,6 @@ jobs:
                   ref: ${{ github.sha }}
                   persist-credentials: false
                   fetch-depth: 0
-            - name: Switch to feature branch with TODO management files
-              run: |
-                  git checkout openhands/todo-management-example
-                  git pull origin openhands/todo-management-example
-
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -150,11 +145,9 @@ jobs:
               with:
                   enable-cache: true
 
-            - name: Install OpenHands dependencies
+            - name: Install owned SDK dependencies
               run: |
-                  # Install OpenHands SDK and tools from git repository
-                  uv pip install --system "openhands-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-sdk"
-                  uv pip install --system "openhands-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-tools"
+                  uv pip install --system ./openhands-sdk ./openhands-tools
 
             - name: Copy agent files
               run: |
@@ -164,9 +157,9 @@ jobs:
 
             - name: Configure Git
               run: |
-                  git config --global user.name "openhands-bot"
+                  git config --global user.name "praxis-bot"
                   git config --global user.email \
-                    "openhands-bot@users.noreply.github.com"
+                    "praxis-bot@users.noreply.github.com"
 
             - name: Process TODO
               env:
