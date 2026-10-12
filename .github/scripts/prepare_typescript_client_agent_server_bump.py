@@ -18,7 +18,7 @@ from typing import Any
 
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 IMAGE_RE = re.compile(
-    r"^ghcr\.io/openhands/agent-server:(?P<version>\d+\.\d+\.\d+)-python$"
+    r"^ghcr\.io/praxiss-lab/praxis-agent-server:(?P<version>\d+\.\d+\.\d+)-python$"
 )
 VERSION_MIRRORS = (
     Path("package.json"),
