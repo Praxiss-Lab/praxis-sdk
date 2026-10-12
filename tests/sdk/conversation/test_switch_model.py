@@ -389,7 +389,7 @@ def test_switch_llm_refreshes_llm_condenser_credentials(
     switched but that copy is left behind, normal turns can keep working while
     the next condensation request still calls the old no-credential model.
     """
-    initial_llm = LLM(model="litellm_proxy/old-model", usage_id="default")
+    initial_llm = LLM(model="litellm_proxy/old-model", usage_id="default", base_url="http://127.0.0.1:8080/v1")
     initial_condenser_llm = initial_llm.model_copy(update={"usage_id": "condenser"})
     initial_condenser_llm.reset_metrics()
     condenser = LLMSummarizingCondenser(
@@ -406,6 +406,7 @@ def test_switch_llm_refreshes_llm_condenser_credentials(
     switched_llm = LLM(
         model="litellm_proxy/new-model",
         api_key=SecretStr("new-test-key"),
+        base_url="http://127.0.0.1:8080/v1",
         usage_id="profile:new",
     )
 
@@ -449,7 +450,7 @@ def test_switch_llm_refreshes_llm_condenser_credentials(
 def test_switch_llm_condenser_can_generate_condensation(
     empty_profile_store, tmp_path, monkeypatch
 ):
-    initial_llm = LLM(model="litellm_proxy/old-model", usage_id="default")
+    initial_llm = LLM(model="litellm_proxy/old-model", usage_id="default", base_url="http://127.0.0.1:8080/v1")
     condenser = LLMSummarizingCondenser(
         llm=initial_llm.model_copy(update={"usage_id": "condenser"}),
         max_size=6,
@@ -464,6 +465,7 @@ def test_switch_llm_condenser_can_generate_condensation(
     switched_llm = LLM(
         model="litellm_proxy/new-model",
         api_key=SecretStr("new-test-key"),
+        base_url="http://127.0.0.1:8080/v1",
         usage_id="profile:new",
     )
     conv.switch_llm(switched_llm)
