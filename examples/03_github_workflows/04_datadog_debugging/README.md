@@ -1,6 +1,6 @@
 # Datadog Error Debugging Workflow
 
-This example demonstrates how to use OpenHands agents to automatically debug errors from Datadog in a GitHub Actions workflow.
+This example demonstrates how to use Praxis agents to automatically debug errors from Datadog in a GitHub Actions workflow.
 
 ## Overview
 
@@ -42,7 +42,7 @@ Run on-demand via GitHub Actions UI with configurable inputs:
 - Identifies root causes across repository boundaries
 
 ### AI-Powered Debugging
-- Automatic code analysis using OpenHands agents
+- Automatic code analysis using Praxis agents
 - Identifies error locations and root causes
 - Provides actionable fix recommendations
 - Posts detailed findings as GitHub comments
@@ -296,4 +296,4 @@ jobs:
 
 - [Datadog API Documentation](https://docs.datadoghq.com/api/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [OpenHands SDK Documentation](https://github.com/OpenHands/software-agent-sdk)
+- [Praxis SDK Documentation](https://github.com/Praxiss-Lab/praxis-sdk)

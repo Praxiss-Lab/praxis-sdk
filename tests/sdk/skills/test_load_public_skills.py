@@ -82,7 +82,7 @@ def mock_repo_with_agentskills_references(tmp_path):
 
     This reproduces the issue where markdown files in subdirectories of a SKILL.md
     directory (like themes/ or references/) are incorrectly loaded as separate skills.
-    See: https://github.com/OpenHands/software-agent-sdk/issues/1981
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/1981
     """
     repo_dir = tmp_path / "mock_repo"
     repo_dir.mkdir()
@@ -171,7 +171,9 @@ def test_load_public_skills_success(mock_repo_dir, tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
         assert len(skills) == 3
         skill_names = {s.name for s in skills}
         assert skill_names == {"git", "docker", "testing"}
@@ -202,7 +204,9 @@ def test_load_public_skills_repo_update_fails(tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
         assert skills == []
 
 
@@ -225,7 +229,9 @@ def test_load_public_skills_no_skills_directory(tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
         assert skills == []
 
 
@@ -259,7 +265,9 @@ def test_load_public_skills_with_invalid_skill(tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
         # Only valid skill should be loaded, invalid one skipped
         assert len(skills) == 1
         assert skills[0].name == "valid"
@@ -277,7 +285,7 @@ def test_update_skills_repository_clone_new(tmp_path):
         "openhands.sdk.git.utils.subprocess.run", return_value=mock_result
     ) as mock_run:
         repo_path = update_skills_repository(
-            "https://github.com/OpenHands/extensions",
+            "https://example.test/skills",
             "main",
             cache_dir,
         )
@@ -312,7 +320,7 @@ def test_update_skills_repository_update_existing(tmp_path):
         "openhands.sdk.git.utils.subprocess.run", return_value=mock_result
     ) as mock_run:
         result_path = update_skills_repository(
-            "https://github.com/OpenHands/extensions",
+            "https://example.test/skills",
             "main",
             cache_dir,
         )
@@ -345,7 +353,7 @@ def test_update_skills_repository_clone_timeout(tmp_path):
         side_effect=subprocess.TimeoutExpired("git", 60),
     ) as mock_run:
         repo_path = update_skills_repository(
-            "https://github.com/OpenHands/extensions",
+            "https://example.test/skills",
             "main",
             cache_dir,
         )
@@ -376,7 +384,7 @@ def test_update_skills_repository_update_fails_uses_cache(tmp_path):
         return_value=mock_result,
     ):
         result_path = update_skills_repository(
-            "https://github.com/OpenHands/extensions",
+            "https://example.test/skills",
             "main",
             cache_dir,
         )
@@ -542,7 +550,9 @@ def test_load_public_skills_custom_branch(mock_repo_dir, tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills(ref="develop")
+        skills = load_public_skills(
+            repo_url="https://example.test/skills", ref="develop"
+        )
         assert len(skills) == 3
 
 
@@ -552,7 +562,7 @@ def test_load_public_skills_excludes_reference_markdown_in_agentskills_folders(
     """Test that markdown files in SKILL.md subdirs are NOT loaded as skills.
 
     This is a regression test for issue #1981:
-    https://github.com/OpenHands/software-agent-sdk/issues/1981
+    https://github.com/Praxiss-Lab/praxis-sdk/issues/1981
 
     When a skill directory contains a SKILL.md file (AgentSkills format), any
     markdown files in subdirectories (like themes/, references/, etc.) should
@@ -579,7 +589,9 @@ def test_load_public_skills_excludes_reference_markdown_in_agentskills_folders(
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
         # Get all skill names
         skill_names = {s.name for s in skills}
@@ -757,7 +769,9 @@ def test_load_public_skills_filters_by_marketplace(
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
     skill_names = {skill.name for skill in skills}
     assert skill_names == {"git", "docker"}
@@ -783,7 +797,10 @@ def test_load_public_skills_uses_custom_marketplace_path(
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills(marketplace_path="marketplaces/custom.json")
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+            marketplace_path="marketplaces/custom.json",
+        )
 
     assert {skill.name for skill in skills} == {"git", "internal-only"}
 
@@ -806,7 +823,10 @@ def test_load_public_skills_returns_empty_for_invalid_custom_marketplace_path(
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills(marketplace_path="marketplaces/missing.json")
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+            marketplace_path="marketplaces/missing.json",
+        )
 
     assert skills == []
 
@@ -842,7 +862,9 @@ def test_load_public_skills_loads_all_when_no_marketplace(tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
         # Should have all skills since no marketplace exists
         skill_names = {s.name for s in skills}
@@ -895,7 +917,9 @@ def test_load_public_skills_handles_legacy_md_files_with_marketplace(tmp_path):
             return_value=tmp_path,
         ),
     ):
-        skills = load_public_skills()
+        skills = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
         # Should only have git and docker from marketplace
         skill_names = {s.name for s in skills}
@@ -921,8 +945,12 @@ def test_load_public_skills_caches_result_within_ttl(mock_repo_dir, tmp_path):
             return_value=tmp_path,
         ),
     ):
-        first = load_public_skills()
-        second = load_public_skills()
+        first = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
+        second = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
     assert update_mock.call_count == 1
     assert {s.name for s in first} == {s.name for s in second}
@@ -941,9 +969,13 @@ def test_invalidate_public_skills_cache_forces_recompute(mock_repo_dir, tmp_path
             return_value=tmp_path,
         ),
     ):
-        load_public_skills()
+        load_public_skills(
+            repo_url="https://example.test/skills",
+        )
         _invalidate_public_skills_cache()
-        load_public_skills()
+        load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
     assert update_mock.call_count == 2
 
@@ -965,8 +997,12 @@ def test_load_public_skills_does_not_cache_empty_results(mock_repo_dir, tmp_path
             return_value=tmp_path,
         ),
     ):
-        first = load_public_skills()
-        second = load_public_skills()
+        first = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
+        second = load_public_skills(
+            repo_url="https://example.test/skills",
+        )
 
     assert first == []
     assert {s.name for s in second} == {"git", "docker", "testing"}

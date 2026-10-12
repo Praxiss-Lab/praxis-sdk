@@ -1,4 +1,4 @@
-"""Helpers for examples that run a local OpenHands agent-server subprocess."""
+"""Helpers for examples that run a local Praxis agent-server subprocess."""
 
 from __future__ import annotations
 

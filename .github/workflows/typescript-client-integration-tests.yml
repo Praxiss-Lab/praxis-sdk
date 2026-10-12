@@ -94,7 +94,7 @@ jobs:
               working-directory: .
               run: |
                   uv sync --frozen
-                  uv run ./openhands-agent-server/openhands/agent_server/docker/build.py \
+                  uv run ./praxis-agent-server/openhands/agent_server/docker/build.py \
                       --build-ctx-only --arch amd64 \
                       --base-image python-node-runtime
 

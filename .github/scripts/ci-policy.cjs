@@ -8,6 +8,7 @@ const SCOPES = ['python', 'typescript', 'server', 'examples', 'storage', 'securi
 function classifyFiles(files) {
   const scopes = Object.fromEntries(SCOPES.map(name => [name, false]));
   for (const file of files) {
+    if (file.startsWith('docs/examples/')) { scopes.examples = true; continue; }
     if (file.startsWith('docs/') || /^[^/]+\.(md|rst)$/i.test(file)) continue;
     if (file.startsWith('clients/typescript/')) {
       scopes.typescript = true;

@@ -65,7 +65,7 @@ def _current_version(package_json: dict[str, Any]) -> str:
     if not isinstance(image, str) or not (match := IMAGE_RE.fullmatch(image)):
         raise ValueError(
             "package.json config.agentServerImage must be an exact "
-            "ghcr.io/openhands/agent-server:X.Y.Z-python release image"
+            "ghcr.io/praxiss-lab/praxis-agent-server:X.Y.Z-python release image"
         )
     return match.group("version")
 
@@ -73,8 +73,8 @@ def _current_version(package_json: dict[str, Any]) -> str:
 def _replace_version_mirror(text: str, previous: str, target: str) -> str:
     replacements = (
         (
-            f"ghcr.io/openhands/agent-server:{previous}-python",
-            f"ghcr.io/openhands/agent-server:{target}-python",
+            f"ghcr.io/praxiss-lab/praxis-agent-server:{previous}-python",
+            f"ghcr.io/praxiss-lab/praxis-agent-server:{target}-python",
         ),
         (
             f"software-agent-sdk v{previous}",

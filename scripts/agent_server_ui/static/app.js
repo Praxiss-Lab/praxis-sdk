@@ -600,7 +600,7 @@ class OpenHandsWebChat {
             agent: {
                 llm: {
                     model: "litellm_proxy/openai/gpt-5.5",
-                    base_url: "https://llm-proxy.app.all-hands.dev",
+                    base_url: "http://localhost:4000",
                     api_key: "secret"
                 },
                 tools: [

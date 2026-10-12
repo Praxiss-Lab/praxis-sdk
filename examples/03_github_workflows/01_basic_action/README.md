@@ -1,11 +1,11 @@
 # Routine Maintenance Workflow
 
-This example demonstrates how to set up a GitHub Actions workflow for automated routine maintenance tasks using the OpenHands agent SDK.
+This example demonstrates how to set up a GitHub Actions workflow for automated routine maintenance tasks using the Praxis agent SDK.
 
 ## Files
 
 - **`workflow.yml`**: GitHub Actions workflow file that can be copied to `.github/workflows/` in your repository
-- **`agent_script.py`**: Python script that runs the OpenHands agent with a custom prompt
+- **`agent_script.py`**: Python script that runs the Praxis agent with a custom prompt
 
 ## Setup
 
@@ -58,7 +58,7 @@ jobs:
 Set the following secret in your GitHub repository settings:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Get one from the [OpenHands LLM Provider](https://docs.all-hands.dev/openhands/usage/llms/openhands-llms)
+  - Get one from the [OpenHands LLM Provider](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/independent-deployment.md)
 
 ### 4. Test locally (optional)
 
@@ -123,7 +123,7 @@ with:
   prompt_location: path/to/prompt.txt
 ```
 
-Your custom script should accept a prompt location as a command-line argument and use the OpenHands SDK to run the agent.
+Your custom script should accept a prompt location as a command-line argument and use the Praxis SDK to run the agent.
 
 ### Using remote prompts
 
@@ -141,6 +141,6 @@ This allows you to update prompts without modifying the workflow file.
 
 ## References
 
-- [OpenHands SDK Documentation](https://docs.all-hands.dev/)
+- [Praxis SDK Documentation](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [LLM Provider Setup](https://docs.all-hands.dev/openhands/usage/llms/openhands-llms)
+- [LLM Provider Setup](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/independent-deployment.md)

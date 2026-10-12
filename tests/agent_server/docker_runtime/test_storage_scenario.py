@@ -27,7 +27,7 @@ from openhands.agent_server.docker_runtime.registry import DockerConversationReg
 pytestmark = pytest.mark.docker_live
 
 IMAGE = os.environ.get(
-    "OH_STORAGE_SCENARIO_IMAGE", "ghcr.io/openhands/agent-server:latest-python"
+    "OH_STORAGE_SCENARIO_IMAGE", "ghcr.io/praxiss-lab/praxis-agent-server:latest-python"
 )
 GIT = "git -c user.name=agent -c user.email=agent@example.com"
 

@@ -366,7 +366,7 @@ jobs:
               env:
                   LLM_CONFIG: ${{ toJson(matrix.job-config['llm-config']) }}
                   LLM_API_KEY: ${{ secrets.LLM_API_KEY_EVAL }}
-                  LLM_BASE_URL: https://llm-proxy.eval.all-hands.dev
+                  LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
                   TOOL_PRESET: ${{ github.event.inputs.tool_preset || 'default' }}
               run: |
                   set -eo pipefail
@@ -563,7 +563,7 @@ jobs:
             - name: Run API compliance tests
               env:
                   LLM_API_KEY: ${{ secrets.LLM_API_KEY_EVAL }}
-                  LLM_BASE_URL: https://llm-proxy.eval.all-hands.dev
+                  LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
               run: |
                   uv run python tests/integration/api_compliance/run_compliance.py \
                     --output-dir compliance-results

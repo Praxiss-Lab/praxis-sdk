@@ -229,7 +229,7 @@ def test_get_conversation_includes_tags(
 async def test_event_service_start_forwards_tags_to_local_conversation(tmp_path):
     """EventService.start() must pass stored tags to LocalConversation.
 
-    Regression test for https://github.com/OpenHands/software-agent-sdk/issues/2821:
+    Regression test for https://github.com/Praxiss-Lab/praxis-sdk/issues/2821:
     tags sent via POST /api/conversations were persisted in StoredConversation but
     not forwarded to the LocalConversation constructor, so state.tags was always {}.
     """

@@ -40,7 +40,10 @@ def test_llm_config_aws_credentials():
 def test_llm_config_openrouter_defaults():
     """Test OpenRouter default values."""
     config = LLM(model="gpt-4o-mini", usage_id="test-llm")
-    assert config.openrouter_site_url == "https://docs.all-hands.dev/"
+    assert (
+        config.openrouter_site_url
+        == "https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs"
+    )
     assert config.openrouter_app_name == "OpenHands"
 
 

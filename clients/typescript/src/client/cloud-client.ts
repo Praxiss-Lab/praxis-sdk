@@ -1,3 +1,4 @@
+import { assertSelfHostedEndpoint } from './cloud-endpoint-policy';
 import { HttpError, type ResponseType } from './http-client';
 import {
   OpenHandsClient,
@@ -737,6 +738,7 @@ async function fetchAndParse<TResponse>(options: FetchAndParseOptions): Promise<
 
   let response: Response;
   try {
+    assertSelfHostedEndpoint(url);
     response = await fetch(url, init);
   } catch (error) {
     // AbortSignal.timeout() aborts with a TimeoutError; some runtimes

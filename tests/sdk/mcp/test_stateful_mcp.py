@@ -13,7 +13,7 @@ The key insight: With the OLD code, each `async with client:` would disconnect
 on exit and reconnect on the next entry, creating a NEW session each time.
 With the FIX, we call `__aenter__` once and keep the connection open.
 
-Related: https://github.com/OpenHands/software-agent-sdk/issues/1739
+Related: https://github.com/Praxiss-Lab/praxis-sdk/issues/1739
 """
 
 import asyncio

@@ -212,7 +212,7 @@ jobs:
                   git rm -rf .pr/
                   git commit \
                     -m "chore: remove merged PR artifacts" \
-                    -m "Co-authored-by: openhands <openhands@all-hands.dev>"
+                    -m "Co-authored-by: Codex <codex@openai.com>"
                   git push --force-with-lease origin "HEAD:$CLEANUP_BRANCH"
 
                   cleanup_pr_url=$(gh pr list \

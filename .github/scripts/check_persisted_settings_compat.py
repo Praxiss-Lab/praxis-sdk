@@ -768,7 +768,7 @@ def validate_baseline_payload_cases(
 
 def _resolve_pypi_baselines() -> tuple[str | None, str | None, str | None]:
     sdk_current = read_version_from_pyproject(
-        REPO_ROOT / "openhands-sdk" / "pyproject.toml"
+        REPO_ROOT / "praxis-sdk" / "pyproject.toml"
     )
     sdk_baseline = get_pypi_baseline_version("openhands-sdk", sdk_current)
     if sdk_baseline is None:
@@ -776,7 +776,7 @@ def _resolve_pypi_baselines() -> tuple[str | None, str | None, str | None]:
 
     cutoffs = [get_pypi_release_cutoff("openhands-sdk", sdk_baseline)]
     agent_server_current = read_version_from_pyproject(
-        REPO_ROOT / "openhands-agent-server" / "pyproject.toml"
+        REPO_ROOT / "praxis-agent-server" / "pyproject.toml"
     )
     agent_server_baseline = get_pypi_baseline_version(
         "openhands-agent-server", agent_server_current
@@ -802,7 +802,7 @@ def main() -> int:
     sdk_baseline, agent_server_baseline, baseline_cutoff = _resolve_pypi_baselines()
     if sdk_baseline is None or baseline_cutoff is None:
         print(
-            "::warning title=Persisted settings baseline::No published openhands-sdk "
+            "::warning title=Persisted settings baseline::No published praxis-sdk "
             "baseline found; skipping PyPI payload generation"
         )
         return 0
@@ -813,9 +813,9 @@ def main() -> int:
         exclude_newer=baseline_cutoff,
     )
     validate_baseline_payload_cases(baseline_cases)
-    baseline_summary = f"openhands-sdk=={sdk_baseline}"
+    baseline_summary = f"praxis-sdk=={sdk_baseline}"
     if agent_server_baseline is not None:
-        baseline_summary += f", openhands-agent-server=={agent_server_baseline}"
+        baseline_summary += f", praxis-agent-server=={agent_server_baseline}"
     print(
         f"Validated {len(baseline_cases)} baseline payload(s) from PyPI release "
         f"{baseline_summary}"

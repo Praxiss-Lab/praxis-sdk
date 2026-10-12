@@ -1,6 +1,6 @@
 # Automated TODO Management with GitHub Actions
 
-This example demonstrates how to use the OpenHands SDK to automatically scan a codebase for configurable TODO comments and create pull requests to implement them. This showcases practical automation and self-improving codebase capabilities.
+This example demonstrates how to use the Praxis SDK to automatically scan a codebase for configurable TODO comments and create pull requests to implement them. This showcases practical automation and self-improving codebase capabilities.
 
 ## Overview
 
@@ -13,7 +13,7 @@ The workflow consists of three main components:
 ## Features
 
 - 🔍 **Smart Scanning**: Finds legitimate TODO comments with configurable identifiers while filtering out false positives
-- 🤖 **AI Implementation**: Uses OpenHands agent to automatically implement TODOs
+- 🤖 **AI Implementation**: Uses Praxis agent to automatically implement TODOs
 - 🔄 **PR Management**: Creates feature branches and pull requests automatically
 - 📝 **Progress Tracking**: Tracks TODO processing status and PR creation
 - 📊 **Comprehensive Reporting**: Detailed GitHub Actions summary with processing status
@@ -29,7 +29,7 @@ The workflow consists of three main components:
 
 2. **Process Phase**: For each TODO found:
    - Creates a feature branch
-   - Uses OpenHands agent to implement the TODO
+   - Uses Praxis agent to implement the TODO
    - Creates a pull request with the implementation
    - Tracks processing status and PR information
 
@@ -41,7 +41,7 @@ The workflow consists of three main components:
 ## Files
 
 - **`scanner.py`**: Smart TODO scanner with false positive filtering
-- **`agent.py`**: OpenHands agent for TODO implementation
+- **`agent.py`**: Praxis agent for TODO implementation
 - **`prompt.py`**: Contains the prompt template for TODO implementation
 - **`README.md`**: This comprehensive documentation
 
@@ -52,7 +52,7 @@ The workflow consists of three main components:
 Add these secrets to your GitHub repository:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Get one from the [OpenHands LLM Provider](https://docs.all-hands.dev/openhands/usage/llms/openhands-llms)
+  - Get one from the [OpenHands LLM Provider](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/independent-deployment.md)
 - `GITHUB_TOKEN` - GitHub token with repo permissions (automatically provided)
 -  Make sure Github Actions are allowed to create and review PRs (in the repo settings)
 

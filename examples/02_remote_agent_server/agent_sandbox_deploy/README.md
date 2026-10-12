@@ -36,7 +36,7 @@ kubectl apply -f sandboxtemplate.yaml
 kubectl apply -f sandboxwarmpool.yaml
 ```
 
-The first pull of `ghcr.io/openhands/agent-server` can take a minute. Watch the pool
+The first pull of `ghcr.io/praxiss-lab/praxis-agent-server` can take a minute. Watch the pool
 fill up (pods become `Ready` once the agent server passes its `/health` probe):
 
 ```bash
@@ -46,7 +46,7 @@ kubectl get pods -w
 ## 4. Install the client and run the example
 
 ```bash
-pip install openhands-workspace[agent-sandbox]
+pip install praxis-workspace[agent-sandbox]
 
 export LLM_API_KEY=...            # your LLM key (called from inside the pod)
 export LLM_MODEL=...              # optional, e.g. a hosted model id

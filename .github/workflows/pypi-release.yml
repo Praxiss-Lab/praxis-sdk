@@ -1,5 +1,5 @@
 ---
-name: Publish all OpenHands packages (uv)
+name: Publish all Praxis packages (uv)
 
 on:
     workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
                   VERSION: ${{ inputs.version }}
               run: |
                   set -euo pipefail
-                  actual_version=$(grep -m1 '^version = ' openhands-sdk/pyproject.toml | cut -d'"' -f2)
+                  actual_version=$(grep -m1 '^version = ' praxis-sdk/pyproject.toml | cut -d'"' -f2)
                   if [ "$actual_version" != "$VERSION" ]; then
                     echo "❌ SDK version $actual_version does not match requested version $VERSION"
                     exit 1
@@ -62,10 +62,10 @@ jobs:
                   fi
 
                   PACKAGES=(
-                    openhands-sdk
-                    openhands-tools
-                    openhands-workspace
-                    openhands-agent-server
+                    praxis-sdk
+                    praxis-tools
+                    praxis-workspace
+                    praxis-agent-server
                   )
 
                   expected_version="${VERSION}"

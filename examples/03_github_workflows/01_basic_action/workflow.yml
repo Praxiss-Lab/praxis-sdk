@@ -51,9 +51,9 @@ jobs:
 
             - name: Install OpenHands dependencies
               run: |
-                  # Install OpenHands SDK and tools from git repository
-                  uv pip install --system "openhands-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-sdk"
-                  uv pip install --system "openhands-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-tools"
+                  # Install Praxis SDK and tools from git repository
+                  uv pip install --system "praxis-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=praxis-sdk"
+                  uv pip install --system "praxis-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=praxis-tools"
 
             - name: Check required configuration
               env:

@@ -185,5 +185,4 @@ def test_publication_and_paid_agents_do_not_start_from_dependency_labels():
     binary = _workflow("server-validation.yml")["jobs"]["build-binary-and-test"]
     assert binary["strategy"]["max-parallel"] == "2"
     upstream = _workflow("version-bump-prs.yml")["jobs"]
-    for name in ("create-version-bump-prs", "bump-cloud-chart"):
-        assert "github.repository_owner == 'OpenHands'" in upstream[name]["if"]
+    assert set(upstream) == {"bump-typescript-client"}

@@ -1,6 +1,6 @@
 ---
 name: Bug
-description: Report a problem with OpenHands SDK
+description: Report a problem with Praxis SDK
 title: '[Bug]: '
 labels: [bug]
 body:
@@ -55,7 +55,7 @@ body:
           label: Steps to Reproduce
           description: Provide clear, step-by-step instructions to reproduce the bug.
           placeholder: |
-              1. Install openhands-sdk using pip
+              1. Install praxis-sdk using pip
               2. Import and create an agent instance
               3. Define a custom tool function
               4. Call agent.register_tool(custom_tool)
@@ -77,8 +77,8 @@ body:
       id: installation
       attributes:
           label: Installation Method
-          description: How did you install the OpenHands SDK?
-          placeholder: ex. pip install openhands-sdk, uv pip install openhands-sdk, pip install -e ., etc.
+          description: How did you install the Praxis SDK?
+          placeholder: ex. pip install praxis-sdk, uv pip install praxis-sdk, pip install -e ., etc.
 
     - type: input
       id: installation-other
@@ -91,7 +91,7 @@ body:
       id: sdk-version
       attributes:
           label: SDK Version
-          description: What version are you using? Check with `pip show openhands-sdk` or similar for other packages.
+          description: What version are you using? Check with `pip show praxis-sdk` or similar for other packages.
           placeholder: ex. 0.1.0, 0.2.0, main branch, commit hash, etc.
       validations:
           required: false
@@ -102,7 +102,7 @@ body:
           label: Version Confirmation
           description: Bugs on older versions may already be fixed. Please upgrade before submitting.
           options:
-              - label: I have confirmed this bug exists on the LATEST version of OpenHands SDK
+              - label: I have confirmed this bug exists on the LATEST version of Praxis SDK
                 required: false
 
     - type: input

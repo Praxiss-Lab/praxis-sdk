@@ -38,7 +38,7 @@ def _write_client_fixture(root: Path, version: str) -> None:
             {
                 "config": {
                     "agentServerImage": (
-                        f"ghcr.io/openhands/agent-server:{version}-python"
+                        f"ghcr.io/praxiss-lab/praxis-agent-server:{version}-python"
                     )
                 }
             },
@@ -50,7 +50,7 @@ def _write_client_fixture(root: Path, version: str) -> None:
         f"Pinned to software-agent-sdk v{version} and `v{version}`.\n"
     )
     (root / "README.md").write_text(
-        f"Use ghcr.io/openhands/agent-server:{version}-python.\n"
+        f"Use ghcr.io/praxiss-lab/praxis-agent-server:{version}-python.\n"
     )
 
 

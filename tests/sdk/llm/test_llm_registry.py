@@ -224,7 +224,7 @@ def test_llm_registry_ensures_independent_metrics_for_copied_llms():
     the metrics would be shared between the original and copied LLM, causing
     metrics to be double-counted when both LLMs are used.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/418
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/418
     """
     from pydantic import SecretStr
 

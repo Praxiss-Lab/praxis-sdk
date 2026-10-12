@@ -54,8 +54,9 @@ class PackageConfig:
     """Configuration for a single published package."""
 
     package: str  # dotted module path, e.g. "openhands.sdk"
-    distribution: str  # PyPI distribution name, e.g. "openhands-sdk"
-    source_dir: str  # repo-relative directory, e.g. "openhands-sdk"
+    distribution: str  # PyPI distribution name, e.g. "praxis-sdk"
+    source_dir: str  # repo-relative directory, e.g. "praxis-sdk"
+    baseline_distribution: str | None = None  # Historical compatibility oracle
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,18 +94,21 @@ FIELD_DEFAULT_CHANGE_REPORT_ENV = "SDK_API_BREAKAGE_REPORT_PATH"
 PACKAGES: tuple[PackageConfig, ...] = (
     PackageConfig(
         package="openhands.sdk",
-        distribution="openhands-sdk",
-        source_dir="openhands-sdk",
+        distribution="praxis-sdk",
+        source_dir="praxis-sdk",
+        baseline_distribution="openhands-sdk",
     ),
     PackageConfig(
         package="openhands.workspace",
-        distribution="openhands-workspace",
-        source_dir="openhands-workspace",
+        distribution="praxis-workspace",
+        source_dir="praxis-workspace",
+        baseline_distribution="openhands-workspace",
     ),
     PackageConfig(
         package="openhands.tools",
-        distribution="openhands-tools",
-        source_dir="openhands-tools",
+        distribution="praxis-tools",
+        source_dir="praxis-tools",
+        baseline_distribution="openhands-tools",
     ),
 )
 
@@ -252,7 +256,7 @@ def _git_archive_directory(
 
 
 def _load_base_pyproject(base_ref: str) -> dict | None:
-    rel_path = "openhands-sdk/pyproject.toml"
+    rel_path = "praxis-sdk/pyproject.toml"
     content = _git_show_file(base_ref, rel_path)
     if content is None:
         print(
@@ -290,7 +294,7 @@ def _check_acp_version_bump(repo_root: str) -> int:
         return 0
 
     current_data = _read_pyproject(
-        os.path.join(repo_root, "openhands-sdk", "pyproject.toml")
+        os.path.join(repo_root, "praxis-sdk", "pyproject.toml")
     )
     old_req = _get_dependency_spec(base_data, ACP_DEPENDENCY)
     new_req = _get_dependency_spec(current_data, ACP_DEPENDENCY)
@@ -406,7 +410,7 @@ def get_pypi_baseline_version(pkg: str, current: str | None) -> str | None:
     than the current version. If ``current`` is None, use the latest release.
 
     Args:
-        pkg: Package name on PyPI (e.g., "openhands-sdk")
+        pkg: Package name on PyPI (e.g., "praxis-sdk")
         current: Current version from the workspace, or None for latest
 
     Returns:
@@ -414,7 +418,7 @@ def get_pypi_baseline_version(pkg: str, current: str | None) -> str | None:
     """
     req = urllib.request.Request(
         url=f"https://pypi.org/pypi/{pkg}/json",
-        headers={"User-Agent": "openhands-sdk-api-check/1.0"},
+        headers={"User-Agent": "praxis-sdk-api-check/1.0"},
         method="GET",
     )
     try:
@@ -957,7 +961,13 @@ def _load_from_git_ref(
 ):
     title = f"{cfg.distribution} API"
     with tempfile.TemporaryDirectory() as tmpdir:
-        if not _git_archive_directory(repo_root, ref, cfg.source_dir, tmpdir):
+        # Historical refs keep their original source layout after rebranding.
+        source_dir = cfg.source_dir
+        archived = _git_archive_directory(repo_root, ref, source_dir, tmpdir)
+        if not archived and cfg.baseline_distribution:
+            source_dir = cfg.baseline_distribution
+            archived = _git_archive_directory(repo_root, ref, source_dir, tmpdir)
+        if not archived:
             print(
                 f"::warning title={title}::Failed to load {cfg.distribution} from "
                 f"git ref {ref}: unable to archive {cfg.source_dir}"
@@ -968,7 +978,7 @@ def _load_from_git_ref(
         try:
             yield griffe_module.load(
                 cfg.package,
-                search_paths=[os.path.join(tmpdir, cfg.source_dir)],
+                search_paths=[os.path.join(tmpdir, source_dir)],
             )
         except Exception as e:
             print(
@@ -989,7 +999,7 @@ def _load_prev_from_pypi(
     try:
         return griffe_module.load_pypi(
             package=cfg.package,
-            distribution=cfg.distribution,
+            distribution=cfg.baseline_distribution or cfg.distribution,
             version_spec=f"=={prev}",
         )
     except Exception as e:
@@ -1343,7 +1353,9 @@ def _check_package(
     new_version = read_version_from_pyproject(pyproj)
 
     title = f"{cfg.distribution} API"
-    baseline = get_pypi_baseline_version(cfg.distribution, new_version)
+    baseline = get_pypi_baseline_version(
+        cfg.baseline_distribution or cfg.distribution, new_version
+    )
     if not baseline:
         print(
             f"::warning title={title}::No baseline {cfg.distribution} "

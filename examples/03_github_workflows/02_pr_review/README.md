@@ -1,6 +1,6 @@
 # PR Review Workflow
 
-This example demonstrates how to set up a GitHub Actions workflow for automated pull request reviews using the OpenHands agent SDK. When a PR is labeled with `review-this` or when openhands-agent is added as a reviewer, OpenHands will analyze the changes and provide detailed, constructive feedback.
+This example demonstrates how to set up a GitHub Actions workflow for automated pull request reviews using the Praxis agent SDK. When a PR is labeled with `review-this` or when openhands-agent is added as a reviewer, OpenHands will analyze the changes and provide detailed, constructive feedback.
 
 **Note**: The actual review scripts now live in the [OpenHands/extensions](https://github.com/OpenHands/extensions/tree/main/plugins/pr-review) repository. This directory contains an example workflow that references those scripts.
 
@@ -55,7 +55,7 @@ cp examples/03_github_workflows/02_pr_review/workflow.yml .github/workflows/pr-r
 Set the following secrets in your GitHub repository settings:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Get one from the [OpenHands LLM Provider](https://docs.all-hands.dev/openhands/usage/llms/openhands-llms)
+  - Get one from the [OpenHands LLM Provider](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/independent-deployment.md)
 
 **Note**: The workflow automatically uses the `GITHUB_TOKEN` secret that's available in all GitHub Actions workflows.
 
@@ -163,7 +163,7 @@ You are a code reviewer for this project. Follow these guidelines:
 
 ### Reference Example
 
-See the [software-agent-sdk's own code-review skill](https://github.com/OpenHands/software-agent-sdk/blob/main/.agents/skills/code-review.md) for a complete example of a custom code review skill.
+See the [software-agent-sdk's own code-review skill](https://github.com/Praxiss-Lab/praxis-sdk/blob/main/.agents/skills/custom-codereview-guide.md) for a complete example of a custom code review skill.
 
 ## Workflow Configuration
 
@@ -242,4 +242,4 @@ Configure a Laminar signal to analyze the evaluation traces:
    - Which comments received human responses
    - Overall review effectiveness score
 
-See [GitHub Issue #1953](https://github.com/OpenHands/software-agent-sdk/issues/1953) for the full implementation details.
+See [GitHub Issue #1953](https://github.com/Praxiss-Lab/praxis-sdk/issues/1953) for the full implementation details.

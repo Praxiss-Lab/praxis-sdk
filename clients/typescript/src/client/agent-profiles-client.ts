@@ -49,7 +49,7 @@ export interface ActivateAgentProfileResponse {
 /**
  * Client for the agent-server `/api/agent-profiles` endpoints.
  *
- * Mirrors `agent_profiles_router.py` in the OpenHands agent-server.
+ * Mirrors `agent_profiles_router.py` in the Praxis agent-server.
  * Error status codes surfaced via `HttpError.status`:
  * - 404: profile not found (get/rename/materialize)
  * - 409: profile limit exceeded (save) or new_name already exists (rename)

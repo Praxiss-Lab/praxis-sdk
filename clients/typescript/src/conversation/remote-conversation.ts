@@ -60,10 +60,10 @@ export interface RemoteConversationOptions extends BaseConversationOptions {
 }
 
 /**
- * Remote conversation implementation that connects to an OpenHands agent server.
+ * Remote conversation implementation that connects to an Praxis agent server.
  *
  * RemoteConversation provides access to a conversation running on a remote
- * OpenHands agent server. This is the recommended approach for production deployments
+ * Praxis agent server. This is the recommended approach for production deployments
  * as it provides better isolation and security.
  *
  * Example:

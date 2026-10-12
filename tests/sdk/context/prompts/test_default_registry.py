@@ -92,7 +92,7 @@ def test_default_registry_is_all_static() -> None:
     )
     blocks = create_registry().build(ctx)
     assert blocks.dynamic is None
-    assert blocks.static.startswith("<SOUL>\nYou are OpenHands agent")
+    assert blocks.static.startswith("<SOUL>\nYou are Praxis agent")
     assert "<IMPORTANT>" in blocks.static
 
 
@@ -119,7 +119,7 @@ def test_soul_section_renders_custom_and_defaults() -> None:
     assert section.guard(_ctx()) is True
     default = section.render(_ctx())
     assert default == (
-        "<SOUL>\nYou are OpenHands agent, a helpful AI assistant that can"
+        "<SOUL>\nYou are Praxis agent, a helpful AI assistant that can"
         " interact with a computer to solve tasks.\n</SOUL>"
     )
     custom = section.render(_ctx(soul_content="You are a tiny cat agent."))

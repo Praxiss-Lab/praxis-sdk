@@ -49,7 +49,7 @@ def test_resolve_unset_tools_is_the_default_set() -> None:
 
 
 def test_preset_default_specs_exclude_the_sdk_builtin() -> None:
-    """``default_tool_specs`` stays in lockstep with the openhands-tools preset.
+    """``default_tool_specs`` stays in lockstep with the praxis-tools preset.
 
     ``switch_llm`` is an SDK built-in, so it belongs to the settings/profile
     default (``resolve_tool_specs``) and not to the preset constructor.

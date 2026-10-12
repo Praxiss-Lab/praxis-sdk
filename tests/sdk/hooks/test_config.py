@@ -483,7 +483,7 @@ class TestAsyncHooks:
 def test_issue_2749():
     """Prompt-based stop hooks should not cause a validation error.
 
-    https://github.com/OpenHands/software-agent-sdk/issues/2749
+    https://github.com/Praxiss-Lab/praxis-sdk/issues/2749
     """
     data = {
         "hooks": {
@@ -518,7 +518,7 @@ def test_issue_2749():
 def test_issue_2749_validation(hook_type: HookType, match: str):
     """Validator should enforce required fields based on hook type.
 
-    https://github.com/OpenHands/software-agent-sdk/issues/2749
+    https://github.com/Praxiss-Lab/praxis-sdk/issues/2749
     """
     with pytest.raises(ValidationError, match=match):
         HookDefinition(type=hook_type)  # type: ignore[call-arg]

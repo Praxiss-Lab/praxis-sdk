@@ -14,7 +14,7 @@ from openai import OpenAI
 from scripts.utils import ManagedAPIServer
 
 
-# The gateway runs a full OpenHands agent, but OpenAI clients still need a
+# The gateway runs a full Praxis agent, but OpenAI clients still need a
 # normal model-like name. We create an LLM profile below and expose it as
 # `openhands_<profile_name>` through `/v1/models`.
 

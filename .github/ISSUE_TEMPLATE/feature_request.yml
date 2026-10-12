@@ -1,6 +1,6 @@
 ---
 name: Feature Request or Enhancement
-description: Suggest a new feature or improvement for OpenHands SDK
+description: Suggest a new feature or improvement for Praxis SDK
 title: '[Feature]: '
 labels: [enhancement]
 body:
@@ -91,8 +91,9 @@ body:
       id: feature-area
       attributes:
           label: Feature Area
-          description: Which part of OpenHands SDK does this feature relate to? If you select "Other", please specify the area in the Additional 
-              Context section below. <!-- TODO-openhands -->
+          description: >-
+              Which part of Praxis SDK does this feature relate to?
+              If you select Other, specify the area in Additional Context.
           options:
               - label: Agent API / Core functionality
               - label: Tools / Tool system

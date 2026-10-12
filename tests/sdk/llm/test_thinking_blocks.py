@@ -66,7 +66,7 @@ def test_thinking_block_without_signature():
     Gemini 3 which always includes signatures. This test verifies that the
     ThinkingBlock model correctly handles None signatures.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/1392
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/1392
     """
     # Test thinking block without signature (Gemini 2.5 behavior)
     block = ThinkingBlock(

@@ -1,4 +1,4 @@
-"""Tests for async utilities in OpenHands SDK."""
+"""Tests for async utilities in Praxis SDK."""
 
 import asyncio
 import threading

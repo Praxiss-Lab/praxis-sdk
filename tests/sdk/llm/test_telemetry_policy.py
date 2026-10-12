@@ -37,7 +37,12 @@ def test_chat_forwards_extra_body_for_all_models():
 
 def test_chat_proxy_forwards_extra_body():
     eb = {"cluster": "c1", "route": "r1"}
-    llm = LLM(model="litellm_proxy/gpt-4o", usage_id="u1", litellm_extra_body=eb)
+    llm = LLM(
+        model="litellm_proxy/gpt-4o",
+        base_url="http://localhost:4000",
+        usage_id="u1",
+        litellm_extra_body=eb,
+    )
     messages = [Message(role="user", content=[TextContent(text="Hi")])]
     with patch("openhands.sdk.llm.llm.litellm_completion") as mock_call:
         mock_call.return_value = ModelResponse(
@@ -93,7 +98,12 @@ def test_responses_forwards_extra_body_for_all_models(mock_responses):
 @patch("openhands.sdk.llm.llm.litellm_responses")
 def test_responses_proxy_forwards_extra_body(mock_responses):
     eb = {"cluster": "c1", "route": "r1"}
-    llm = LLM(model="litellm_proxy/gpt-4o", usage_id="u1", litellm_extra_body=eb)
+    llm = LLM(
+        model="litellm_proxy/gpt-4o",
+        base_url="http://localhost:4000",
+        usage_id="u1",
+        litellm_extra_body=eb,
+    )
     messages = [Message(role="user", content=[TextContent(text="Hi")])]
     mock_responses.return_value = ResponsesAPIResponse(
         id="r1",

@@ -751,7 +751,7 @@ def test_remote_conversation_over_real_server(server_env, patched_llm):
         # Note: SystemPromptEvent may not be delivered via WebSocket due to a race
         # condition where the event is published before the WebSocket subscription
         # completes. The event IS persisted on the server, but RemoteEventsList
-        # may miss it. See: https://github.com/OpenHands/software-agent-sdk/issues/1785
+        # may miss it. See: https://github.com/Praxiss-Lab/praxis-sdk/issues/1785
         if found_agent_event and found_state_update:
             break
         time.sleep(0.1)
@@ -1477,7 +1477,7 @@ def test_events_not_lost_during_client_disconnection(
     that may have been missed via WebSocket. This ensures the client always
     has a complete view of all events.
 
-    See PR #1791 review for details: https://github.com/OpenHands/software-agent-sdk/pull/1791#pullrequestreview-3694259068
+    See PR #1791 review for details: https://github.com/Praxiss-Lab/praxis-sdk/pull/1791#pullrequestreview-3694259068
     """
 
     def fake_completion_with_finish_tool(

@@ -37,11 +37,11 @@ BUILDKIT_STDERR_SAMPLE = "\n".join(
 
 
 def _create_fake_sdist(tmp_path: Path) -> Path:
-    src_root = tmp_path / "openhands-sdk-test"
+    src_root = tmp_path / "praxis-sdk-test"
     src_root.mkdir()
     (src_root / "README.md").write_text("fixture", encoding="utf-8")
 
-    tarball = tmp_path / "openhands-sdk-test.tar.gz"
+    tarball = tmp_path / "praxis-sdk-test.tar.gz"
     with tarfile.open(tarball, "w:gz") as tar:
         tar.add(src_root, arcname=src_root.name)
 
@@ -448,9 +448,9 @@ def test_all_tags_include_short_long_sha_and_branch():
     )
 
     assert opts.all_tags == [
-        "ghcr.io/openhands/agent-server:abc1234-python",
-        "ghcr.io/openhands/agent-server:abc1234567890fedcba-python",
-        "ghcr.io/openhands/agent-server:feature-release-1-python",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234-python",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890fedcba-python",
+        "ghcr.io/praxiss-lab/praxis-agent-server:feature-release-1-python",
     ]
 
 
@@ -467,9 +467,9 @@ def test_slim_flavor_has_distinct_image_and_cache_tags():
     )
 
     assert opts.all_tags == [
-        "ghcr.io/openhands/agent-server:abc1234-python-slim",
-        "ghcr.io/openhands/agent-server:abc1234567890fedcba-python-slim",
-        "ghcr.io/openhands/agent-server:main-python-slim",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234-python-slim",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890fedcba-python-slim",
+        "ghcr.io/praxiss-lab/praxis-agent-server:main-python-slim",
     ]
     assert opts.cache_tags == (
         "buildcache-binary-python_tag_3.13-slim-main",
@@ -494,11 +494,11 @@ def test_minimal_flavor_names_binary_minimal_without_duplicate_suffix():
     )
 
     assert opts.all_tags == [
-        "ghcr.io/openhands/agent-server:abc1234-python-minimal-amd64",
-        "ghcr.io/openhands/agent-server:abc1234567890fedcba-python-minimal-amd64",
-        "ghcr.io/openhands/agent-server:1-python-minimal-amd64",
-        "ghcr.io/openhands/agent-server:1.48-python-minimal-amd64",
-        "ghcr.io/openhands/agent-server:1.48.0-python-minimal-amd64",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234-python-minimal-amd64",
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890fedcba-python-minimal-amd64",
+        "ghcr.io/praxiss-lab/praxis-agent-server:1-python-minimal-amd64",
+        "ghcr.io/praxiss-lab/praxis-agent-server:1.48-python-minimal-amd64",
+        "ghcr.io/praxiss-lab/praxis-agent-server:1.48.0-python-minimal-amd64",
     ]
     assert all("minimal-binary-minimal" not in tag for tag in opts.all_tags)
 
@@ -518,14 +518,14 @@ def test_all_tags_includes_versioned_tags():
 
     all_tags = opts.all_tags
 
-    assert "ghcr.io/openhands/agent-server:abc1234-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:abc1234567890-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:abc1234-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890-python" in all_tags
     # Versioned tags use bare semver (no "v" prefix)
-    assert "ghcr.io/openhands/agent-server:1-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2.0-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2.0-java" in all_tags
-    assert "ghcr.io/openhands/agent-server:1-java" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2.0-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2.0-java" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1-java" in all_tags
 
 
 def test_all_tags_excludes_versioned_tags_when_disabled():
@@ -543,10 +543,10 @@ def test_all_tags_excludes_versioned_tags_when_disabled():
 
     all_tags = opts.all_tags
 
-    assert "ghcr.io/openhands/agent-server:abc1234-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:abc1234567890-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:main-python" in all_tags
-    assert "ghcr.io/openhands/agent-server:1-python" not in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:abc1234-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:main-python" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1-python" not in all_tags
 
 
 def test_all_tags_with_arch_suffix():
@@ -566,10 +566,12 @@ def test_all_tags_with_arch_suffix():
     all_tags = opts.all_tags
 
     # Versioned tags use bare semver (no "v" prefix)
-    assert "ghcr.io/openhands/agent-server:1-python-amd64" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2-python-amd64" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2.0-python-amd64" in all_tags
-    assert "ghcr.io/openhands/agent-server:abc1234567890-python-amd64" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1-python-amd64" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2-python-amd64" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2.0-python-amd64" in all_tags
+    assert (
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890-python-amd64" in all_tags
+    )
 
 
 def test_all_tags_with_target_suffix():
@@ -588,10 +590,13 @@ def test_all_tags_with_target_suffix():
 
     all_tags = opts.all_tags
 
-    assert "ghcr.io/openhands/agent-server:1-python-source" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2-python-source" in all_tags
-    assert "ghcr.io/openhands/agent-server:1.2.0-python-source" in all_tags
-    assert "ghcr.io/openhands/agent-server:abc1234567890-python-source" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1-python-source" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2-python-source" in all_tags
+    assert "ghcr.io/praxiss-lab/praxis-agent-server:1.2.0-python-source" in all_tags
+    assert (
+        "ghcr.io/praxiss-lab/praxis-agent-server:abc1234567890-python-source"
+        in all_tags
+    )
 
 
 def test_make_build_context_reuses_prebuilt_sdist_without_running_uv_build(

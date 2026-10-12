@@ -684,7 +684,7 @@ class TestTool:
 
         When the LLM exhausts its output token budget, truncation should cut
         content parameters rather than the required security_risk field.
-        See https://github.com/OpenHands/software-agent-sdk/issues/1911
+        See https://github.com/Praxiss-Lab/praxis-sdk/issues/1911
         """
         tool = MockTestTool(
             description="A test tool",

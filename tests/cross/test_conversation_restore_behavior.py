@@ -132,6 +132,8 @@ def _agent(
         "api_key": SecretStr("test-key"),
         "usage_id": "test-llm",
     }
+    if llm_model.startswith(("openhands/", "litellm_proxy/")):
+        llm_kwargs["base_url"] = "http://localhost:4000"
     if temperature is not None:
         llm_kwargs["temperature"] = temperature
     if reasoning_effort is not None:
@@ -697,13 +699,11 @@ def test_openhands_provider_restore_writes_public_model_shape(mock_completion):
         base_state = lifecycle.read_base_state()
         llm_payload = base_state["agent"]["llm"]
         assert llm_payload["model"] == "openhands/claude-opus-4-8"
-        assert "base_url" not in llm_payload
+        assert llm_payload["base_url"] == "http://localhost:4000"
 
         assert captured_completion_kwargs[-1]["model"] == "claude-opus-4-8"
         assert captured_completion_kwargs[-1]["custom_llm_provider"] == "litellm_proxy"
-        assert (
-            captured_completion_kwargs[-1]["api_base"] == OPENHANDS_LLM_PROXY_BASE_URL
-        )
+        assert captured_completion_kwargs[-1]["api_base"] == "http://localhost:4000"
 
 
 @patch("openhands.sdk.llm.llm.litellm_completion")
@@ -760,17 +760,14 @@ def test_conversation_restore_rewrites_legacy_openhands_proxy_snapshot(
             restored_base_state = lifecycle.read_base_state()
             restored_llm_payload = restored_base_state["agent"]["llm"]
             assert restored_llm_payload["model"] == "openhands/claude-opus-4-8"
-            assert "base_url" not in restored_llm_payload
+            assert restored_llm_payload["base_url"] == "http://localhost:4000"
 
             lifecycle.send_and_run(restored, "Third message")
             assert captured_completion_kwargs[-1]["model"] == "claude-opus-4-8"
             assert (
                 captured_completion_kwargs[-1]["custom_llm_provider"] == "litellm_proxy"
             )
-            assert (
-                captured_completion_kwargs[-1]["api_base"]
-                == OPENHANDS_LLM_PROXY_BASE_URL
-            )
+            assert captured_completion_kwargs[-1]["api_base"] == "http://localhost:4000"
         finally:
             restored.close()
 

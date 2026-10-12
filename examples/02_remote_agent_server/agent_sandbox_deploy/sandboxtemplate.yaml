@@ -1,10 +1,10 @@
 ---
-# SandboxTemplate that runs the OpenHands agent server. See the canonical copy and
-# docs at openhands-workspace/openhands/workspace/agent_sandbox/.
+# SandboxTemplate that runs the Praxis agent server. See the canonical copy and
+# docs at praxis-workspace/openhands/workspace/agent_sandbox/.
 apiVersion: extensions.agents.x-k8s.io/v1beta1
 kind: SandboxTemplate
 metadata:
-    name: openhands-agent-server
+    name: praxis-agent-server
     namespace: default
 spec:
     volumeClaimTemplates:
@@ -24,7 +24,7 @@ spec:
                 fsGroup: 10001
             containers:
                 - name: agent-server
-                  image: ghcr.io/openhands/agent-server:1.42.1-python
+                  image: ghcr.io/praxiss-lab/praxis-agent-server:1.42.1-python
                   args: [--host, 0.0.0.0, --port, '8000']
                   workingDir: /workspace
                   ports:

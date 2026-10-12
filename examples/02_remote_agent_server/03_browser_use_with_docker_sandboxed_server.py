@@ -39,8 +39,8 @@ def get_server_image():
     # built-in GITHUB_SHA which resolves to the merge-commit on PRs).
     sha = os.getenv("SDK_SHA") or os.getenv("GITHUB_SHA")
     if sha:
-        return f"ghcr.io/openhands/agent-server:{sha[:7]}-python-{arch}"
-    return "ghcr.io/openhands/agent-server:latest-python"
+        return f"ghcr.io/praxiss-lab/praxis-agent-server:{sha[:7]}-python-{arch}"
+    return "ghcr.io/praxiss-lab/praxis-agent-server:latest-python"
 
 
 # Create a Docker-based remote workspace with extra ports for browser access.

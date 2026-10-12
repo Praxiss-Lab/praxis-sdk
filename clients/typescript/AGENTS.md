@@ -2,13 +2,13 @@
 
 ## General Purpose
 
-This directory contains the TypeScript client library for the OpenHands Agent Server. It provides a complete, type-safe interface for interacting with the OpenHands Agent Server API, enabling developers to build applications that can create and manage AI agent conversations, workspaces, and real-time event streams.
+This directory contains the TypeScript client library for the Praxis Agent Server. It provides a complete, type-safe interface for interacting with the Praxis Agent Server API, enabling developers to build applications that can create and manage AI agent conversations, workspaces, and real-time event streams.
 
 The client is designed to mirror the structure and functionality of the Python SDK in this monorepo while providing idiomatic TypeScript/JavaScript APIs with full type safety and modern development tooling.
 
 ## Cross-Repository Boundaries
 
-This directory owns the browser-compatible TypeScript client for the OpenHands Agent Server API. The canonical API implementation and behavior live in the Python SDK and Agent Server packages in this repository; [`OpenHands/OpenHands`](https://github.com/OpenHands/OpenHands) consumes this client for Agent Canvas UI; and [`OpenHands/extensions`](https://github.com/OpenHands/extensions) owns reusable skills, plugins, automations, and integrations; [`OpenHands/automation`](https://github.com/OpenHands/automation) owns scheduling, webhooks, run history, and dispatching.
+This directory owns the browser-compatible TypeScript client for the Praxis Agent Server API. The canonical API implementation and behavior live in the Python SDK and Agent Server packages in this repository; [`OpenHands/OpenHands`](https://github.com/OpenHands/OpenHands) consumes this client for Agent Canvas UI; and [`OpenHands/extensions`](https://github.com/OpenHands/extensions) owns reusable skills, plugins, automations, and integrations; [`OpenHands/automation`](https://github.com/OpenHands/automation) owns scheduling, webhooks, run history, and dispatching.
 
 The normal flow is SDK/Agent Server → OpenAPI contract → this client → Agent Canvas. Keep backend behavior and endpoints in the Python SDK or Agent Server packages, typed API access in this directory, UI in Agent Canvas, and automation lifecycle behavior in `automation`.
 
@@ -16,7 +16,7 @@ All pull requests must follow the repository's contribution and applicable code-
 
 ## Key Features
 
-- **Complete API Coverage**: Implements all endpoints from the OpenHands Agent Server OpenAPI specification
+- **Complete API Coverage**: Implements all endpoints from the Praxis Agent Server OpenAPI specification
 - **Type Safety**: Full TypeScript support with comprehensive interfaces and type definitions
 - **Real-time Events**: WebSocket client for streaming conversation events and agent status updates
 - **Workspace Management**: File operations, uploads, downloads, and workspace state management
@@ -53,14 +53,14 @@ This TypeScript client is based on the following source materials:
 
 - **Source**: The `openapi.json` artifact for the exact SDK release pinned by
   `package.json` → `config.agentServerImage`
-- **Purpose**: Defines the complete REST API specification for the OpenHands Agent Server
+- **Purpose**: Defines the complete REST API specification for the Praxis Agent Server
 - **Usage**: Generates `src/generated/agent-server-schema.ts`, whose selected
   operations and components are exposed through stable aliases and checked
   against handwritten client methods
 
 ### 2. Python SDK Reference Implementation
 
-- **Source**: `openhands-sdk/` in this repository
+- **Source**: `praxis-sdk/` in this repository
 - **Key Components**:
   - `RemoteConversation` class - Main conversation management
   - `RemoteWorkspace` class - Workspace file operations
@@ -70,7 +70,7 @@ This TypeScript client is based on the following source materials:
 
 ### 3. Agent Server Implementation
 
-- **Source**: `openhands-agent-server/` in this repository
+- **Source**: `praxis-agent-server/` in this repository
 - **Purpose**: The actual server implementation that this client communicates with
 - **Usage**: Reference for understanding expected request/response formats and WebSocket event structures
 
@@ -113,7 +113,7 @@ src/workspace/
 - `gitChanges()` / `gitDiff()` - Git operations
 - `close()` - Cleanup resources
 
-**RemoteWorkspace**: Fully implemented class that connects to a remote OpenHands agent server via HTTP API.
+**RemoteWorkspace**: Fully implemented class that connects to a remote Praxis agent server via HTTP API.
 
 **LocalWorkspace**: Stub implementation that throws descriptive errors directing users to RemoteWorkspace.
 
@@ -193,7 +193,7 @@ src/conversation/
 - `generateTitle()` - Generate a title using LLM
 - `close()` - Cleanup resources
 
-**RemoteConversation**: Fully implemented class that connects to a remote OpenHands agent server via HTTP/WebSocket.
+**RemoteConversation**: Fully implemented class that connects to a remote Praxis agent server via HTTP/WebSocket.
 
 **LocalConversation**: Fully implemented class for local agent execution:
 
@@ -265,7 +265,7 @@ src/hooks/
 
 1. **API Changes**: When the OpenAPI specification is updated, corresponding TypeScript interfaces and client methods should be updated
 2. **Feature Parity**: New features added to the Python SDK should be implemented in this TypeScript client
-3. **Testing**: All functionality should be tested against a running OpenHands Agent Server instance
+3. **Testing**: All functionality should be tested against a running Praxis Agent Server instance
 4. **Documentation**: API changes should be reflected in the README.md and example code
 
 ## Release Process
@@ -285,7 +285,7 @@ Server image version remains independent and may lag the client package version.
 
 This client is tested and documented against a specific `software-agent-sdk`
 release, expressed as the agent-server image tag
-(`ghcr.io/openhands/agent-server:<version>-python`, where `<version>` equals the
+(`ghcr.io/praxiss-lab/praxis-agent-server:<version>-python`, where `<version>` equals the
 SDK release `vX.Y.Z`). The **source of truth** is `package.json` →
 `config.agentServerImage`; `AGENTS.md`, `README.md`, and the generated schema
 mirror the same version.
@@ -361,7 +361,7 @@ export LLM_MODEL="anthropic/claude-sonnet-4-5-20250929"
 # Start agent-server in Docker (matching the pinned image in package.json -> config.agentServerImage)
 docker run -d --name agent-server -p 127.0.0.1:8010:8000 \
   -v /tmp/agent-workspace:/workspace \
-  ghcr.io/openhands/agent-server:1.51.0-python --host 0.0.0.0
+  ghcr.io/praxiss-lab/praxis-agent-server:1.51.0-python --host 0.0.0.0
 
 # Run integration tests
 npm run test:integration
@@ -391,7 +391,7 @@ Required GitHub secrets:
 
 ### CI Image Version
 
-- The pinned agent-server image for the TypeScript client is `package.json` → `config.agentServerImage` (currently `ghcr.io/openhands/agent-server:1.51.0-python`), which is the source of truth the generated schema and integration workflows use.
+- The pinned agent-server image for the TypeScript client is `package.json` → `config.agentServerImage` (currently `ghcr.io/praxiss-lab/praxis-agent-server:1.51.0-python`), which is the source of truth the generated schema and integration workflows use.
 - Keep the TypeScript client tests strict against that released server image rather than adding compatibility fallbacks for older prerelease builds.
 
 ## Agent Behavior Guidelines
@@ -414,12 +414,12 @@ The agent should focus on code development, testing, and documentation tasks. On
 
 This client is intended for developers who want to:
 
-- Build web applications that interact with OpenHands agents
+- Build web applications that interact with Praxis agents
 - Create Node.js services that manage agent conversations
 - Integrate OpenHands capabilities into existing TypeScript/JavaScript applications
-- Develop custom frontends for the OpenHands Agent Server
+- Develop custom frontends for the Praxis Agent Server
 
-The client abstracts away the complexity of HTTP requests, WebSocket management, and API authentication, providing a clean, type-safe interface for all OpenHands Agent Server functionality.
+The client abstracts away the complexity of HTTP requests, WebSocket management, and API authentication, providing a clean, type-safe interface for all Praxis Agent Server functionality.
 
 ## Example Application
 
@@ -433,4 +433,4 @@ The example application showcases:
 - Import verification of all major SDK classes and enums
 - Modern React development patterns with Vite tooling
 
-This provides developers with a working template for building their own applications using the OpenHands Agent Server TypeScript Client.
+This provides developers with a working template for building their own applications using the Praxis Agent Server TypeScript Client.

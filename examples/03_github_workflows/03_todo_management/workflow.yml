@@ -4,7 +4,7 @@
 # appropriate values for your LLM setup.
 #
 # This workflow automatically scans for TODO(openhands) comments and creates
-# pull requests to implement them using the OpenHands agent.
+# pull requests to implement them using the Praxis agent.
 #
 # Setup:
 #  1. Add LLM_API_KEY to repository secrets
@@ -154,9 +154,9 @@ jobs:
 
             - name: Install OpenHands dependencies
               run: |
-                  # Install OpenHands SDK and tools from git repository
-                  uv pip install --system "openhands-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-sdk"
-                  uv pip install --system "openhands-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-tools"
+                  # Install Praxis SDK and tools from git repository
+                  uv pip install --system "praxis-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=praxis-sdk"
+                  uv pip install --system "praxis-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=praxis-tools"
 
             - name: Copy agent files
               run: |
@@ -259,9 +259,9 @@ jobs:
                   git add -A
                   git commit -m "Implement TODO: $TODO_DESCRIPTION
 
-                  Automatically implemented by OpenHands agent.
+                  Automatically implemented by Praxis agent.
 
-                  Co-authored-by: openhands <openhands@all-hands.dev>"
+                  Co-authored-by: Codex <codex@openai.com>"
 
                   # Push branch
                   git push origin "$BRANCH_NAME"
@@ -276,7 +276,7 @@ jobs:
                   **Description:** $TODO_DESCRIPTION
 
                   ### Implementation
-                  The OpenHands agent has analyzed the TODO and implemented the
+                  The Praxis agent has analyzed the TODO and implemented the
                   requested functionality.
 
                   ### Review Notes

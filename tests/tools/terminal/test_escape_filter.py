@@ -1,6 +1,6 @@
 """Tests for terminal escape sequence filtering.
 
-See: https://github.com/OpenHands/software-agent-sdk/issues/2244
+See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2244
 """
 
 import tempfile
@@ -261,7 +261,7 @@ class TestTerminalQueryFilter:
     def test_decrqss_split_at_st_terminator(self):
         """DECRQSS query split exactly at ST terminator boundary should be removed.
 
-        Regression test for: https://github.com/OpenHands/software-agent-sdk/pull/2334
+        Regression test for: https://github.com/Praxiss-Lab/praxis-sdk/pull/2334
         When the chunk boundary falls between the ESC and backslash of the ST
         terminator (\x1b\\), the entire DCS sequence must still be filtered.
         """

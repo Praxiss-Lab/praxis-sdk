@@ -56,7 +56,7 @@ def test_default_server_tmux_tmpdir_uses_current_pid(monkeypatch):
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path("/tmp") / f"openhands-agent-server-{os.getpid()}"
+        Path("/tmp") / f"praxis-agent-server-{os.getpid()}"
     )
 
 
@@ -67,7 +67,7 @@ def test_default_server_tmux_tmpdir_avoids_deep_tempdir(deep_tmp_path, monkeypat
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path("/tmp") / f"openhands-agent-server-{os.getpid()}"
+        Path("/tmp") / f"praxis-agent-server-{os.getpid()}"
     )
 
 
@@ -101,7 +101,7 @@ def test_default_server_tmux_tmpdir_counts_canonical_socket_bytes(
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path(expected_root) / "openhands-agent-server-12345"
+        Path(expected_root) / "praxis-agent-server-12345"
     )
 
 

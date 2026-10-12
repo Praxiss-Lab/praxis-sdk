@@ -254,7 +254,7 @@ def save_report(report: ComplianceReport, output_dir: str) -> str:
 
 # Base URL for linking to test files
 GITHUB_BASE_URL = (
-    "https://github.com/OpenHands/software-agent-sdk/blob/main/tests/integration/tests"
+    "https://github.com/Praxiss-Lab/praxis-sdk/blob/main/tests/integration/tests"
 )
 
 # Map pattern names to test file names
@@ -367,8 +367,7 @@ def generate_markdown_report(report: ComplianceReport) -> str:
     github_run_id = os.environ.get("GITHUB_RUN_ID")
     if github_run_id:
         run_url = (
-            "https://github.com/OpenHands/software-agent-sdk/actions/runs/"
-            f"{github_run_id}"
+            f"https://github.com/Praxiss-Lab/praxis-sdk/actions/runs/{github_run_id}"
         )
         lines.append(
             f"*Full API responses available in [workflow artifacts]({run_url})*"

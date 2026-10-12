@@ -34,7 +34,7 @@ async function fetchJson(url, options = {}) {
 
 async function loadFromReleaseArtifact(version) {
   const url =
-    `https://github.com/OpenHands/software-agent-sdk/releases/download/` +
+    `https://github.com/Praxiss-Lab/praxis-sdk/releases/download/` +
     `v${version}/openapi.json`;
   try {
     const schema = await fetchJson(url);

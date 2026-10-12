@@ -18,6 +18,7 @@ def test_completion_forwards_extra_body_for_proxy_models():
 
     llm = LLM(
         model="litellm_proxy/gpt-4o",
+        base_url="http://localhost:4000",
         usage_id="test",
         litellm_extra_body=custom_extra_body,
     )
