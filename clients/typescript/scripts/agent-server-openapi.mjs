@@ -9,7 +9,7 @@ export function getPinnedAgentServer(packageJson) {
     throw new Error('package.json config.agentServerImage must be a string');
   }
 
-  const match = image.match(/^ghcr\.io\/openhands\/agent-server:(\d+\.\d+\.\d+)-python$/);
+  const match = image.match(/^ghcr\.io\/praxiss-lab\/praxis-agent-server:(\d+\.\d+\.\d+)-python$/);
   if (!match) {
     throw new Error(
       `config.agentServerImage must use an exact release tag, received ${JSON.stringify(image)}`
@@ -34,8 +34,7 @@ async function fetchJson(url, options = {}) {
 
 async function loadFromReleaseArtifact(version) {
   const url =
-    `https://github.com/Praxiss-Lab/praxis-sdk/releases/download/` +
-    `v${version}/openapi.json`;
+    `https://github.com/Praxiss-Lab/praxis-sdk/releases/download/` + `v${version}/openapi.json`;
   try {
     const schema = await fetchJson(url);
     if (schema.info?.version !== version) {
