@@ -93,7 +93,9 @@ iterative_config = IterativeRefinementConfig(max_iterations=MAX_REFINEMENTS)
 # Configure critic from operator-managed endpoint or explicit env vars
 critic = get_default_critic()
 if critic is None:
-    print("⚠️  No operator-managed critic endpoint configured, trying explicit env vars...")
+    print(
+        "⚠️  No operator-managed critic endpoint configured, trying explicit env vars..."
+    )
     critic = SingleRefinementCritic(
         server_url=get_required_env("CRITIC_SERVER_URL"),
         api_key=get_required_env("CRITIC_API_KEY"),
