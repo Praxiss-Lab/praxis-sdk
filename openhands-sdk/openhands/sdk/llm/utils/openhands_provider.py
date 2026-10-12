@@ -16,8 +16,8 @@ DIGITALOCEAN_INFERENCE_BASE_URL: Final[str] = "https://inference.do-ai.run/v1"
 # TODO: DigitalOcean goes through ``openai/`` only as a stopgap, because
 # LiteLLM's native ``gradient_ai/`` route rejects ``tools``. Switch to
 # ``gradient_ai/`` once LiteLLM supports tool calling there.
-_ROUTED_PROVIDERS: Final[dict[str, tuple[str, str]]] = {
-    OPENHANDS_PROVIDER_PREFIX: (LITELLM_PROXY_PREFIX, OPENHANDS_LLM_PROXY_BASE_URL),
+_ROUTED_PROVIDERS: Final[dict[str, tuple[str, str | None]]] = {
+    OPENHANDS_PROVIDER_PREFIX: (LITELLM_PROXY_PREFIX, None),
     DIGITALOCEAN_PROVIDER_PREFIX: ("openai/", DIGITALOCEAN_INFERENCE_BASE_URL),
 }
 

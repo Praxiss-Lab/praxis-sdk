@@ -1,4 +1,4 @@
-"""OpenHands Cloud workspace implementation using Cloud API."""
+"""self-hosted App API workspace implementation using Cloud API."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from pydantic import Field, PrivateAttr, SecretStr
 
 from openhands.sdk.logger import get_logger
 from openhands.sdk.mcp.config import MCPServer, MCPTransport
+from openhands.sdk.utils.cloud_endpoint import validate_self_hosted_endpoint
 from openhands.sdk.workspace.remote.base import RemoteWorkspace
 from openhands.sdk.workspace.repo import CloneResult, RepoMapping, RepoSource
 
@@ -27,7 +28,7 @@ if TYPE_CHECKING:
 
 logger = get_logger(__name__)
 
-# Standard exposed URL names from OpenHands Cloud
+# Standard exposed URL names from self-hosted App API
 AGENT_SERVER = "AGENT_SERVER"
 
 # Number of retry attempts for transient API failures
@@ -51,33 +52,33 @@ def _is_retryable_error(error: BaseException) -> bool:
 
 
 class OpenHandsCloudWorkspace(RemoteWorkspace):
-    """Remote workspace using OpenHands Cloud API.
+    """Remote workspace using self-hosted App API API.
 
-    This workspace connects to OpenHands Cloud (app.all-hands.dev) to provision
+    This workspace connects to self-hosted App API (app.all-hands.dev) to provision
     and manage sandboxed environments for agent execution.
 
     When ``local_agent_server_mode=True``, the workspace assumes it is already
-    running inside an OpenHands Cloud Runtime sandbox.  Instead of creating or
+    running inside an self-hosted App API Runtime sandbox.  Instead of creating or
     managing a sandbox via the Cloud API it connects directly to the local
     agent-server at ``http://localhost:<agent_server_port>``.
 
     Example:
         workspace = OpenHandsCloudWorkspace(
-            cloud_api_url="https://app.all-hands.dev",
+            cloud_api_url="https://app.example.test",
             cloud_api_key="your-api-key",
         )
 
         # With custom sandbox spec
         workspace = OpenHandsCloudWorkspace(
-            cloud_api_url="https://app.all-hands.dev",
+            cloud_api_url="https://app.example.test",
             cloud_api_key="your-api-key",
             sandbox_spec_id="ghcr.io/openhands/agent-server:main-python",
         )
 
-        # Running inside an OpenHands Cloud Runtime (local agent-server mode)
+        # Running inside an self-hosted App API Runtime (local agent-server mode)
         workspace = OpenHandsCloudWorkspace(
             local_agent_server_mode=True,
-            cloud_api_url="https://app.all-hands.dev",
+            cloud_api_url="https://app.example.test",
             cloud_api_key=os.environ["OPENHANDS_API_KEY"],
         )
     """
@@ -96,7 +97,7 @@ class OpenHandsCloudWorkspace(RemoteWorkspace):
     local_agent_server_mode: bool = Field(
         default=False,
         description=(
-            "When True, assume the SDK is running inside an OpenHands Cloud "
+            "When True, assume the SDK is running inside an self-hosted App API "
             "Runtime and connect to the local agent-server instead of "
             "provisioning a sandbox via the Cloud API."
         ),
@@ -112,14 +113,14 @@ class OpenHandsCloudWorkspace(RemoteWorkspace):
     # Cloud API fields
     cloud_api_url: str = Field(
         description=(
-            "Base URL of OpenHands Cloud API "
-            "(e.g., https://app.all-hands.dev). "
+            "Base URL of self-hosted App API API "
+            "(e.g., https://app.example.test). "
             "Required in all modes — used for get_llms / get_secrets."
         ),
     )
     cloud_api_key: str = Field(
         description=(
-            "API key for authenticating with OpenHands Cloud. "
+            "API key for authenticating with self-hosted App API. "
             "Required in all modes — used for get_llms / get_secrets."
         ),
     )
@@ -199,12 +200,13 @@ class OpenHandsCloudWorkspace(RemoteWorkspace):
     def _api_headers(self) -> dict[str, str]:
         """Headers for Cloud API requests.
 
-        Uses Bearer token authentication as per OpenHands Cloud API.
+        Uses Bearer token authentication as per self-hosted App API API.
         """
         return {"Authorization": f"Bearer {self.cloud_api_key}"}
 
     def model_post_init(self, context: Any) -> None:
         """Set up the sandbox and initialize the workspace."""
+        validate_self_hosted_endpoint(self.cloud_api_url)
         self.cloud_api_url = self.cloud_api_url.rstrip("/")
 
         if self.local_agent_server_mode:
@@ -305,7 +307,7 @@ class OpenHandsCloudWorkspace(RemoteWorkspace):
 
     def _create_new_sandbox(self) -> None:
         """Create a new sandbox via Cloud API."""
-        logger.info("Starting sandbox via OpenHands Cloud API...")
+        logger.info("Starting sandbox via self-hosted App API API...")
 
         # Build request params
         params: dict[str, str] = {}
@@ -430,7 +432,7 @@ class OpenHandsCloudWorkspace(RemoteWorkspace):
     def pause(self) -> None:
         """Pause the sandbox to conserve resources.
 
-        Note: OpenHands Cloud does not currently support pausing sandboxes.
+        Note: self-hosted App API does not currently support pausing sandboxes.
         This method raises NotImplementedError until the API is available.
 
         Raises:

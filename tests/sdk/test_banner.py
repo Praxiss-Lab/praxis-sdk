@@ -12,6 +12,7 @@ def reset_banner_state(monkeypatch):
 
     # Remove suppress env var if set (e.g., from CI)
     monkeypatch.delenv("OPENHANDS_SUPPRESS_BANNER", raising=False)
+    monkeypatch.delenv("PRAXIS_SUPPRESS_BANNER", raising=False)
 
     original_state = banner_module._BANNER_PRINTED
     banner_module._BANNER_PRINTED = False
@@ -24,11 +25,10 @@ def test_banner_prints_to_stderr(reset_banner_state, capsys):
     _print_banner("1.0.0")
 
     captured = capsys.readouterr()
-    assert "OpenHands SDK v1.0.0" in captured.err
-    assert "github.com/OpenHands/software-agent-sdk/issues" in captured.err
-    assert "openhands.dev/joinslack" in captured.err
-    assert "openhands.dev/product/sdk" in captured.err
-    assert "OPENHANDS_SUPPRESS_BANNER=1" in captured.err
+    assert "Praxis SDK v1.0.0" in captured.err
+    assert "github.com/Praxiss-Lab/praxis-sdk/issues" in captured.err
+    assert "github.com/Praxiss-Lab/praxis-sdk/tree/main/docs" in captured.err
+    assert "PRAXIS_SUPPRESS_BANNER=1" in captured.err
     assert captured.out == ""
 
 
@@ -39,7 +39,7 @@ def test_banner_prints_only_once(reset_banner_state, capsys):
     _print_banner("1.0.0")
 
     captured = capsys.readouterr()
-    assert captured.err.count("OpenHands SDK") == 1
+    assert captured.err.count("Praxis SDK") == 1
 
 
 def test_banner_suppressed_by_env_var(monkeypatch, reset_banner_state, capsys):

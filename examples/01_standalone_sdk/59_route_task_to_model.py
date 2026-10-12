@@ -16,7 +16,7 @@ Both modes require the target models to exist as saved LLM profiles (the tool
 switches to them by name) or to be supplied inline via ``meta_profile_llms``.
 
 Usage:
-    LLM_API_KEY=... LLM_BASE_URL=https://llm-proxy.app.all-hands.dev \
+    LLM_API_KEY=... LLM_BASE_URL=http://localhost:4000 \
         uv run python examples/01_standalone_sdk/59_route_task_to_model.py
 """
 
@@ -30,7 +30,7 @@ from openhands.sdk.llm.meta_profile_store import MetaProfile, MetaProfileClass
 from openhands.tools.preset.default import register_default_tools
 
 
-DEFAULT_BASE_URL = "https://llm-proxy.app.all-hands.dev"
+DEFAULT_BASE_URL = "http://localhost:4000"
 
 # Saved profile names. The route_task_to_model tool switches the conversation
 # to one of these by name, so each must exist in the LLMProfileStore below.

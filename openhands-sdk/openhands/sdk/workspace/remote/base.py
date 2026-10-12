@@ -8,12 +8,13 @@ from urllib.request import urlopen
 
 import httpx
 import tenacity
-from pydantic import PrivateAttr, ValidationError
+from pydantic import PrivateAttr, ValidationError, field_validator
 
 from openhands.sdk.git.models import GitChange, GitDiff
 from openhands.sdk.logger import get_logger
 from openhands.sdk.mcp.config import MCPServer
 from openhands.sdk.settings import SecretsListResponse, SettingsResponse
+from openhands.sdk.utils.cloud_endpoint import validate_self_hosted_endpoint
 from openhands.sdk.workspace.base import BaseWorkspace
 from openhands.sdk.workspace.models import CommandResult, FileOperationResult
 from openhands.sdk.workspace.remote.remote_workspace_mixin import RemoteWorkspaceMixin
@@ -72,6 +73,12 @@ class RemoteWorkspace(RemoteWorkspaceMixin, BaseWorkspace):
 
     _client: httpx.Client | None = PrivateAttr(default=None)
 
+    @field_validator("host")
+    @classmethod
+    def _validate_hosted_endpoint(cls, value: str) -> str:
+        validate_self_hosted_endpoint(value)
+        return value
+
     def reset_client(self) -> None:
         """Reset the HTTP client to force re-initialization.
 
@@ -87,6 +94,7 @@ class RemoteWorkspace(RemoteWorkspaceMixin, BaseWorkspace):
 
     @property
     def client(self) -> httpx.Client:
+        validate_self_hosted_endpoint(self.host)
         client = self._client
         if client is None:
             # Configure reasonable timeouts for HTTP requests

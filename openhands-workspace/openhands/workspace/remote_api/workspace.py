@@ -10,6 +10,7 @@ import tenacity
 from pydantic import Field, PrivateAttr
 
 from openhands.sdk.logger import get_logger
+from openhands.sdk.utils.cloud_endpoint import validate_self_hosted_endpoint
 from openhands.sdk.workspace.remote.base import RemoteWorkspace
 
 
@@ -19,11 +20,11 @@ logger = get_logger(__name__)
 class APIRemoteWorkspace(RemoteWorkspace):
     """Remote workspace using OpenHands runtime API.
 
-    Runtime API: https://runtime.all-hands.dev/
+    Runtime API: https://runtime.example.test/
 
     Example:
         workspace = APIRemoteWorkspace(
-            runtime_api_url="https://runtime.eval.all-hands.dev",
+            runtime_api_url="https://runtime.example.test",
             runtime_api_key="your-api-key",
             server_image="ghcr.io/openhands/agent-server:lastest-python",
         )
@@ -129,6 +130,7 @@ class APIRemoteWorkspace(RemoteWorkspace):
                 f"resource_factor must be 1, 2, 4, or 8, got {self.resource_factor}"
             )
 
+        validate_self_hosted_endpoint(self.runtime_api_url)
         self.runtime_api_url = self.runtime_api_url.rstrip("/")
 
         try:

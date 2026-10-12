@@ -120,6 +120,7 @@ test('merge queue reuse requires the exact successful group commit and provenanc
 test('real Git event planning selects scopes and falls back safely on direct pushes', () => {
   const cases = [
     ['pull_request', 'docs/change.md', []],
+    ['pull_request', 'docs/examples/catalog.md', ['examples']],
     ['pull_request', 'clients/typescript/change.ts', ['typescript', 'security']],
     ['pull_request', 'examples/change.py', ['python', 'examples']],
     ['pull_request', 'uv.lock', ['python', 'typescript', 'server', 'examples', 'storage', 'security']],

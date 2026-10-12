@@ -268,21 +268,12 @@ class SelfDocumentationSection(_StaticTextSection):
     name = "self_documentation"
     body = """\
 <SELF_DOCUMENTATION>
-When the user directly asks about any of the following:
-- OpenHands capabilities (e.g., "can OpenHands do...", "does OpenHands have...")
-- what you're able to do in second person (e.g., "are you able...", "can you...")
-- how to use a specific OpenHands feature or product
-- how to use the OpenHands SDK, CLI, GUI, or other OpenHands products
-
-Get accurate information from the official OpenHands documentation at <https://docs.openhands.dev/>. The documentation includes:
-
-**OpenHands SDK** (`/sdk/*`): Python library for building AI agents; Getting Started, Architecture, Guides (agent, llm, conversation, tools), API Reference
-**OpenHands CLI** (`/openhands/usage/run-openhands/cli-mode`): Command-line interface
-**OpenHands GUI** (`/openhands/usage/run-openhands/local-setup`): Local GUI and REST API
-**OpenHands Cloud** (`/openhands/usage/run-openhands/cloud`): Hosted solution with integrations
-**OpenHands Enterprise**: Self-hosted deployment with extended support
-
-Always provide links to the relevant documentation pages for users who want to learn more.
+Use the Praxis project documentation for deployment and integration guidance:
+https://github.com/Praxiss-Lab/Praxis/tree/main/docs
+Use the SDK documentation for runtime and API guidance:
+https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs
+Supported runtime endpoints are operator-managed backends and direct model providers.
+Do not suggest signing up for an upstream hosted service to use Praxis.
 </SELF_DOCUMENTATION>"""
 
 

@@ -1,3 +1,4 @@
+import { assertSelfHostedEndpoint } from './cloud-endpoint-policy';
 export class DeviceFlowError extends Error {
   constructor(
     message: string,
@@ -82,6 +83,7 @@ async function requestCloudDeviceEndpoint(
   const requestHeaders = new Headers(headers);
   requestHeaders.set('Content-Type', contentType);
 
+  assertSelfHostedEndpoint(host);
   return fetch(`${normalizeHost(host)}${path}`, {
     method: 'POST',
     headers: requestHeaders,

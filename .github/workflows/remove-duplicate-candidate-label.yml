@@ -24,7 +24,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Remove duplicate-candidate label
-              uses: OpenHands/extensions/plugins/issue-duplicate-checker@fb020c71eb8e7cd2678f0251ab24327d3738da7d
+              uses: actions/github-script@v9
               with:
-                  mode: remove-label
-                  github-token: ${{ secrets.PRAXIS_AUTOMATION_TOKEN || github.token }}
+                  script: |
+                      await github.rest.issues.removeLabel({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: context.issue.number,
+                        name: 'duplicate-candidate',
+                      });

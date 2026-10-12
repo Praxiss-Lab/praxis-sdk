@@ -16,6 +16,7 @@ from pydantic import (
 from pydantic.json_schema import SkipJsonSchema
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
+from openhands.sdk.utils.cloud_endpoint import validate_self_hosted_endpoint
 from openhands.sdk.utils.pydantic_secrets import (
     is_redacted_secret,
     serialize_secret,
@@ -71,7 +72,7 @@ class LabelProbMap(BaseModel):
 # ============================================================
 
 
-DEFAULT_CRITIC_SERVER_URL = "https://llm-proxy.app.all-hands.dev/vllm"
+DEFAULT_CRITIC_SERVER_URL = "http://127.0.0.1:8001"
 DEFAULT_CRITIC_MODEL_NAME = "critic"
 
 
@@ -265,6 +266,7 @@ class CriticClient(BaseModel):
         tools: Sequence[ChatCompletionToolParam] | None = None,
     ) -> ClassificationResponse:
         """POST /classify and parse response into ClassificationResponse."""
+        validate_self_hosted_endpoint(self.server_url)
         formatted = self.apply_chat_template(messages, tools)
 
         def should_retry(exc: BaseException) -> bool:

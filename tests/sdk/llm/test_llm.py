@@ -130,10 +130,7 @@ def test_base_url_for_openhands_provider(mock_get):
     )
     assert llm.model == "openhands/claude-sonnet-4-20250514"
     assert llm.base_url is None
-    mock_get.assert_called_once_with(
-        "https://llm-proxy.app.all-hands.dev/v1/model/info",
-        headers={"Authorization": "Bearer test-key"},
-    )
+    mock_get.assert_not_called()
 
 
 @patch("openhands.sdk.llm.utils.model_info.httpx.get")
@@ -162,6 +159,7 @@ def test_openhands_provider_translates_only_for_litellm(mock_completion, mock_ge
         model="openhands/claude-haiku-4-5-20251001",
         api_key=SecretStr("test-key"),
         usage_id="test-openhands-transport",
+        base_url="http://localhost:4000",
         num_retries=0,
     )
 
@@ -169,14 +167,14 @@ def test_openhands_provider_translates_only_for_litellm(mock_completion, mock_ge
     llm.completion(messages=messages)
 
     assert llm.model == "openhands/claude-haiku-4-5-20251001"
-    assert llm.base_url is None
+    assert llm.base_url == "http://localhost:4000"
     _, kwargs = mock_completion.call_args
     assert kwargs["model"] == "claude-haiku-4-5-20251001"
     assert kwargs["custom_llm_provider"] == "litellm_proxy"
-    assert kwargs["api_base"] == "https://llm-proxy.app.all-hands.dev"
+    assert kwargs["api_base"] == "http://localhost:4000"
     persisted = llm.to_persisted()
     assert persisted["model"] == "openhands/claude-haiku-4-5-20251001"
-    assert "base_url" not in persisted
+    assert persisted["base_url"] == "http://localhost:4000"
 
 
 @patch("openhands.sdk.llm.llm.litellm_completion")

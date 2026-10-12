@@ -1,3 +1,4 @@
+import { assertSelfHostedEndpoint } from './cloud-endpoint-policy';
 /**
  * HTTP client for OpenHands Agent Server API
  */
@@ -251,6 +252,7 @@ export class HttpClient {
     }
 
     try {
+      assertSelfHostedEndpoint(url.toString());
       const response = await fetch(url.toString(), requestInit);
 
       const isAcceptable =

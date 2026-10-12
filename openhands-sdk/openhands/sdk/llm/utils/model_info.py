@@ -11,6 +11,7 @@ from litellm.utils import get_model_info
 from pydantic import SecretStr
 
 from openhands.sdk.llm.utils.openhands_provider import litellm_call_kwargs
+from openhands.sdk.utils.cloud_endpoint import validate_self_hosted_endpoint
 
 
 logger = getLogger(__name__)
@@ -94,6 +95,7 @@ def _get_model_info_from_litellm_proxy(
 ):
     logger.debug(f"Get model_info_from_litellm_proxy:{cache_key}")
     try:
+        validate_self_hosted_endpoint(base_url)
         headers = {}
         if isinstance(secret_api_key, SecretStr):
             secret_api_key = secret_api_key.get_secret_value()

@@ -137,43 +137,14 @@ Symbols exported via `openhands.sdk.__all__` are the SDK's public surface. Two C
 
 These are enforced by `check_sdk_api_breakage.py` (runs on release PRs). Deprecation deadlines are separately enforced by `check_deprecations.py` (runs on every PR).
 
-## Documentation workflow
+## Documentation and independent deployment
 
-Documentation lives in **github.com/OpenHands/docs** under the `sdk/` folder. When adding features or modifying APIs, you MUST update documentation there.
-
-### Workflow
-
-1. Clone docs repo next to this repository: `git clone https://github.com/OpenHands/docs.git ../openhands-docs`
-2. Create matching branch in both repos
-3. Update documentation in `openhands-docs/sdk/` folder
-4. **If you are creating a PR to `OpenHands/software-agent-sdk`**, you must also create a corresponding PR to `OpenHands/docs` with documentation updates in the `sdk/` folder
-5. Cross-reference both PRs in their descriptions
-
-Example:
-```bash
-cd ../openhands-docs
-git checkout -b <feature-name>
-# Edit files in sdk/ folder
-git add sdk/
-git commit -m "Document <feature>
-
-Co-authored-by: openhands <openhands@all-hands.dev>"
-git push -u origin <feature-name>
-```
-
-## Running SDK examples
-
-When implementing or modifying examples in `examples/`, always verify they work before committing:
-
-```bash
-# Run examples using the All-Hands LLM proxy
-LLM_BASE_URL="https://llm-proxy.eval.all-hands.dev" LLM_API_KEY="$LLM_API_KEY" \
-  uv run python examples/01_standalone_sdk/<example_name>.py
-```
-
-The `LLM_API_KEY` environment variable may be available in the OpenHands development environment and works with the All-Hands LLM proxy (`llm-proxy.eval.all-hands.dev` OR `llm-proxy.app.all-hands.dev`). Please consult the human user for the LLM key if it is not found.
-
-For examples that use the critic model (e.g., `34_critic_example.py`), the critic is auto-configured when using the All-Hands LLM proxy - no additional setup needed.
+Documentation for this fork lives in this repository's `docs/` directory.
+See `docs/independent-deployment.md`. Do not dispatch documentation or evaluation
+jobs to upstream repositories or suggest upstream hosted credentials.
+Run examples with an explicitly selected model provider and operator-managed
+endpoint. Live model tests require an authorized credential and real-model run;
+unit-test mocks are not live evidence.
 
 ## Commit & Pull Request Guidelines
 

@@ -120,7 +120,7 @@ class AgentBase(DiscriminatedUnionMixin, ABC):
         examples=[
             {
                 "model": "litellm_proxy/openai/gpt-5.5",
-                "base_url": "https://llm-proxy.eval.all-hands.dev",
+                "base_url": "http://localhost:4000",
                 "api_key": "your_api_key_here",
             }
         ],
@@ -292,7 +292,7 @@ class AgentBase(DiscriminatedUnionMixin, ABC):
                 "kind": "LLMSummarizingCondenser",
                 "llm": {
                     "model": "litellm_proxy/openai/gpt-5.5",
-                    "base_url": "https://llm-proxy.eval.all-hands.dev",
+                    "base_url": "http://localhost:4000",
                     "api_key": "your_api_key_here",
                 },
                 "max_size": 80,

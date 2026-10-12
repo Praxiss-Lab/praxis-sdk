@@ -13,12 +13,11 @@ Key concepts demonstrated:
 3. Customizing refinement policy independently of variable critic scores
 4. Bounding agent work and verifying the final artifact
 
-For All-Hands LLM proxy (llm-proxy.*.all-hands.dev), the critic is auto-configured
+Configure CRITIC_BASE_URL and CRITIC_API_KEY for an optional self-hosted critic
 using the same base_url with /vllm suffix and "critic" as the model name.
 """
 
 import os
-import re
 import tempfile
 from pathlib import Path
 
@@ -54,63 +53,28 @@ def get_required_env(name: str) -> str:
 
 
 def get_default_critic(llm: LLM) -> CriticBase | None:
-    """Auto-configure critic for All-Hands LLM proxy.
-
-    When the LLM base_url matches `llm-proxy.*.all-hands.dev`, returns an
-    APIBasedCritic configured with:
-    - server_url: {base_url}/vllm
-    - api_key: same as LLM
-    - model_name: "critic"
-
-    Args:
-        llm: The LLM instance to derive critic configuration from.
-
-    Returns:
-        An APIBasedCritic if the LLM is configured for All-Hands proxy,
-        None otherwise.
-
-    Example:
-        llm = LLM(
-            model="anthropic/claude-sonnet-4-5",
-            api_key=api_key,
-            base_url="https://llm-proxy.eval.all-hands.dev",
-        )
-        critic = get_default_critic(llm)
-        if critic is None:
-            # Fall back to explicit configuration
-            critic = APIBasedCritic(
-                server_url="https://my-critic-server.com",
-                api_key="my-api-key",
-                model_name="my-critic-model",
-            )
-    """
-    base_url = llm.base_url
-    api_key = llm.api_key
-    if base_url is None or api_key is None:
+    """Configure an optional operator-managed critic service."""
+    server_url = os.environ.get("CRITIC_BASE_URL")
+    api_key = os.environ.get("CRITIC_API_KEY")
+    if not server_url or not api_key:
         return None
-
-    # Match: llm-proxy.{env}.all-hands.dev (e.g., staging, prod, eval)
-    pattern = r"^https?://llm-proxy\.[^./]+\.all-hands\.dev"
-    if not re.match(pattern, base_url):
-        return None
-
     return SingleRefinementCritic(
-        server_url=f"{base_url.rstrip('/')}/vllm",
+        server_url=server_url,
         api_key=api_key,
-        model_name="critic",
+        model_name=os.environ.get("CRITIC_MODEL", "critic"),
     )
 
 
 INITIAL_TASK_PROMPT = """\
 Create `greeting.txt` containing exactly this one line, including the final newline:
 
-Hello from the OpenHands critic example!
+Hello from the Praxis critic example!
 
 Use the file editor, verify the content once, then finish. Do not create other files,
 initialize version control, or perform unrelated work.
 """
 
-EXPECTED_GREETING = "Hello from the OpenHands critic example!\n"
+EXPECTED_GREETING = "Hello from the Praxis critic example!\n"
 
 
 llm_api_key = get_required_env("LLM_API_KEY")
