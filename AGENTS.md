@@ -29,11 +29,11 @@ strong bias toward simplicity and maintainable code.
 
 This repository owns the Python SDK and Agent Server: agent and tool behavior, conversations, workspaces, events, and the canonical REST/WebSocket API. Related responsibilities live elsewhere:
 
-- [`OpenHands/OpenHands`](https://github.com/OpenHands/OpenHands) owns Agent Canvas UI, frontend state, backend selection, and local-stack orchestration.
+- [`Praxiss-Lab/praxis`](https://github.com/Praxiss-Lab/praxis) owns the Praxis UI, frontend state, backend selection, local-stack orchestration and packaging. It consumes this SDK at an exact revision pinned in its `config/defaults.json` and vendors Automation (scheduling, webhooks, run history) under `vendor/automation`.
 - `clients/typescript/` mirrors the Agent Server API for browser-compatible TypeScript clients.
-- [`OpenHands/extensions`](https://github.com/OpenHands/extensions) owns reusable skills, plugins, automations, and integrations; [`OpenHands/automation`](https://github.com/OpenHands/automation) owns automation definitions, scheduling, webhooks, run history, dispatch, and sandbox lifecycle orchestration; this repository executes the dispatched conversations.
+- Public skills are bundled: `PUBLIC_SKILLS_REPO = "bundled:praxis"` loads the `praxis-extensions.tgz` archive shipped in `openhands/sdk/skills/`, with no network clone. Update that archive to change the public skill set.
 
-The usual flow is SDK/Agent Server → OpenAPI contract → `clients/typescript` → Agent Canvas. Implement backend behavior and endpoints in the Python SDK or Agent Server packages first, then update the typed client and downstream applications as needed. If a PR is opened in the wrong repository, explicitly recommend closing and moving it to the repository that owns the change rather than merging it here.
+The usual flow is SDK/Agent Server → OpenAPI contract → `clients/typescript` → Praxis. Implement backend behavior and endpoints in the Python SDK or Agent Server packages first, then update the typed client, then bump the SDK revision in Praxis. If a PR is opened in the wrong repository, explicitly recommend closing and moving it to the repository that owns the change rather than merging it here.
 
 All pull requests must comply with [`.agents/skills/custom-codereview-guide.md`](.agents/skills/custom-codereview-guide.md), in addition to the repository's contribution requirements and CI checks.
 
@@ -165,7 +165,6 @@ consult each relevant package-level AGENTS.md.
   - repo-specific gates: `check-import-rules`, `check-tool-registration`
 - NEVER USE `mypy`!
 - Do NOT commit ALL the file, just commit the relevant file you've changed!
-- In every commit message, you should add "Co-authored-by: Codex <codex@openai.com>"
 - You can run pytest with `uv run pytest`
 
 # Instruction for fixing "E501 Line too long"
@@ -366,7 +365,7 @@ Note: This is separate from `persistence_dir` which is used for conversation sta
 - This is a monorepo with a `uv`-managed Python workspace (single `uv.lock` at repo root) and a separately managed npm package under `clients/typescript/`. The Python distributable packages are: `praxis-sdk/` (SDK), `praxis-tools/` (built-in tools), `praxis-workspace/` (workspace impls), and `praxis-agent-server/` (server runtime).
 - `clients/typescript/` contains the browser-compatible TypeScript client, with its own `package-lock.json`, npm scripts, and Vitest tests.
 - `examples/` contains runnable patterns; `tests/` is split by domain (`tests/sdk`, `tests/tools`, `tests/workspace`, `tests/agent_server`, etc.).
-- Python namespace is `openhands.*` across packages; keep new modules within the matching package and mirror test paths under `tests/`.
+- Implementation modules live under the historical `openhands.*` namespace; the public namespace `praxis.*` (in `praxis-sdk/praxis/`) resolves to the same module objects. Keep new modules within the matching `openhands.*` package, document `praxis.*` imports, and mirror test paths under `tests/`.
 </PROJECT_STRUCTURE>
 
 <QUICK_COMMANDS>
@@ -394,12 +393,28 @@ Note: This is separate from `persistence_dir` which is used for conversation sta
 - **Hook events vs `state.events`**: `HookExecutionEvent` is emitted via `hook_processor.original_callback` (the chained `_on_event`), so it *should* land in `state.events` when the run is allowed to complete. But because the WS-FINISHED race above used to make the client snapshot `list(conversation.state.events)` *before* the server-side hook eval ran, `output.jsonl` history could miss hook events while on-disk persisted events under `/workspace/conversations/.../events/` had them — useful as a forensic signal that the race fired.
 </KNOWN_RACES_AND_GOTCHAS>
 
+<BRANCHES_AND_RELEASES>
+- `main` is the stable integration branch. Never commit or push directly to it. Start code, test, CI or configuration work on a branch from the current remote `main` (`feature/*`, `fix/*`, `chore/*`); start documentation work from `documentation` (see below).
+- Open a pull request with the repository template. Merge only after explicit maintainer authorization; passing CI is not approval, and agents never fill the `HUMAN:` field or enable auto-merge. Delete a merged working branch once nothing depends on it.
+- Integration and publication are separate. Merging to `main` publishes nothing. A release follows `.github/workflows/README-RELEASE.md`: run `prepare-release.yml` with a new `X.Y.Z`, merge only that validated release PR, then `create-release.yml` creates the tag/release and dispatches the publishers. Publish only when the maintainer authorizes it.
+- After an SDK change Praxis needs, open a PR in `Praxiss-Lab/praxis` that updates the SDK revision in its `config/defaults.json`.
+</BRANCHES_AND_RELEASES>
+
+<WORKFLOWS>
+- `sdk-validation.yml` (SDK Validation) is the only source-validation entry point: PRs to any branch, `main` pushes, merge queue and manual runs. Its `plan` job (`.github/scripts/ci-policy.cjs`, tested by `ci-policy.test.cjs`) selects the layers a change needs and calls the reusable `workflow_call` checks: `precommit`, `tests`, `server-validation`, `typescript-client-*`, `agent-server-rest-api-breakage`, `persisted-settings-compat`, `storage-scenario`, `deprecation-check`, `check-docstrings`, `check-documented-examples`, `check-duplicate-examples`, `security-scan`, `version-bump-guard`. Policy details: `docs/ci-policy.md` on the `documentation` branch.
+- PR housekeeping: `pr-description-check` (template and `HUMAN:` field), `pr-artifacts` (`.pr/` evidence), `review-thread-gate`, `create-release` (acts only on release PRs), `issue-readiness-check`, `remove-duplicate-candidate-label`.
+- Manual, credentialed jobs: `run-examples`, `integration-runner`, `todo-management` (paid LLM runs), `typescript-client-integration-tests` (deterministic with dummy credentials inside SDK Validation; real-model run only when dispatched manually), `version-bump-prs`.
+- Publication, dispatch-only: `prepare-release`, `pypi-release`, `typescript-client-npm-publish`, `typescript-client-github-packages-publish`, `server`, `release-binaries`.
+- Scheduled maintenance: `update-npm-pin`, `update-debian-snapshot`.
+- Change a workflow only on a working branch, keep `ci-policy.test.cjs` passing, and never weaken a check to make a PR pass.
+</WORKFLOWS>
+
 <DOCUMENTATION_AND_ACTIONS>
 Documentation lives only as Markdown on the `documentation` branch (https://github.com/Praxiss-Lab/praxis-sdk/tree/documentation), which has history independent of `main`; its README is the index. There is no generated site and no GitHub Pages. Do not add `docs/` to `main`; link to `https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/<page>.md` instead.
-- Edit: branch from `documentation` and open the PR into `documentation`. The branch has no workflows, so documentation changes never run Actions.
-- Links inside pages: use relative links between pages; link code on `main` with absolute `https://github.com/Praxiss-Lab/praxis-sdk/blob/main/...` URLs, because code files do not exist on `documentation`.
+- When to update it: in the same task as any change to public APIs, defaults, configuration, the Agent Server API, examples, CI policy or release process. Open the documentation PR alongside the code PR and link them.
+- How: branch from `documentation` and open the PR into `documentation`. Use relative links between pages and absolute `https://github.com/Praxiss-Lab/praxis-sdk/blob/main/...` links for code, because code files do not exist on `documentation`. The branch has no workflows, so documentation PRs never run Actions.
 - New examples: `check-documented-examples.yml` checks out `documentation` and requires an entry in `docs/examples/catalog.md` there. Merge the catalog entry into `documentation` before (or together with) the example PR.
-- Documentation-only changes on `main` (links, AGENTS.md) may use `[skip ci]` in the commit message; `main` has no required status checks.
+- `[skip ci]`: SDK Validation runs on every PR, including Markdown-only ones. Add `[skip ci]` to the commit message only when the change cannot affect behavior, builds or tests (Markdown, guidance text, comments). Never use it for source, tests, dependencies, `uv.lock`, workflows or scripts, and never to bypass a failing check. It skips `push`/`pull_request` runs for that head commit; `pull_request_target` checks such as PR Description Check still run. `main` currently has no required status checks.
 
 Repository settings and credentials the workflows require:
 - `PRAXIS_AUTOMATION_TOKEN` (configured): `pr-artifacts`, `version-bump-prs`, `update-npm-pin`, `update-debian-snapshot`, `prepare-release`, `todo-management`.
