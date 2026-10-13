@@ -51,13 +51,13 @@ jobs:
 
             - name: Build and publish all packages
               env:
-                  UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN_OPENHANDS }}
+                  UV_PUBLISH_TOKEN: ${{ secrets.PRAXIS_PYPI_TOKEN }}
                   VERSION: ${{ steps.extract_version.outputs.version }}
               run: |
                   set -euo pipefail
 
                   if [ -z "${UV_PUBLISH_TOKEN:-}" ]; then
-                    echo "❌ Missing secret PYPI_TOKEN_OPENHANDS"
+                    echo "❌ Missing secret PRAXIS_PYPI_TOKEN"
                     exit 1
                   fi
 

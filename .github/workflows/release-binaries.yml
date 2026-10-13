@@ -312,7 +312,7 @@ jobs:
                       runner: ubuntu-24.04-arm
             max-parallel: 2
         env:
-            IMAGE: ghcr.io/praxiss-lab/agent-server
+            IMAGE: ghcr.io/praxiss-lab/praxis-agent-server
             IMAGE_TAG: ${{ needs.resolve-tag.outputs.image_tag }}
             VARIANT: ${{ matrix.variant }}
             ARCH: ${{ matrix.arch }}
