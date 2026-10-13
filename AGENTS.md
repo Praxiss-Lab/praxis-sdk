@@ -394,4 +394,19 @@ Note: This is separate from `persistence_dir` which is used for conversation sta
 - **Hook events vs `state.events`**: `HookExecutionEvent` is emitted via `hook_processor.original_callback` (the chained `_on_event`), so it *should* land in `state.events` when the run is allowed to complete. But because the WS-FINISHED race above used to make the client snapshot `list(conversation.state.events)` *before* the server-side hook eval ran, `output.jsonl` history could miss hook events while on-disk persisted events under `/workspace/conversations/.../events/` had them — useful as a forensic signal that the race fired.
 </KNOWN_RACES_AND_GOTCHAS>
 
+<DOCUMENTATION_AND_ACTIONS>
+Documentation lives only on the `documentation` branch, which has history independent of `main`, and is published at https://praxiss-lab.github.io/praxis-sdk/. Do not add `docs/` or site files to `main`; link to the published pages instead.
+- Edit: branch from `documentation`, open the PR into `documentation`, preview with `pip install 'mkdocs>=1.6,<2' 'mkdocs-material>=9.6,<10' && mkdocs serve`. Documentation PRs never run SDK CI.
+- Publish: `.github/workflows/docs.yml` on `documentation` builds with `mkdocs build --strict` on PRs and deploys GitHub Pages on push or manual dispatch.
+- New examples: `check-documented-examples.yml` checks out `documentation` and requires an entry in `docs/examples/catalog.md` there. Merge the catalog entry into `documentation` before (or together with) the example PR.
+
+Repository settings and credentials the workflows require:
+- Pages: Settings → Pages → Source **GitHub Actions**; environment `github-pages` allows branch `documentation`. Both configured.
+- `PRAXIS_AUTOMATION_TOKEN` (configured): `pr-artifacts`, `version-bump-prs`, `update-npm-pin`, `update-debian-snapshot`, `prepare-release`, `todo-management`.
+- `PRAXIS_PYPI_TOKEN` (not configured): `pypi-release`; add only when publication is authorized.
+- `LLM_API_KEY` secret with `LLM_MODEL` and `LLM_BASE_URL` repository variables (not configured): manual paid jobs `run-examples`, `todo-management`, `typescript-client-integration-tests` (reads `LLM_MODEL`/`LLM_BASE_URL` as secrets); `integration-runner` uses `LLM_API_KEY_EVAL`. `RUNTIME_API_KEY` only for remote-runtime examples.
+- `SLACK_BOT_TOKEN` (optional, not configured): release notification in `prepare-release`.
+- `GITHUB_TOKEN`: provided by GitHub. Routine PR validation (`SDK Validation`) needs no extra secret.
+</DOCUMENTATION_AND_ACTIONS>
+
 </REPO>
