@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Validate docstrings conform to MDX-compatible formatting guidelines.
+"""Validate docstrings conform to Markdown-compatible formatting guidelines.
 
 This script checks that docstrings in the SDK use patterns that render correctly
-in Mintlify MDX documentation. It validates:
+in the MkDocs documentation site. It validates:
 
 1. No REPL-style examples (>>>) - should use fenced code blocks instead
 2. Shell/config examples use fenced code blocks (prevents # becoming headers)

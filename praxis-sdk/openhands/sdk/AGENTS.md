@@ -139,8 +139,9 @@ These are enforced by `check_sdk_api_breakage.py` (runs on release PRs). Depreca
 
 ## Documentation and independent deployment
 
-Documentation for this fork lives in this repository's `docs/` directory.
-See `docs/independent-deployment.md`. Do not dispatch documentation or evaluation
+Documentation for this fork lives on this repository's `documentation` branch and is
+published at https://praxiss-lab.github.io/praxis-sdk/. See
+https://praxiss-lab.github.io/praxis-sdk/independent-deployment/. Do not dispatch documentation or evaluation
 jobs to upstream repositories or suggest upstream hosted credentials.
 Run examples with an explicitly selected model provider and operator-managed
 endpoint. Live model tests require an authorized credential and real-model run;
