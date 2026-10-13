@@ -15,11 +15,11 @@ flowchart LR
 
 | Package               | Source directory                                       | Responsibility                                                                  |
 | --------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| `praxis-sdk`          | [`praxis-sdk/`](../../praxis-sdk/)                     | Agent loop, LLM abstraction, conversations, events, skills, hooks, security     |
-| `praxis-tools`        | [`praxis-tools/`](../../praxis-tools/)                 | Built-in tools and presets such as `get_default_agent`                          |
-| `praxis-workspace`    | [`praxis-workspace/`](../../praxis-workspace/)         | Sandboxed workspaces: `DockerWorkspace`, Apptainer, Agent Sandbox, remote API   |
-| `praxis-agent-server` | [`praxis-agent-server/`](../../praxis-agent-server/)   | Server that hosts conversations, files, terminals and settings over HTTP        |
-| TypeScript client     | [`clients/typescript/`](../../clients/typescript/)     | Browser-compatible client for remote conversations                              |
+| `praxis-sdk`          | [`praxis-sdk/`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/praxis-sdk)                     | Agent loop, LLM abstraction, conversations, events, skills, hooks, security     |
+| `praxis-tools`        | [`praxis-tools/`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/praxis-tools)                 | Built-in tools and presets such as `get_default_agent`                          |
+| `praxis-workspace`    | [`praxis-workspace/`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/praxis-workspace)         | Sandboxed workspaces: `DockerWorkspace`, Apptainer, Agent Sandbox, remote API   |
+| `praxis-agent-server` | [`praxis-agent-server/`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/praxis-agent-server)   | Server that hosts conversations, files, terminals and settings over HTTP        |
+| TypeScript client     | [`clients/typescript/`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/clients/typescript)     | Browser-compatible client for remote conversations                              |
 
 ## Namespaces
 

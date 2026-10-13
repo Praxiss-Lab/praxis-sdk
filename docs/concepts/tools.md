@@ -22,8 +22,8 @@ Presets in `praxis.tools.preset` assemble common sets (`default`, `planning`, `g
 ## Custom tools
 
 Subclass `ToolDefinition`, implement an executor and register it with `register_tool`.
-See [`02_custom_tools.py`](../../examples/01_standalone_sdk/02_custom_tools.py) and, for
-remote servers, [`06_custom_tool`](../../examples/02_remote_agent_server/06_custom_tool/).
+See [`02_custom_tools.py`](https://github.com/Praxiss-Lab/praxis-sdk/blob/main/examples/01_standalone_sdk/02_custom_tools.py) and, for
+remote servers, [`06_custom_tool`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/examples/02_remote_agent_server/06_custom_tool).
 
 ## MCP
 

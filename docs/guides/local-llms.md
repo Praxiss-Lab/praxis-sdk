@@ -18,21 +18,19 @@ llm = LLM(
 Agents need a large context. Praxis SDK refuses models whose context window is below
 **16,384 tokens**. Increase it in your server configuration, for example:
 
-=== "Ollama"
+**Ollama**
 
-    ```sh
-    OLLAMA_CONTEXT_LENGTH=32768 ollama serve
-    ```
+```sh
+OLLAMA_CONTEXT_LENGTH=32768 ollama serve
+```
 
-=== "LM Studio"
+**LM Studio:** set *Context Length* to 32768 or more when loading the model.
 
-    Set *Context Length* to 32768 or more when loading the model.
+**vLLM**
 
-=== "vLLM"
-
-    ```sh
-    vllm serve <model> --max-model-len 32768
-    ```
+```sh
+vllm serve <model> --max-model-len 32768
+```
 
 Only if you understand the consequences, the check can be disabled with
 `ALLOW_SHORT_CONTEXT_WINDOWS=true`.

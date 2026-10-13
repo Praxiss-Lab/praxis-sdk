@@ -2,7 +2,7 @@
 
 This example creates an agent with a terminal, a file editor and a task tracker, then
 asks it to work in the current directory. It mirrors
-[`examples/01_standalone_sdk/01_hello_world.py`](../../examples/01_standalone_sdk/01_hello_world.py).
+[`examples/01_standalone_sdk/01_hello_world.py`](https://github.com/Praxiss-Lab/praxis-sdk/blob/main/examples/01_standalone_sdk/01_hello_world.py).
 
 ```python
 import os
@@ -38,10 +38,11 @@ Run it from the repository root:
 uv run python examples/01_standalone_sdk/01_hello_world.py
 ```
 
-!!! warning "The agent acts on your machine"
-    With a local workspace, terminal and file tools operate directly on the host
-    filesystem. Use a dedicated directory, or a [Docker workspace](../concepts/workspaces.md),
-    for untrusted tasks.
+> [!WARNING]
+> **The agent acts on your machine**
+> With a local workspace, terminal and file tools operate directly on the host
+> filesystem. Use a dedicated directory, or a [Docker workspace](../concepts/workspaces.md),
+> for untrusted tasks.
 
 ## What happened
 

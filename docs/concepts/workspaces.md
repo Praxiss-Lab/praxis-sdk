@@ -22,7 +22,7 @@ with DockerWorkspace(server_image=server_image) as workspace:
 ```
 
 The container is stopped when the context manager exits. See
-[`02_convo_with_docker_sandboxed_server.py`](../../examples/02_remote_agent_server/02_convo_with_docker_sandboxed_server.py).
+[`02_convo_with_docker_sandboxed_server.py`](https://github.com/Praxiss-Lab/praxis-sdk/blob/main/examples/02_remote_agent_server/02_convo_with_docker_sandboxed_server.py).
 
 ## Remote server
 
@@ -32,7 +32,9 @@ from praxis.sdk import Workspace
 workspace = Workspace(host="http://my-vm:8000", working_dir="/workspace/project")
 ```
 
-!!! info "Provisioning APIs"
-    The legacy `APIRemoteWorkspace` and cloud workspace classes only work with a
-    compatible provisioning service that you operate. Hosted upstream URLs are rejected.
-    See [Independent deployment](../independent-deployment.md).
+> [!NOTE]
+> **Provisioning APIs**
+> The legacy `APIRemoteWorkspace` and cloud workspace classes only work with a
+> compatible provisioning service that you operate. Hosted upstream URLs are rejected.
+> See [Independent deployment](../independent-deployment.md).
+

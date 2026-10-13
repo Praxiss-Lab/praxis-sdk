@@ -40,4 +40,4 @@ context = AgentContext(
 )
 ```
 
-See [`03_activate_skill.py`](../../examples/01_standalone_sdk/03_activate_skill.py) for a complete example.
+See [`03_activate_skill.py`](https://github.com/Praxiss-Lab/praxis-sdk/blob/main/examples/01_standalone_sdk/03_activate_skill.py) for a complete example.

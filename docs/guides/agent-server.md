@@ -40,6 +40,6 @@ conversation.run()
 ## Containers
 
 `DockerWorkspace` starts the server inside a container automatically. Apptainer and
-Agent Sandbox (Kubernetes) variants are in [`examples/02_remote_agent_server`](../../examples/02_remote_agent_server/).
+Agent Sandbox (Kubernetes) variants are in [`examples/02_remote_agent_server`](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/examples/02_remote_agent_server).
 For a persistent server on your own VM, see the
-[Praxis self-hosting guide](https://praxiss-lab.github.io/praxis/SELF_HOSTING/).
+[Praxis self-hosting guide](https://github.com/Praxiss-Lab/praxis/blob/documentation/docs/SELF_HOSTING.md).
