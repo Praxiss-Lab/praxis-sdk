@@ -6,7 +6,7 @@ description: Diagnose the owned example catalog and explicitly requested live ex
 # Praxis example checks
 
 `check-documented-examples.yml` validates the owned catalog during SDK
-Validation. The catalog is `docs/examples/catalog.md`; examples remain under
+Validation. The catalog is `docs/examples/catalog.md` on the `documentation` branch; examples remain under
 `examples/` in this repository.
 
 Inspect the failing job in `Praxiss-Lab/praxis-sdk`, reproduce its command at

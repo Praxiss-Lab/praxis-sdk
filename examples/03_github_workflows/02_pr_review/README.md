@@ -55,7 +55,7 @@ cp examples/03_github_workflows/02_pr_review/workflow.yml .github/workflows/pr-r
 Set the following secrets in your GitHub repository settings:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Get one from the [OpenHands LLM Provider](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/independent-deployment.md)
+  - Configure your own provider: see [LLM provider setup](https://praxiss-lab.github.io/praxis-sdk/independent-deployment/)
 
 **Note**: The workflow automatically uses the `GITHUB_TOKEN` secret that's available in all GitHub Actions workflows.
 

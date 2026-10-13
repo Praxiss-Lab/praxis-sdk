@@ -182,7 +182,7 @@ def main() -> None:
         print("\n📚 How to Document Examples:")
         print("=" * 60)
         print("Add a source link, purpose and execution prerequisites to")
-        print("docs/examples/catalog.md in this repository.")
+        print("docs/examples/catalog.md on the documentation branch.")
         sys.exit(1)
     else:
         print("✅ All examples are documented!")
