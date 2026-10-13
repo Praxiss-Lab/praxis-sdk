@@ -11,15 +11,15 @@ cd praxis-sdk
 uv sync --frozen --group dev
 ```
 
-Read [independent deployment](https://praxiss-lab.github.io/praxis-sdk/independent-deployment/) before configuring
+Read [independent deployment](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/independent-deployment.md) before configuring
 models, remote servers or optional critic services. Select your own model provider
 and credentials; hosted OpenHands Cloud endpoints are unsupported.
 
 ## Examples and documentation
 
-- [Documentation site](https://praxiss-lab.github.io/praxis-sdk/)
-- [Example catalog](https://praxiss-lab.github.io/praxis-sdk/examples/catalog/)
-- [CI policy](https://praxiss-lab.github.io/praxis-sdk/ci-policy/)
+- [Documentation site](https://github.com/Praxiss-Lab/praxis-sdk/tree/documentation)
+- [Example catalog](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/examples/catalog.md)
+- [CI policy](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/ci-policy.md)
 - [TypeScript client](clients/typescript/)
 - [Source and issues](https://github.com/Praxiss-Lab/praxis-sdk)
 

@@ -1642,7 +1642,9 @@ def test_llm_raises_error_on_small_context_window(mock_get_model_info):
 
     assert exc_info.value.context_window == 2048
     assert exc_info.value.min_required == MIN_CONTEXT_WINDOW_TOKENS
-    assert "praxiss-lab.github.io/praxis-sdk/guides/local-llms" in str(exc_info.value)
+    assert "praxis-sdk/blob/documentation/docs/guides/local-llms.md" in str(
+        exc_info.value
+    )
 
 
 @patch("openhands.sdk.llm.llm.get_litellm_model_info")
