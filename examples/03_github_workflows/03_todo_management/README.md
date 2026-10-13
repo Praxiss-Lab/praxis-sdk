@@ -52,7 +52,7 @@ The workflow consists of three main components:
 Add these secrets to your GitHub repository:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Configure your own provider: see [LLM provider setup](https://praxiss-lab.github.io/praxis-sdk/independent-deployment/)
+  - Configure your own provider: see [LLM provider setup](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/independent-deployment.md)
 - `GITHUB_TOKEN` - GitHub token with repo permissions (automatically provided)
 -  Make sure Github Actions are allowed to create and review PRs (in the repo settings)
 

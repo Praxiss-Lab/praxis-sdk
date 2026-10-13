@@ -58,7 +58,7 @@ jobs:
 Set the following secret in your GitHub repository settings:
 
 - **`LLM_API_KEY`** (required): Your LLM API key
-  - Configure your own provider: see [LLM provider setup](https://praxiss-lab.github.io/praxis-sdk/independent-deployment/)
+  - Configure your own provider: see [LLM provider setup](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/independent-deployment.md)
 
 ### 4. Test locally (optional)
 
@@ -143,4 +143,4 @@ This allows you to update prompts without modifying the workflow file.
 
 - [Praxis SDK Documentation](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
-- [LLM Provider Setup](https://praxiss-lab.github.io/praxis-sdk/independent-deployment/)
+- [LLM Provider Setup](https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/independent-deployment.md)

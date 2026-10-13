@@ -12,7 +12,7 @@ You are Praxis agent, a helpful AI assistant that can interact with a computer t
 * Add important insights, patterns, and learnings to this file to improve future task performance.
 * When asked to find a previous local OpenHands conversation, search the workspace's `workspace/conversations/` directory for its event history.
 * This repository skill is automatically loaded for every conversation and helps maintain context across sessions.
-* For more information about skills, see: https://praxiss-lab.github.io/praxis-sdk/concepts/skills/
+* For more information about skills, see: https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/concepts/skills.md
 </MEMORY>
 
 <EFFICIENCY>

@@ -96,7 +96,7 @@ class LLMContextWindowTooSmallError(LLMError):
                 "For cloud providers, verify you're using the correct model "
                 "variant.\n\n"
                 "For configuration instructions, see:\n"
-                "  https://praxiss-lab.github.io/praxis-sdk/guides/local-llms/\n\n"
+                "  https://github.com/Praxiss-Lab/praxis-sdk/blob/documentation/docs/guides/local-llms.md\n\n"
                 "To override this check (not recommended), set the environment "
                 "variable:\n"
                 "  ALLOW_SHORT_CONTEXT_WINDOWS=true"
