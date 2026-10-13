@@ -17,6 +17,7 @@ and credentials; hosted OpenHands Cloud endpoints are unsupported.
 
 ## Examples and documentation
 
+- [Documentation site](https://praxiss-lab.github.io/praxis-sdk/)
 - [Example catalog](docs/examples/catalog.md)
 - [CI policy](docs/ci-policy.md)
 - [TypeScript client](clients/typescript/)
