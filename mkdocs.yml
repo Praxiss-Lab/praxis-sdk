@@ -1,0 +1,98 @@
+---
+site_name: Praxis SDK
+site_description: Python and TypeScript building blocks for agents, tools, conversations and personal Agent Servers.
+site_url: https://praxiss-lab.github.io/praxis-sdk/
+site_author: Praxiss-Lab
+repo_url: https://github.com/Praxiss-Lab/praxis-sdk
+repo_name: Praxiss-Lab/praxis-sdk
+edit_uri: edit/documentation/docs/
+copyright: Maintained by Praxiss-Lab · Derived from the OpenHands Software Agent SDK (see LICENSE)
+
+docs_dir: docs
+hooks:
+    - scripts/docs_hooks.py
+
+theme:
+    name: material
+    logo: assets/brand/praxis-icon-white.svg
+    favicon: assets/brand/praxis-app-icon-light.png
+    font:
+        text: Inter
+        code: JetBrains Mono
+    palette:
+        - media: '(prefers-color-scheme: light)'
+          scheme: default
+          toggle:
+              icon: material/weather-night
+              name: Switch to dark mode
+        - media: '(prefers-color-scheme: dark)'
+          scheme: slate
+          toggle:
+              icon: material/weather-sunny
+              name: Switch to light mode
+    features:
+        - navigation.tabs
+        - navigation.sections
+        - navigation.top
+        - navigation.footer
+        - navigation.indexes
+        - search.suggest
+        - search.highlight
+        - content.code.copy
+        - content.action.edit
+
+extra_css:
+    - stylesheets/praxis.css
+
+extra:
+    generator: false
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/Praxiss-Lab/praxis-sdk
+        - icon: material/application-outline
+          link: https://praxiss-lab.github.io/praxis/
+          name: Praxis documentation
+
+markdown_extensions:
+    - admonition
+    - attr_list
+    - md_in_html
+    - tables
+    - toc:
+          permalink: true
+    - pymdownx.details
+    - pymdownx.highlight:
+          anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.tabbed:
+          alternate_style: true
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+    - Home: index.md
+    - Getting started:
+          - Installation: getting-started/installation.md
+          - Your first agent: getting-started/first-agent.md
+    - Concepts:
+          - Architecture: concepts/architecture.md
+          - Agents and LLMs: concepts/agents-and-llms.md
+          - Conversations: concepts/conversations.md
+          - Tools: concepts/tools.md
+          - Workspaces: concepts/workspaces.md
+          - Skills: concepts/skills.md
+    - Guides:
+          - Agent Server: guides/agent-server.md
+          - Local LLMs: guides/local-llms.md
+          - Independent deployment: independent-deployment.md
+          - Example catalog: examples/catalog.md
+    - Reference:
+          - TypeScript client: reference/typescript-client.md
+          - Compatibility identifiers: reference/compatibility.md
+          - CI policy: ci-policy.md

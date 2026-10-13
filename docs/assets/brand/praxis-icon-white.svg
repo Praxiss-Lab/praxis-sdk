@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="320" viewBox="-28 -30 216 309" role="img" aria-labelledby="title">
+<title id="title">Praxis white-and-blue folded ribbon icon</title>
+<defs><linearGradient id="blue" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#2563EB"/><stop offset="1" stop-color="#16C8EE"/></linearGradient></defs>
+<path d="M52 0L160 62L104 90L0 30Z" fill="#FFFFFF"/>
+<path d="M0 145L160 62V120L0 204Z" fill="url(#blue)"/>
+<path d="M0 216L60 184V249Z" fill="#FFFFFF"/>
+</svg>
