@@ -266,7 +266,7 @@ def test_issue_2412_consecutive_failures_reset_session(mock_browser_executor):
     should set _initialized=False so the next call re-creates the
     browser session instead of looping on the dead one.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/2412
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2412
     """
     from openhands.tools.browser_use.impl import MAX_CONSECUTIVE_FAILURES
 
@@ -299,7 +299,7 @@ def test_issue_2412_consecutive_failures_reset_session(mock_browser_executor):
 def test_issue_2412_success_resets_failure_counter(mock_browser_executor):
     """A successful action should reset the consecutive failure counter.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/2412
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2412
     """
     mock_browser_executor._initialized = True
 
@@ -334,7 +334,7 @@ def test_issue_2412_action_errors_do_not_trigger_reset(mock_browser_executor):
     Only timeouts indicate a potentially dead browser. Errors like
     invalid selector or missing element are normal agent mistakes.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/2412
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2412
     """
     from openhands.tools.browser_use.impl import MAX_CONSECUTIVE_FAILURES
 
@@ -358,7 +358,7 @@ def test_issue_2412_action_errors_do_not_trigger_reset(mock_browser_executor):
 def test_issue_2412_degraded_timeout_after_failures(mock_browser_executor):
     """Degraded timeout kicks in after 2+ consecutive timeout failures.
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/2412
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2412
     """
     from openhands.tools.browser_use.impl import DEGRADED_TIMEOUT_SECONDS
 

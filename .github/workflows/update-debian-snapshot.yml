@@ -21,7 +21,7 @@ jobs:
         env:
             GH_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
             BRANCH: chore/update-agent-server-debian-snapshot
-            DOCKERFILE: openhands-agent-server/openhands/agent_server/docker/Dockerfile
+            DOCKERFILE: praxis-agent-server/openhands/agent_server/docker/Dockerfile
             IMAGE: openhands/agent-server-binary-minimal:snapshot-update
         steps:
             - name: Checkout
@@ -72,7 +72,7 @@ jobs:
                   git add "$DOCKERFILE"
                   git commit -m "chore(agent-server): update Debian snapshot to $SNAPSHOT" \
                     -m "Use the newest UTC snapshot that has completed the three-day observation period." \
-                    -m "Co-authored-by: openhands <openhands@all-hands.dev>"
+                    -m "Co-authored-by: Codex <codex@openai.com>"
                   git push --force-with-lease -u origin "$BRANCH"
 
                   BODY=$(cat <<EOF

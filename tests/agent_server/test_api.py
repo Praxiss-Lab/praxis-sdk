@@ -56,7 +56,7 @@ def test_default_server_tmux_tmpdir_uses_current_pid(monkeypatch):
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path("/tmp") / f"openhands-agent-server-{os.getpid()}"
+        Path("/tmp") / f"praxis-agent-server-{os.getpid()}"
     )
 
 
@@ -67,21 +67,22 @@ def test_default_server_tmux_tmpdir_avoids_deep_tempdir(deep_tmp_path, monkeypat
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path("/tmp") / f"openhands-agent-server-{os.getpid()}"
+        Path("/tmp") / f"praxis-agent-server-{os.getpid()}"
     )
 
 
 @pytest.mark.skipif(os.name != "posix", reason="Unix socket paths")
 @pytest.mark.parametrize(
     "socket_limit, expected_root",
-    [(103, "/tmp"), (107, "/tmp/oh-abcdefgh")],
+    [(103, "/tmp"), (107, "/tmp/oh-abcdefghij")],
     ids=["macos", "linux"],
 )
 def test_default_server_tmux_tmpdir_counts_canonical_socket_bytes(
     socket_limit, expected_root, monkeypatch
 ):
     # Model macOS's /tmp -> /private/tmp, with a fixed UID/PID. The original
-    # test fixture produced a 105-byte socket path; the fallback is 93.
+    # fixture produces a 105-byte socket path with the Praxis directory name;
+    # the fallback is 91. It must exceed macOS's limit while fitting Linux's.
     # Replace the module's os reference, not global os.getpid/getuid.
     monkeypatch.setattr(
         "openhands.agent_server.api.os",
@@ -97,11 +98,11 @@ def test_default_server_tmux_tmpdir_counts_canonical_socket_bytes(
         "openhands.agent_server.api._MAX_TMUX_SOCKET_PATH", socket_limit
     )
     monkeypatch.setattr(
-        "openhands.agent_server.api.tempfile.gettempdir", lambda: "/tmp/oh-abcdefgh"
+        "openhands.agent_server.api.tempfile.gettempdir", lambda: "/tmp/oh-abcdefghij"
     )
 
     assert _default_server_tmux_tmpdir() == (
-        Path(expected_root) / "openhands-agent-server-12345"
+        Path(expected_root) / "praxis-agent-server-12345"
     )
 
 

@@ -66,7 +66,9 @@ def mock_llm() -> LLM:
     mock_llm.format_messages_for_llm = lambda messages: messages
 
     # Mock the required attributes that the LLM validator reads
-    mock_llm.openrouter_site_url = "https://docs.all-hands.dev/"
+    mock_llm.openrouter_site_url = (
+        "https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs"
+    )
     mock_llm.openrouter_app_name = "OpenHands"
     mock_llm.aws_access_key_id = None
     mock_llm.aws_secret_access_key = None
@@ -111,7 +113,7 @@ def test_default_values(mock_llm: LLM) -> None:
     """Test that LLMSummarizingCondenser has correct default values.
 
     These defaults are tuned to ensure workable manipulation indices for condensation.
-    See https://github.com/OpenHands/software-agent-sdk/issues/1518 for context.
+    See https://github.com/Praxiss-Lab/praxis-sdk/issues/1518 for context.
     """
     condenser = LLMSummarizingCondenser(llm=mock_llm)
 
@@ -650,7 +652,7 @@ def test_generate_condensation_raises_on_zero_events(mock_llm: LLM) -> None:
 
     This prevents the LLM from being called with an empty event list, which would
     produce a confusing summary like "I don't see any events provided to summarize."
-    See https://github.com/OpenHands/software-agent-sdk/issues/1518 for context.
+    See https://github.com/Praxiss-Lab/praxis-sdk/issues/1518 for context.
     """
     condenser = LLMSummarizingCondenser(llm=mock_llm, max_size=100, keep_first=2)
 

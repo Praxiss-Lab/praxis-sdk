@@ -1,6 +1,6 @@
-# OpenHands SDK React Example
+# Praxis SDK React Example
 
-This is a basic React application built with Vite that demonstrates successful integration with the OpenHands Agent Server TypeScript Client SDK.
+This is a basic React application built with Vite that demonstrates successful integration with the Praxis Agent Server TypeScript Client SDK.
 
 ## Features
 

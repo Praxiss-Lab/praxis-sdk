@@ -11,7 +11,7 @@ How to end-to-end test features that span `OpenHands/software-agent-sdk` and `Op
 
 | Repo | Role | What lives here |
 |------|------|-----------------|
-| [`software-agent-sdk`](https://github.com/OpenHands/software-agent-sdk) | Agent core | `openhands-sdk`, `openhands-workspace`, `openhands-tools` packages. `OpenHandsCloudWorkspace` lives here. |
+| [`software-agent-sdk`](https://github.com/Praxiss-Lab/praxis-sdk) | Agent core | `praxis-sdk`, `praxis-workspace`, `praxis-tools` packages. `OpenHandsCloudWorkspace` lives here. |
 | [`OpenHands`](https://github.com/OpenHands/OpenHands) | Cloud backend | FastAPI server (`openhands/app_server/`), sandbox management, auth, enterprise integrations. Deployed as OH Cloud. |
 | [`deploy`](https://github.com/OpenHands/deploy) | Infrastructure | Helm charts + GitHub Actions that build the enterprise Docker image and deploy to staging/production. |
 
@@ -51,7 +51,7 @@ In `software-agent-sdk`, implement the client code (e.g., new methods on `OpenHa
 
 ```bash
 cd software-agent-sdk
-pip install -e openhands-sdk -e openhands-workspace
+pip install -e praxis-sdk -e praxis-workspace
 pytest tests/ -v
 ```
 
@@ -86,19 +86,19 @@ In the `OpenHands` repo PR, update 3 files + regenerate 3 lock files (see the `u
 **`pyproject.toml`** — pin all 3 SDK packages in **both** `dependencies` and `[tool.poetry.dependencies]`:
 ```toml
 # dependencies array (PEP 508)
-"openhands-sdk @ git+https://github.com/OpenHands/software-agent-sdk.git@<COMMIT>#subdirectory=openhands-sdk",
-"openhands-agent-server @ git+https://github.com/OpenHands/software-agent-sdk.git@<COMMIT>#subdirectory=openhands-agent-server",
-"openhands-tools @ git+https://github.com/OpenHands/software-agent-sdk.git@<COMMIT>#subdirectory=openhands-tools",
+"praxis-sdk @ git+https://github.com/Praxiss-Lab/praxis-sdk.git@<COMMIT>#subdirectory=praxis-sdk",
+"praxis-agent-server @ git+https://github.com/Praxiss-Lab/praxis-sdk.git@<COMMIT>#subdirectory=praxis-agent-server",
+"praxis-tools @ git+https://github.com/Praxiss-Lab/praxis-sdk.git@<COMMIT>#subdirectory=praxis-tools",
 
 # [tool.poetry.dependencies]
-openhands-sdk = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "<COMMIT>", subdirectory = "openhands-sdk" }
-openhands-agent-server = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "<COMMIT>", subdirectory = "openhands-agent-server" }
-openhands-tools = { git = "https://github.com/OpenHands/software-agent-sdk.git", rev = "<COMMIT>", subdirectory = "openhands-tools" }
+praxis-sdk = { git = "https://github.com/Praxiss-Lab/praxis-sdk.git", rev = "<COMMIT>", subdirectory = "praxis-sdk" }
+praxis-agent-server = { git = "https://github.com/Praxiss-Lab/praxis-sdk.git", rev = "<COMMIT>", subdirectory = "praxis-agent-server" }
+praxis-tools = { git = "https://github.com/Praxiss-Lab/praxis-sdk.git", rev = "<COMMIT>", subdirectory = "praxis-tools" }
 ```
 
 **`openhands/app_server/sandbox/sandbox_spec_service.py`** — use the SDK's merge-commit SHA:
 ```python
-AGENT_SERVER_IMAGE = 'ghcr.io/openhands/agent-server:<merge-commit-sha>-python'
+AGENT_SERVER_IMAGE = 'ghcr.io/praxiss-lab/praxis-agent-server:<merge-commit-sha>-python'
 ```
 
 **Regenerate lock files:**

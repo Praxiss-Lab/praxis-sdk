@@ -17,7 +17,7 @@ another copy of an already-baselined call is still flagged.
 Regenerate the baseline after removing existing calls with::
 
     uv run python scripts/check_forbidden_dynamic_attributes.py \\
-        --update-baseline $(find openhands-sdk -name '*.py')
+        --update-baseline $(find praxis-sdk -name '*.py')
 """
 
 from __future__ import annotations
@@ -105,7 +105,14 @@ def _load_baseline_from_git(ref: str) -> Baseline:
 
 
 def _baseline_additions(reference: Baseline, current: Baseline) -> Baseline:
-    return current - reference
+    # The package-root rename preserves existing expressions and occurrence
+    # counts. Normalize only that historical root, never hashes or inner paths.
+    renamed: Baseline = Counter()
+    for (file, name, digest), count in reference.items():
+        if file.startswith("openhands-sdk/"):
+            file = "praxis-sdk/" + file.removeprefix("openhands-sdk/")
+        renamed[(file, name, digest)] += count
+    return current - renamed
 
 
 def _write_baseline(entries: list[tuple[str, str, str]]) -> None:
@@ -116,7 +123,7 @@ def _write_baseline(entries: list[tuple[str, str, str]]) -> None:
     BASELINE_FILE.write_text(json.dumps(payload, indent=4) + "\n", encoding="utf-8")
 
 
-SDK_ROOT = "openhands-sdk"
+SDK_ROOT = "praxis-sdk"
 
 
 def _discover_sdk_files() -> list[str]:

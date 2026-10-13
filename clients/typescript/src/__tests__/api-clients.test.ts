@@ -153,7 +153,7 @@ describe('Auxiliary API clients', () => {
       ) as typeof fetch;
 
       const client = new CloudClient({
-        host: 'https://app.all-hands.dev/',
+        host: 'https://app.praxis.example.test/',
         apiKey: 'cloud-key',
         orgId: 'org-1',
       });
@@ -161,7 +161,7 @@ describe('Auxiliary API clients', () => {
 
       expect(result).toEqual({ items: [], currentOrgId: 'org-1' });
       expect(global.fetch).toHaveBeenCalledWith(
-        'https://app.all-hands.dev/api/organizations',
+        'https://app.praxis.example.test/api/organizations',
         expect.objectContaining({
           method: 'GET',
           headers: expect.objectContaining({
@@ -181,7 +181,7 @@ describe('Auxiliary API clients', () => {
       ) as typeof fetch;
 
       const client = new CloudClient({
-        host: 'https://app.all-hands.dev',
+        host: 'https://app.praxis.example.test',
         apiKey: 'cloud-key',
         proxy: {
           host: 'http://localhost:8001',
@@ -239,7 +239,7 @@ describe('Auxiliary API clients', () => {
       ) as typeof fetch;
 
       const client = new CloudClient({
-        host: 'https://app.all-hands.dev',
+        host: 'https://app.praxis.example.test',
         apiKey: 'cloud-key',
       });
 
@@ -255,7 +255,7 @@ describe('Auxiliary API clients', () => {
       });
 
       expect(global.fetch).toHaveBeenCalledWith(
-        'https://app.all-hands.dev/api/v1/app-conversations',
+        'https://app.praxis.example.test/api/v1/app-conversations',
         expect.objectContaining({
           method: 'POST',
           headers: expect.objectContaining({

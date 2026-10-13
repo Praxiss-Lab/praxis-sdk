@@ -1,5 +1,5 @@
 /**
- * Basic usage example for the OpenHands Agent Server TypeScript Client
+ * Basic usage example for the Praxis Agent Server TypeScript Client
  */
 
 import { Conversation, Agent, Workspace, AgentExecutionStatus } from '../src/index.js';

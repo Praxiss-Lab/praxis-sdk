@@ -9,7 +9,7 @@ leave behind. Run it after changing `openhands/agent_server/storage/` or
 Needs a running Docker daemon and the agent-server image (pulled, not built):
 
 ```
-docker pull ghcr.io/openhands/agent-server:latest-python
+docker pull ghcr.io/praxiss-lab/praxis-agent-server:latest-python
 uv run pytest -m docker_live tests/agent_server/docker_runtime/test_storage_scenario.py
 ```
 

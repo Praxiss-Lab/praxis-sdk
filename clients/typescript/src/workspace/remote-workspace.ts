@@ -31,10 +31,10 @@ export interface RemoteWorkspaceOptions extends BaseWorkspaceOptions {
 }
 
 /**
- * Remote workspace implementation that connects to an OpenHands agent server.
+ * Remote workspace implementation that connects to an Praxis agent server.
  *
  * RemoteWorkspace provides access to a sandboxed environment running on a remote
- * OpenHands agent server. This is the recommended approach for production deployments
+ * Praxis agent server. This is the recommended approach for production deployments
  * as it provides better isolation and security.
  */
 export class RemoteWorkspace implements IWorkspace {

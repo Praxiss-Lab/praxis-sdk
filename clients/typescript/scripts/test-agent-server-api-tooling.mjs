@@ -121,7 +121,7 @@ try {
     packageFixture,
     `${JSON.stringify({
       config: {
-        agentServerImage: 'ghcr.io/openhands/agent-server:1.37.0-python',
+        agentServerImage: 'ghcr.io/praxiss-lab/praxis-agent-server:1.37.0-python',
       },
     })}\n`
   );
@@ -133,7 +133,7 @@ try {
     '--package',
     packageFixture,
     '--run-url',
-    'https://github.com/OpenHands/typescript-client/actions/runs/123',
+    'https://github.com/Praxiss-Lab/praxis-sdk/actions/runs/123',
     '--output',
     report,
   ]);
@@ -142,7 +142,7 @@ try {
   }
   const reportText = await readFile(report, 'utf8');
   if (
-    !reportText.includes(`software-agent-sdk/commit/${exactSdkSha}`) ||
+    !reportText.includes(`https://github.com/Praxiss-Lab/praxis-sdk/commit/${exactSdkSha}`) ||
     !reportText.includes(exactSdkSha)
   ) {
     throw new Error('The scheduled audit report did not include the exact SDK commit SHA');

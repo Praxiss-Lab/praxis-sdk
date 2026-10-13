@@ -9,10 +9,8 @@ This script:
 4. Exits with error code 1 if undocumented examples are found
 """
 
-import json
 import os
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -102,54 +100,6 @@ def find_agent_sdk_examples(agent_sdk_path: Path) -> set[str]:
     return examples
 
 
-def find_changed_examples_for_pull_request(agent_sdk_path: Path) -> set[str] | None:
-    """
-    Return example paths changed by the current pull request, if available.
-
-    The docs repository can lag behind main briefly. In pull_request runs, only
-    fail the PR for examples that are part of that PR's diff; manual and other
-    runs continue to validate the full examples set.
-    """
-    if os.environ.get("GITHUB_EVENT_NAME") != "pull_request":
-        return None
-
-    event_path = os.environ.get("GITHUB_EVENT_PATH")
-    if not event_path:
-        print("⚠️  GITHUB_EVENT_PATH is unavailable; checking all examples.")
-        return None
-
-    try:
-        event = json.loads(Path(event_path).read_text(encoding="utf-8"))
-        base_sha = event["pull_request"]["base"]["sha"]
-    except (KeyError, OSError, json.JSONDecodeError) as e:
-        print(f"⚠️  Could not read pull request base SHA: {e}")
-        print("   Checking all examples instead.")
-        return None
-
-    try:
-        diff = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(agent_sdk_path),
-                "diff",
-                "--name-only",
-                f"{base_sha}...HEAD",
-                "--",
-                "examples",
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except subprocess.CalledProcessError as e:
-        print(f"⚠️  Could not determine changed examples: {e}")
-        print("   Checking all examples instead.")
-        return None
-
-    return {line for line in diff.stdout.splitlines() if line.endswith(".py")}
-
-
 def resolve_paths() -> tuple[Path, Path]:
     """
     Determine agent-sdk root and docs path.
@@ -213,14 +163,6 @@ def main() -> None:
     agent_examples = find_agent_sdk_examples(agent_sdk_root)
     print(f"   Found {len(agent_examples)} example file(s)")
 
-    changed_examples = find_changed_examples_for_pull_request(agent_sdk_root)
-    if changed_examples is not None:
-        agent_examples &= changed_examples
-        print(
-            "   Pull request mode: checking "
-            f"{len(agent_examples)} changed example file(s)"
-        )
-
     # Find all documented examples in docs
     print("\n📄 Scanning docs repository...")
     documented_examples = find_documented_examples(docs_path)
@@ -239,28 +181,8 @@ def main() -> None:
         print("=" * 60)
         print("\n📚 How to Document Examples:")
         print("=" * 60)
-        print("1. Clone the docs repository:")
-        print("   git clone https://github.com/OpenHands/docs.git")
-        print()
-        print("2. Create a new .mdx file in sdk/guides/ directory")
-        print("   (e.g., sdk/guides/my-feature.mdx)")
-        print()
-        print("3. Add the example code block with this format:")
-        print('   ```python icon="python" expandable examples/path/to/file.py')
-        print("   <code will be auto-synced>")
-        print("   ```")
-        print()
-        print("4. See the format documentation at:")
-        print(
-            "   https://github.com/OpenHands/docs/blob/main/.github/scripts/README.md"
-        )
-        print()
-        print("5. Example documentation files can be found in:")
-        print("   https://github.com/OpenHands/docs/tree/main/sdk/guides")
-        print()
-        print("6. After creating the PR in docs repo, reference it in your")
-        print("   agent-sdk PR description.")
-        print("=" * 60)
+        print("Add a source link, purpose and execution prerequisites to")
+        print("docs/examples/catalog.md in this repository.")
         sys.exit(1)
     else:
         print("✅ All examples are documented!")

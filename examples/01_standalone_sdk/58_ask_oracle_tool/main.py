@@ -7,7 +7,7 @@ drives a normal conversation: the agent decides to call ``ask_oracle``, the tool
 consults the ``oracle`` profile, and the agent uses the Oracle's answer to reply.
 
 Usage:
-    LLM_API_KEY=... LLM_BASE_URL=https://llm-proxy.app.all-hands.dev \
+    LLM_API_KEY=... LLM_BASE_URL=http://localhost:4000 \
         uv run python examples/01_standalone_sdk/58_ask_oracle_tool/main.py
 
 Note:
@@ -25,7 +25,7 @@ from openhands.sdk.llm.llm_profile_store import LLMProfileStore
 from openhands.tools.ask_oracle import ORACLE_PROFILE_NAME, AskOracleTool
 
 
-DEFAULT_BASE_URL = "https://llm-proxy.app.all-hands.dev"
+DEFAULT_BASE_URL = "http://localhost:4000"
 # The agent's primary model (follows the standard LLM_MODEL env like other
 # examples). The Oracle defaults to the same model; override ASK_ORACLE_MODEL to
 # point the "oracle" profile at a different/stronger model.

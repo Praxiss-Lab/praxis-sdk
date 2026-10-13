@@ -72,12 +72,12 @@ def test_switching_to_acp_clears_active_meta_profile() -> None:
 
 
 def test_switching_back_to_openhands_can_reactivate() -> None:
-    """After an ACP round-trip, an OpenHands agent can activate routing again."""
+    """After an ACP round-trip, an Praxis agent can activate routing again."""
     settings = PersistedSettings(agent_settings=ACPAgentSettings())
     settings.update({"active_meta_profile": "balanced"})
     assert settings.active_meta_profile is None
 
-    # Switch back to an OpenHands agent and activate.
+    # Switch back to an Praxis agent and activate.
     settings.update({"agent_settings_diff": {"agent_kind": "openhands"}})
     settings.update({"active_meta_profile": "balanced"})
 

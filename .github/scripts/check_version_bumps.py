@@ -13,10 +13,10 @@ from pathlib import Path
 
 
 PACKAGE_FILES: dict[str, Path] = {
-    "openhands-sdk": Path("openhands-sdk/pyproject.toml"),
-    "openhands-tools": Path("openhands-tools/pyproject.toml"),
-    "openhands-workspace": Path("openhands-workspace/pyproject.toml"),
-    "openhands-agent-server": Path("openhands-agent-server/pyproject.toml"),
+    "praxis-sdk": Path("praxis-sdk/pyproject.toml"),
+    "praxis-tools": Path("praxis-tools/pyproject.toml"),
+    "praxis-workspace": Path("praxis-workspace/pyproject.toml"),
+    "praxis-agent-server": Path("praxis-agent-server/pyproject.toml"),
     "typescript-client": Path("clients/typescript/package.json"),
 }
 
@@ -52,19 +52,26 @@ def _read_current_version(repo_root: Path, package_file: Path) -> str:
 def _read_version_from_git_ref(
     repo_root: Path, git_ref: str, package_file: Path
 ) -> str:
-    result = subprocess.run(
-        ["git", "show", f"{git_ref}:{package_file.as_posix()}"],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or "unknown git error"
-        raise SystemExit(
-            f"Unable to read {package_file} from git ref {git_ref}: {message}"
+    paths = [package_file]
+    if package_file.parts[0] in PACKAGE_FILES and package_file.parts[0].startswith(
+        "praxis-"
+    ):
+        paths.append(
+            Path(package_file.parts[0].replace("praxis-", "openhands-", 1))
+            / Path(*package_file.parts[1:])
         )
-    return _read_version(result.stdout, f"{git_ref}:{package_file}")
+    for path in paths:
+        result = subprocess.run(
+            ["git", "show", f"{git_ref}:{path.as_posix()}"],
+            cwd=repo_root,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode == 0:
+            return _read_version(result.stdout, f"{git_ref}:{path}")
+    message = result.stderr.strip() or result.stdout.strip() or "unknown git error"
+    raise SystemExit(f"Unable to read {package_file} from git ref {git_ref}: {message}")
 
 
 def _base_ref_candidates(base_ref: str) -> list[str]:
@@ -115,7 +122,7 @@ def validate_package_version_consistency(repo_root: Path) -> list[str]:
         package: _read_current_version(repo_root, package_file)
         for package, package_file in PACKAGE_FILES.items()
     }
-    expected = versions["openhands-sdk"]
+    expected = versions["praxis-sdk"]
     mismatched = [
         f"{package} ({version})"
         for package, version in versions.items()
@@ -123,7 +130,7 @@ def validate_package_version_consistency(repo_root: Path) -> list[str]:
     ]
     if mismatched:
         return [
-            "Package versions must match openhands-sdk "
+            "Package versions must match praxis-sdk "
             f"({expected}); mismatched packages: {', '.join(mismatched)}."
         ]
     return []

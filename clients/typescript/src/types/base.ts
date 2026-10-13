@@ -1,5 +1,5 @@
 /**
- * Base types and interfaces for the OpenHands Agent Server TypeScript client
+ * Base types and interfaces for the Praxis Agent Server TypeScript client
  */
 
 export type ConversationID = string;

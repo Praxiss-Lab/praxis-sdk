@@ -326,7 +326,7 @@ def test_agent_logs_warning_with_non_handling_condenser_on_ctx_exceeded(
 
 # ---------------------------------------------------------------------------
 # Route metadata must be established before the condenser's token decision.
-# See: https://github.com/OpenHands/software-agent-sdk/issues/4421
+# See: https://github.com/Praxiss-Lab/praxis-sdk/issues/4421
 # ---------------------------------------------------------------------------
 
 

@@ -2,7 +2,7 @@
  * ACP (Agent Client Protocol) provider registry — TypeScript mirror of the
  * Python source of truth at
  * `openhands.sdk.settings.acp_providers.ACP_PROVIDERS` in
- * https://github.com/OpenHands/software-agent-sdk.
+ * https://github.com/Praxiss-Lab/praxis-sdk.
  *
  * The data lives in `./acp-providers.json` so the Python drift check in
  * `scripts/check-acp-drift.py` can read it without executing TypeScript.

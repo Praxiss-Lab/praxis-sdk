@@ -18,7 +18,7 @@ Supported plugin sources:
 - With ref: branch, tag, or commit SHA
 - With repo_path: subdirectory for monorepos
 
-For full documentation, see: https://docs.all-hands.dev/sdk/guides/plugins
+For full documentation, see: https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docsguides/plugins
 """
 
 import json

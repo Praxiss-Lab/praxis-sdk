@@ -2,7 +2,7 @@
 """
 TODO Agent for OpenHands Automated TODO Management
 
-This script processes individual TODO(openhands) comments using OpenHands agent
+This script processes individual TODO(openhands) comments using Praxis agent
 to implement the TODO. Designed for use with GitHub Actions workflows.
 
 Usage:
@@ -36,7 +36,7 @@ logger = get_logger(__name__)
 
 
 def process_todo(todo_data: dict):
-    """Process a single TODO item using OpenHands agent."""
+    """Process a single TODO item using Praxis agent."""
     file_path = todo_data["file"]
     line_num = todo_data["line"]
     description = todo_data["description"]
@@ -99,7 +99,7 @@ def process_todo(todo_data: dict):
 def main():
     """Main function to process a TODO item."""
     parser = argparse.ArgumentParser(
-        description="Process a TODO(openhands) comment using OpenHands agent"
+        description="Process a TODO(openhands) comment using Praxis agent"
     )
     parser.add_argument("todo_json", help="JSON string containing TODO information")
 

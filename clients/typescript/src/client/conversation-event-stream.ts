@@ -1,3 +1,4 @@
+import { assertSelfHostedEndpoint } from './cloud-endpoint-policy';
 /** Browser transport for the Agent Server conversation event socket. */
 export interface ConversationEventStreamOptions {
   /** Full event socket URL, including any reverse-proxy prefix. */
@@ -112,6 +113,7 @@ export class ConversationEventStream {
   private connect(): void {
     if (!this.active) return;
     try {
+      assertSelfHostedEndpoint(this.options.url);
       const url = new URL(this.options.url);
       for (const [key, value] of Object.entries(this.options.queryParams ?? {})) {
         url.searchParams.set(key, String(value));

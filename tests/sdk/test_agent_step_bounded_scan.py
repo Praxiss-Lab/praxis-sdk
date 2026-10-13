@@ -109,7 +109,11 @@ def test_agent_step_uses_last_user_message_id(tmp_path):
     assert conv.state.execution_status == ConversationExecutionStatus.FINISHED
 
 
-def test_agent_step_legacy_state_no_last_user_id(tmp_path, caplog):
+def test_agent_step_legacy_state_no_last_user_id(tmp_path, caplog, monkeypatch):
+    def unavailable_completion(*args, **kwargs):
+        raise RuntimeError("Deterministic test-only completion failure")
+
+    monkeypatch.setattr(LLM, "completion", unavailable_completion)
     """Verify graceful handling of old state without last_user_message_id.
 
     When last_user_message_id is None but blocked_messages exist (legacy state),

@@ -64,25 +64,25 @@ class PackageConfig:
 
 PACKAGES: tuple[PackageConfig, ...] = (
     PackageConfig(
-        name="openhands-sdk",
-        pyproject=REPO_ROOT / "openhands-sdk" / "pyproject.toml",
-        source_roots=(REPO_ROOT / "openhands-sdk" / "openhands" / "sdk",),
+        name="praxis-sdk",
+        pyproject=REPO_ROOT / "praxis-sdk" / "pyproject.toml",
+        source_roots=(REPO_ROOT / "praxis-sdk" / "openhands" / "sdk",),
     ),
     PackageConfig(
-        name="openhands-tools",
-        pyproject=REPO_ROOT / "openhands-tools" / "pyproject.toml",
-        source_roots=(REPO_ROOT / "openhands-tools" / "openhands" / "tools",),
+        name="praxis-tools",
+        pyproject=REPO_ROOT / "praxis-tools" / "pyproject.toml",
+        source_roots=(REPO_ROOT / "praxis-tools" / "openhands" / "tools",),
     ),
     PackageConfig(
-        name="openhands-workspace",
-        pyproject=REPO_ROOT / "openhands-workspace" / "pyproject.toml",
-        source_roots=(REPO_ROOT / "openhands-workspace" / "openhands" / "workspace",),
+        name="praxis-workspace",
+        pyproject=REPO_ROOT / "praxis-workspace" / "pyproject.toml",
+        source_roots=(REPO_ROOT / "praxis-workspace" / "openhands" / "workspace",),
     ),
     PackageConfig(
-        name="openhands-agent-server",
-        pyproject=REPO_ROOT / "openhands-agent-server" / "pyproject.toml",
+        name="praxis-agent-server",
+        pyproject=REPO_ROOT / "praxis-agent-server" / "pyproject.toml",
         source_roots=(
-            REPO_ROOT / "openhands-agent-server" / "openhands" / "agent_server",
+            REPO_ROOT / "praxis-agent-server" / "openhands" / "agent_server",
         ),
     ),
 )
@@ -656,7 +656,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             files.extend(_iter_python_files(root))
 
         records = _collect_records(files, package=package.name)
-        if package.name == "openhands-agent-server":
+        if package.name == "praxis-agent-server":
             records.extend(_collect_rest_route_records(files, package=package.name))
         records.extend(_collect_pydantic_field_records(files, package=package.name))
 

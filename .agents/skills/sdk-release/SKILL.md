@@ -26,7 +26,7 @@ automatically.
 ### Via GitHub UI
 
 Navigate to
-<https://github.com/OpenHands/software-agent-sdk/actions/workflows/prepare-release.yml>,
+<https://github.com/Praxiss-Lab/praxis-sdk/actions/workflows/prepare-release.yml>,
 click **Run workflow**, enter the version (e.g. `1.16.0`), and run it.
 
 ### Via GitHub API
@@ -160,10 +160,10 @@ When the release PR is merged, the following happens automatically:
    GitHub release with tag `v<version>` and auto-generated release notes.
 2. **`pypi-release.yml`** triggers on the published release and publishes
    all four packages to PyPI:
-   - `openhands-sdk`
-   - `openhands-tools`
-   - `openhands-workspace`
-   - `openhands-agent-server`
+   - `praxis-sdk`
+   - `praxis-tools`
+   - `praxis-workspace`
+   - `praxis-agent-server`
 3. **`version-bump-prs.yml`** triggers after successful PyPI publish and
    creates downstream version bump PRs.
 
@@ -171,7 +171,7 @@ When the release PR is merged, the following happens automatically:
 
 ```bash
 # Check each package is available (allow a few minutes for indexing)
-for pkg in openhands-sdk openhands-tools openhands-workspace openhands-agent-server; do
+for pkg in praxis-sdk praxis-tools praxis-workspace praxis-agent-server; do
   curl -s -o /dev/null -w "$pkg: %{http_code}\n" \
     "https://pypi.org/pypi/$pkg/<version>/json"
 done
@@ -191,7 +191,7 @@ Version bump PRs:
 • <https://github.com/All-Hands-AI/OpenHands/pulls?q=is%3Apr+bump-sdk-<version>|OpenHands>
 • <https://github.com/OpenHands/openhands-cli/pulls?q=is%3Apr+bump-sdk-<version>|OpenHands-CLI>
 
-Release: <https://github.com/OpenHands/software-agent-sdk/releases/tag/v<version>|v<version>>
+Release: <https://github.com/Praxiss-Lab/praxis-sdk/releases/tag/v<version>|v<version>>
 ```
 
 See `references/post-release-checklist.md` for details on reviewing

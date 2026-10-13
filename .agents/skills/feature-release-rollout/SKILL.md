@@ -42,7 +42,7 @@ First, identify what feature(s) to analyze. The user may specify:
 **For release tags:**
 ```bash
 # Clone SDK if not present
-git clone https://github.com/OpenHands/software-agent-sdk.git
+git clone https://github.com/Praxiss-Lab/praxis-sdk.git
 
 # View release notes
 cd software-agent-sdk
@@ -59,7 +59,7 @@ Clone all relevant repositories to analyze current support:
 
 ```bash
 # Clone repositories (use GITHUB_TOKEN for authenticated access)
-git clone https://github.com/OpenHands/software-agent-sdk.git
+git clone https://github.com/Praxiss-Lab/praxis-sdk.git
 git clone https://github.com/OpenHands/OpenHands-CLI.git
 git clone https://github.com/OpenHands/OpenHands.git        # Frontend in frontend/
 git clone https://github.com/OpenHands/docs.git

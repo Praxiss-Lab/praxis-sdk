@@ -30,7 +30,7 @@ if (typeof image !== 'string') {
 }
 const summary = (await readFile(resolve(args.summary), 'utf8')).trim();
 const sha = args['sdk-sha'];
-const testedCommit = `https://github.com/OpenHands/software-agent-sdk/commit/${sha}`;
+const testedCommit = `https://github.com/Praxiss-Lab/praxis-sdk/commit/${sha}`;
 const marker = '<!-- agent-server-sdk-main-drift -->';
 const body = [
   marker,

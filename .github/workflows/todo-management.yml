@@ -2,7 +2,7 @@
 # Automated TODO Management Workflow
 #
 # This workflow automatically scans for TODO(openhands) comments and creates
-# pull requests to implement them using the OpenHands agent.
+# pull requests to implement them using the Praxis agent.
 #
 # Setup:
 #  1. Add LLM_API_KEY to repository secrets
@@ -135,11 +135,6 @@ jobs:
                   ref: ${{ github.sha }}
                   persist-credentials: false
                   fetch-depth: 0
-            - name: Switch to feature branch with TODO management files
-              run: |
-                  git checkout openhands/todo-management-example
-                  git pull origin openhands/todo-management-example
-
             - name: Set up Python
               uses: actions/setup-python@v7
               with:
@@ -150,11 +145,9 @@ jobs:
               with:
                   enable-cache: true
 
-            - name: Install OpenHands dependencies
+            - name: Install owned SDK dependencies
               run: |
-                  # Install OpenHands SDK and tools from git repository
-                  uv pip install --system "openhands-sdk @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-sdk"
-                  uv pip install --system "openhands-tools @ git+https://github.com/OpenHands/agent-sdk.git@main#subdirectory=openhands-tools"
+                  uv pip install --system ./praxis-sdk ./praxis-tools
 
             - name: Copy agent files
               run: |
@@ -164,14 +157,14 @@ jobs:
 
             - name: Configure Git
               run: |
-                  git config --global user.name "openhands-bot"
+                  git config --global user.name "praxis-bot"
                   git config --global user.email \
-                    "openhands-bot@users.noreply.github.com"
+                    "praxis-bot@users.noreply.github.com"
 
             - name: Process TODO
               env:
                   LLM_MODEL: litellm_proxy/openai/gpt-5.5
-                  LLM_BASE_URL: https://llm-proxy.app.all-hands.dev
+                  LLM_BASE_URL: ${{ vars.LLM_BASE_URL }}
                   LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
                   GITHUB_TOKEN: ${{ secrets.PRAXIS_AUTOMATION_TOKEN }}
                   GITHUB_REPOSITORY: ${{ github.repository }}
@@ -257,9 +250,9 @@ jobs:
                   git add -A
                   git commit -m "Implement TODO: $TODO_DESCRIPTION
 
-                  Automatically implemented by OpenHands agent.
+                  Automatically implemented by Praxis agent.
 
-                  Co-authored-by: openhands <openhands@all-hands.dev>"
+                  Co-authored-by: Codex <codex@openai.com>"
 
                   # Push branch
                   git push origin "$BRANCH_NAME"
@@ -274,7 +267,7 @@ jobs:
                   **Description:** $TODO_DESCRIPTION
 
                   ### Implementation
-                  The OpenHands agent has analyzed the TODO and implemented the
+                  The Praxis agent has analyzed the TODO and implemented the
                   requested functionality.
 
                   ### Review Notes

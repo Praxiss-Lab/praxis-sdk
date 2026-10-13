@@ -472,7 +472,7 @@ def test_issue_2216():
     raw string to `DelegateAction.model_validate`, which then raises a
     `ValidationError`.
 
-    Ref: https://github.com/OpenHands/software-agent-sdk/issues/2216
+    Ref: https://github.com/Praxiss-Lab/praxis-sdk/issues/2216
     """
     # Raw JSON exactly as the LLM emits it — tasks is a *string*, not an object,
     # and the task description contains a ``\n`` (valid JSON escape for newline).

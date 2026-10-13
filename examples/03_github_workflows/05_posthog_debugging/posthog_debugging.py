@@ -2,7 +2,7 @@
 """
 PostHog Debugging Example
 
-This example demonstrates how to use the OpenHands agent to debug errors
+This example demonstrates how to use the Praxis agent to debug errors
 logged in PostHog.
 The agent will:
 1. Query PostHog events to understand the error using the Query API
@@ -910,7 +910,7 @@ def create_debugging_prompt(
 def main():
     """Main function to run the PostHog debugging example."""
     parser = argparse.ArgumentParser(
-        description="Debug errors from PostHog events using OpenHands agent",
+        description="Debug errors from PostHog events using Praxis agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )

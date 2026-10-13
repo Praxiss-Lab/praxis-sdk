@@ -11,7 +11,7 @@ succeeds. It creates PRs in two repositories:
 ### OpenHands-CLI (`OpenHands/openhands-cli`)
 
 - Branch: `bump-sdk-<version>`
-- Updates `openhands-sdk` and `openhands-tools` via `uv add`
+- Updates `praxis-sdk` and `praxis-tools` via `uv add`
 - Verify the PR passes CLI tests before merging
 
 ```bash
@@ -22,7 +22,7 @@ gh pr list --repo OpenHands/openhands-cli \
 ### OpenHands (`All-Hands-AI/OpenHands`)
 
 - Branch: `bump-sdk-<version>`
-- Updates `openhands-sdk`, `openhands-tools`, and `openhands-agent-server`
+- Updates `praxis-sdk`, `praxis-tools`, and `praxis-agent-server`
   in `pyproject.toml`
 - Regenerates `poetry.lock`
 - Updates `AGENT_SERVER_IMAGE` in `sandbox_spec_service.py`

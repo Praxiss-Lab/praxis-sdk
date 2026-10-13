@@ -3,7 +3,7 @@
 These tests verify that secrets expanded into mcp_config do NOT leak through
 serialization pathways (persistence, WebSocket events, API responses).
 
-See: https://github.com/OpenHands/software-agent-sdk/pull/2873#issuecomment-4273848645
+See: https://github.com/Praxiss-Lab/praxis-sdk/pull/2873#issuecomment-4273848645
 """
 
 import json

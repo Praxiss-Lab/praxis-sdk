@@ -138,7 +138,7 @@ def test_issue_2642(request):
     them.  ``_get_checked_concrete_subclasses(Action)`` then raises
     ``ValueError("Duplicate class definition ...")``.
 
-    Ref: https://github.com/OpenHands/software-agent-sdk/issues/2642
+    Ref: https://github.com/Praxiss-Lab/praxis-sdk/issues/2642
     """
     bug_actions: list[type[Action]] = [
         _Bug2642ActionA,

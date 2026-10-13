@@ -126,10 +126,22 @@ def test_fifo_lock_fairness():
     for thread in threads:
         thread.start()
 
-    # Signal threads to proceed in exact order with small delays
-    for i in range(10):
-        thread_events[i].set()
-        time.sleep(0.002)  # Small delay to ensure deterministic ordering
+    # Establish actual request order, rather than assuming sleep orders threads.
+    # Hold the lock until each worker has entered the wait queue.
+    lock.acquire()
+    try:
+        for i in range(10):
+            thread_events[i].set()
+            deadline = time.monotonic() + 5
+            while True:
+                with lock._mutex:
+                    queued = len(lock._waiters)
+                if queued == i + 1:
+                    break
+                assert time.monotonic() < deadline, "Worker did not enter wait queue"
+                time.sleep(0.001)
+    finally:
+        lock.release()
 
     # Wait for all to complete
     for thread in threads:

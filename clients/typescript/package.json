@@ -1,7 +1,7 @@
 {
-  "name": "@openhands/typescript-client",
+  "name": "@praxiss-lab/praxis-sdk-client",
   "version": "1.54.0",
-  "description": "TypeScript client for OpenHands Agent Server",
+  "description": "TypeScript client for Praxis Agent Server",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -47,7 +47,7 @@
     }
   },
   "config": {
-    "agentServerImage": "ghcr.io/openhands/agent-server:1.54.0-python"
+    "agentServerImage": "ghcr.io/praxiss-lab/praxis-agent-server:1.54.0-python"
   },
   "scripts": {
     "build": "tsc && node ./scripts/copy-json-assets.mjs && node ./scripts/rewrite-relative-imports.mjs",
@@ -110,11 +110,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/OpenHands/software-agent-sdk.git",
+    "url": "https://github.com/Praxiss-Lab/praxis-sdk.git",
     "directory": "clients/typescript"
   },
   "bugs": {
-    "url": "https://github.com/OpenHands/software-agent-sdk/issues"
+    "url": "https://github.com/Praxiss-Lab/praxis-sdk/issues"
   },
-  "homepage": "https://github.com/OpenHands/software-agent-sdk/tree/main/clients/typescript#readme"
+  "homepage": "https://github.com/Praxiss-Lab/praxis-sdk/tree/main/clients/typescript#readme"
 }

@@ -113,9 +113,7 @@ def agent_server():
 def test_agent_server_starts_with_wsproto(agent_server):
     response = requests.get(f"http://127.0.0.1:{agent_server['port']}/docs")
     assert response.status_code == 200
-    assert (
-        "OpenHands Agent Server" in response.text or "swagger" in response.text.lower()
-    )
+    assert "Praxis Agent Server" in response.text or "swagger" in response.text.lower()
 
 
 @pytest.mark.asyncio

@@ -31,7 +31,7 @@ _prod = _load_prod_module()
 def _fixture(root: Path, pinned: str, source: str) -> tuple[Path, Path]:
     client = root / "client"
     client.mkdir()
-    image = f"ghcr.io/openhands/agent-server:{pinned}-python"
+    image = f"ghcr.io/praxiss-lab/praxis-agent-server:{pinned}-python"
     (client / "package.json").write_text(
         json.dumps({"config": {"agentServerImage": image}})
     )
@@ -77,7 +77,7 @@ def test_release_pr_uses_source_contract(tmp_path, urlopen):
         "use_source_contract": "true",
     }
     assert calls == [
-        "https://github.com/OpenHands/software-agent-sdk/releases/download/"
+        "https://github.com/Praxiss-Lab/praxis-sdk/releases/download/"
         "v1.53.0/openapi.json"
     ]
 

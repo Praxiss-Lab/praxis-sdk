@@ -57,12 +57,12 @@ updates allow one open PR per ecosystem (three in total), staggered across Monda
 Tuesday and Wednesday at 06:00 UTC. Security updates stay enabled and grouped;
 their PR limit is controlled separately by GitHub, not by the version-update limit.
 Existing individual Dependabot PRs and previously queued runs are not removed by
-this configuration. The npm runtime-pin updater is weekly. Daily upstream issue
-auto-close scheduling and upstream docs/evaluation dispatches are disabled for
-Praxiss-Lab; manual issue tooling remains available.
-Version-bump jobs targeting OpenHands automation/app/enterprise/cloud repositories
-are likewise restricted to the OpenHands organization; the local client bump
-remains an explicit main-branch dispatch.
+this configuration. The npm runtime-pin updater is weekly. Hosted duplicate triage,
+upstream docs deployment and hosted evaluation workflows have been removed.
+Version-bump jobs targeting external automation/app/enterprise/cloud repositories
+have been removed; the local client bump remains an explicit main-branch dispatch.
+Example coverage reads the local catalog and checks all examples on both PRs and
+main. Catalog edits select the example validation scope.
 
 ## Repository settings required for enforcement
 

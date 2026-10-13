@@ -76,10 +76,10 @@ if [ -n "$CHANGED_FILES" ]; then
 
     while IFS= read -r file; do
         case "$file" in
-            openhands-sdk/*) add_project "tests/sdk" ;;
-            openhands-tools/*) add_project "tests/tools" ;;
-            openhands-workspace/*) add_project "tests/workspace" ;;
-            openhands-agent-server/*) add_project "tests/agent_server" ;;
+            praxis-sdk/*) add_project "tests/sdk" ;;
+            praxis-tools/*) add_project "tests/tools" ;;
+            praxis-workspace/*) add_project "tests/workspace" ;;
+            praxis-agent-server/*) add_project "tests/agent_server" ;;
             tests/sdk/*) add_project "tests/sdk" ;;
             tests/tools/*) add_project "tests/tools" ;;
             tests/workspace/*) add_project "tests/workspace" ;;

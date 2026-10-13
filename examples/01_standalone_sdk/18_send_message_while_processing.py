@@ -2,7 +2,7 @@
 Example demonstrating that user messages can be sent and processed while
 an agent is busy.
 
-This example demonstrates a key capability of the OpenHands agent system: the ability
+This example demonstrates a key capability of the Praxis agent system: the ability
 to receive and process new user messages even while the agent is actively working on
 a previous task. This is made possible by the agent's event-driven architecture.
 

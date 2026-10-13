@@ -31,7 +31,7 @@ jobs:
             - name: Build binary (Windows)
               if: runner.os == 'Windows'
               shell: bash
-              run: uv run pyinstaller openhands-agent-server/openhands/agent_server/agent-server.spec
+              run: uv run pyinstaller praxis-agent-server/openhands/agent_server/agent-server.spec
 
             - name: Test binary
               shell: bash
@@ -39,9 +39,9 @@ jobs:
                   set -euo pipefail
 
                   if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
-                      BIN=./dist/openhands-agent-server.exe
+                      BIN=./dist/praxis-agent-server.exe
                   else
-                      BIN=./dist/openhands-agent-server
+                      BIN=./dist/praxis-agent-server
                   fi
 
                   "$BIN" --help
@@ -86,9 +86,9 @@ jobs:
                   set -euo pipefail
 
                   if [[ "${RUNNER_OS:-}" == "Windows" ]]; then
-                      BIN=./dist/openhands-agent-server.exe
+                      BIN=./dist/praxis-agent-server.exe
                   else
-                      BIN=./dist/openhands-agent-server
+                      BIN=./dist/praxis-agent-server
                   fi
 
                   # A PyInstaller onefile binary unpacks itself to a temp dir on
@@ -238,7 +238,7 @@ jobs:
               with:
                   name: openhands-server-${{ matrix.os }}
                   path: |
-                      dist/openhands-agent-server*
+                      dist/praxis-agent-server*
                   retention-days: 7
 
         timeout-minutes: 30

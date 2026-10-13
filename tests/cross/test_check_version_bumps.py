@@ -38,10 +38,10 @@ def _init_repo_with_versions(tmp_path: Path, version: str) -> Path:
     repo_root.mkdir()
 
     for package_dir in (
-        "openhands-sdk",
-        "openhands-tools",
-        "openhands-workspace",
-        "openhands-agent-server",
+        "praxis-sdk",
+        "praxis-tools",
+        "praxis-workspace",
+        "praxis-agent-server",
     ):
         package_path = repo_root / package_dir
         package_path.mkdir()
@@ -70,6 +70,24 @@ def test_get_release_pr_version_accepts_title_or_branch():
     assert get_release_pr_version("chore: test", "rel-1.15.0") == ("1.15.0", [])
 
 
+def test_historical_layout_rename_preserves_version_guard(tmp_path: Path):
+    repo = _init_repo_with_versions(tmp_path, "1.54.0")
+    packages = [p for p in _prod.PACKAGE_FILES if p.startswith("praxis-")]
+    for name in packages:
+        (repo / name).rename(repo / name.replace("praxis-", "openhands-", 1))
+    subprocess.run(["git", "add", "-A"], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "historical layout"], cwd=repo, check=True)
+    subprocess.run(["git", "branch", "-f", "origin/main", "HEAD"], cwd=repo, check=True)
+    for name in packages:
+        (repo / name.replace("praxis-", "openhands-", 1)).rename(repo / name)
+    assert find_version_changes(repo, "main") == []
+    _write_version(repo / "praxis-sdk" / "pyproject.toml", "1.54.1")
+    changes = find_version_changes(repo, "main")
+    assert len(changes) == 1
+    assert changes[0].previous_version == "1.54.0"
+    assert validate_version_changes(changes, "Rebrand", "chore/rebrand")
+
+
 def test_get_release_pr_version_rejects_mismatched_markers():
     version, errors = get_release_pr_version("Release v1.15.0", "rel-1.16.0")
 
@@ -82,8 +100,8 @@ def test_get_release_pr_version_rejects_mismatched_markers():
 def test_validate_version_changes_rejects_agent_server_bump_in_non_release_pr():
     changes = [
         VersionChange(
-            package="openhands-agent-server",
-            path=Path("openhands-agent-server/pyproject.toml"),
+            package="praxis-agent-server",
+            path=Path("praxis-agent-server/pyproject.toml"),
             previous_version="1.14.0",
             current_version="1.15.0",
         )
@@ -97,7 +115,7 @@ def test_validate_version_changes_rejects_agent_server_bump_in_non_release_pr():
 
     assert errors == [
         "Package version changes are only allowed in release PRs. Detected "
-        "changes: openhands-agent-server (1.14.0 -> 1.15.0). Use the Prepare "
+        "changes: praxis-agent-server (1.14.0 -> 1.15.0). Use the Prepare "
         "Release workflow so the PR title is 'Release vX.Y.Z' or the branch is "
         "'rel-X.Y.Z'."
     ]
@@ -106,8 +124,8 @@ def test_validate_version_changes_rejects_agent_server_bump_in_non_release_pr():
 def test_validate_version_changes_accepts_matching_release_version():
     changes = [
         VersionChange(
-            package="openhands-agent-server",
-            path=Path("openhands-agent-server/pyproject.toml"),
+            package="praxis-agent-server",
+            path=Path("praxis-agent-server/pyproject.toml"),
             previous_version="1.14.0",
             current_version="1.15.0",
         )
@@ -126,7 +144,7 @@ def test_validate_version_changes_accepts_matching_release_version():
 def test_find_version_changes_detects_agent_server_package(tmp_path: Path):
     repo_root = _init_repo_with_versions(tmp_path, "1.14.0")
     _write_version(
-        repo_root / "openhands-agent-server" / "pyproject.toml",
+        repo_root / "praxis-agent-server" / "pyproject.toml",
         "1.15.0",
     )
 
@@ -134,8 +152,8 @@ def test_find_version_changes_detects_agent_server_package(tmp_path: Path):
 
     assert changes == [
         VersionChange(
-            package="openhands-agent-server",
-            path=Path("openhands-agent-server/pyproject.toml"),
+            package="praxis-agent-server",
+            path=Path("praxis-agent-server/pyproject.toml"),
             previous_version="1.14.0",
             current_version="1.15.0",
         )
@@ -149,8 +167,8 @@ def test_write_version_change_output(tmp_path: Path):
     _prod.write_version_change_output(
         [
             VersionChange(
-                package="openhands-sdk",
-                path=Path("openhands-sdk/pyproject.toml"),
+                package="praxis-sdk",
+                path=Path("praxis-sdk/pyproject.toml"),
                 previous_version="1.47.0",
                 current_version="1.48.0",
             )
@@ -177,6 +195,6 @@ def test_validate_package_version_consistency_rejects_typescript_drift(tmp_path:
     )
 
     assert _prod.validate_package_version_consistency(repo_root) == [
-        "Package versions must match openhands-sdk (1.44.1); "
+        "Package versions must match praxis-sdk (1.44.1); "
         "mismatched packages: typescript-client (1.39.0)."
     ]

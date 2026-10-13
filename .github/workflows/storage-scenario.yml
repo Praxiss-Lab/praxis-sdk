@@ -24,8 +24,10 @@ jobs:
             - name: Install deps
               run: uv sync --frozen --group dev
 
-            - name: Pull agent-server image
-              run: docker pull ghcr.io/openhands/agent-server:latest-python
+            - name: Build current agent-server image
+              run: >-
+                  docker build --target source -t ghcr.io/praxiss-lab/praxis-agent-server:latest-python
+                  -f praxis-agent-server/openhands/agent_server/docker/Dockerfile .
 
             - name: Run storage scenario
               run: uv run pytest -m docker_live tests/agent_server/docker_runtime/test_storage_scenario.py

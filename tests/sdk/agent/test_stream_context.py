@@ -1,6 +1,6 @@
 """StreamContext mints one identity per step and always closes it.
 
-See https://github.com/OpenHands/software-agent-sdk/issues/4682.
+See https://github.com/Praxiss-Lab/praxis-sdk/issues/4682.
 """
 
 import asyncio

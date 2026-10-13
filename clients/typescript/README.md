@@ -1,4 +1,4 @@
-# OpenHands Agent Server TypeScript Client
+# Praxis Agent Server TypeScript Client
 
 > ⚠️ **ALPHA SOFTWARE WARNING** ⚠️
 >
@@ -11,7 +11,7 @@
 >
 > Please use with caution and expect frequent updates.
 
-A TypeScript client library for the OpenHands Agent Server API. Mirrors the structure and functionality of the Python [OpenHands Software Agent SDK](https://github.com/OpenHands/software-agent-sdk),
+A TypeScript client library for the Praxis Agent Server API. Mirrors the structure and functionality of the Python [Praxis SDK](https://github.com/Praxiss-Lab/praxis-sdk),
 but only supports remote conversations.
 
 ## ✨ Browser Compatible
@@ -20,7 +20,7 @@ This client is **fully browser-compatible** and works without Node.js dependenci
 
 ## Installation
 
-This package is published to npm and GitHub Packages from the `clients/typescript` directory of the OpenHands Software Agent SDK repository.
+This package is published to npm and GitHub Packages from the `clients/typescript` directory of the Praxis SDK repository.
 
 ### Option 1: Configure .npmrc
 
@@ -70,7 +70,7 @@ issue. Ordinary client PRs never generate from the moving SDK branch.
 
 ## Repository boundaries
 
-The `clients/typescript` package in this repository owns the browser-compatible typed client for the OpenHands Agent Server API. The Python packages and Agent Server in this repository own the canonical API implementation and agent behavior; [`OpenHands/OpenHands`](https://github.com/OpenHands/OpenHands) consumes this client for Agent Canvas UI; and [`OpenHands/extensions`](https://github.com/OpenHands/extensions) owns reusable skills, plugins, automations, and integrations; [`OpenHands/automation`](https://github.com/OpenHands/automation) owns scheduling, webhooks, run history, and dispatching.
+The `clients/typescript` package in this repository owns the browser-compatible typed client for the Praxis Agent Server API. The Python packages and Agent Server in this repository own the canonical API implementation and agent behavior; [`OpenHands/OpenHands`](https://github.com/OpenHands/OpenHands) consumes this client for Agent Canvas UI; and [`OpenHands/extensions`](https://github.com/OpenHands/extensions) owns reusable skills, plugins, automations, and integrations; [`OpenHands/automation`](https://github.com/OpenHands/automation) owns scheduling, webhooks, run history, and dispatching.
 
 The normal flow is SDK/Agent Server → OpenAPI contract → this client → Agent Canvas. Add typed endpoint access under `clients/typescript`, backend behavior in the Python SDK or Agent Server packages, UI in Canvas, and automation lifecycle behavior in `automation`.
 
@@ -84,7 +84,7 @@ You'll need an AgentServer running somewhere for the client to connect to. You c
 docker run -p 127.0.0.1:8000:8000 -p 127.0.0.1:8001:8001 \
   -e SESSION_API_KEY="$SESSION_API_KEY" \
   -e OH_ALLOW_CORS_ORIGINS='["*"]' \
-  ghcr.io/openhands/agent-server:71b070d-python
+  ghcr.io/praxiss-lab/praxis-agent-server:71b070d-python
 ```
 
 ### Creating a Conversation
@@ -303,7 +303,7 @@ await conversation.updateSecrets({
 
 ### Conversation
 
-Factory function that creates conversations with OpenHands agents.
+Factory function that creates conversations with Praxis agents.
 
 #### Constructor
 
@@ -501,7 +501,7 @@ Integration tests require a running agent-server in Docker with a mounted worksp
      --name agent-server \
      -p 127.0.0.1:8010:8000 \
      -v /tmp/agent-workspace:/workspace \
-     ghcr.io/openhands/agent-server:1.44.0-python --host 0.0.0.0
+     ghcr.io/praxiss-lab/praxis-agent-server:1.44.0-python --host 0.0.0.0
    ```
 
 3. Wait for the server to be ready:

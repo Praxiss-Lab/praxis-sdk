@@ -8,41 +8,41 @@ include pyproject.toml
 include uv.lock
 
 # ==============================================================================
-# openhands-sdk
+# praxis-sdk
 # ==============================================================================
-include openhands-sdk/pyproject.toml
-recursive-include openhands-sdk *.py
-recursive-include openhands-sdk *.j2
-recursive-include openhands-sdk py.typed
+include praxis-sdk/pyproject.toml
+recursive-include praxis-sdk *.py
+recursive-include praxis-sdk *.j2
+recursive-include praxis-sdk py.typed
 
 # ==============================================================================
-# openhands-tools
+# praxis-tools
 # ==============================================================================
-include openhands-tools/pyproject.toml
-recursive-include openhands-tools *.py
-recursive-include openhands-tools *.j2
-recursive-include openhands-tools py.typed
+include praxis-tools/pyproject.toml
+recursive-include praxis-tools *.py
+recursive-include praxis-tools *.j2
+recursive-include praxis-tools py.typed
 
 # ==============================================================================
-# openhands-workspace
+# praxis-workspace
 # ==============================================================================
-include openhands-workspace/pyproject.toml
-recursive-include openhands-workspace *.py
-recursive-include openhands-workspace py.typed
+include praxis-workspace/pyproject.toml
+recursive-include praxis-workspace *.py
+recursive-include praxis-workspace py.typed
 
 # ==============================================================================
-# openhands-agent-server
+# praxis-agent-server
 # ==============================================================================
-include openhands-agent-server/pyproject.toml
-recursive-include openhands-agent-server *.py
-recursive-include openhands-agent-server py.typed
+include praxis-agent-server/pyproject.toml
+recursive-include praxis-agent-server *.py
+recursive-include praxis-agent-server py.typed
 
 # Docker build files
-include openhands-agent-server/openhands/agent_server/docker/Dockerfile
-include openhands-agent-server/openhands/agent_server/docker/wallpaper.svg
+include praxis-agent-server/openhands/agent_server/docker/Dockerfile
+include praxis-agent-server/openhands/agent_server/docker/wallpaper.svg
 
 # PyInstaller spec
-include openhands-agent-server/openhands/agent_server/agent-server.spec
+include praxis-agent-server/openhands/agent_server/agent-server.spec
 
 # VSCode extensions
-recursive-include openhands-agent-server/openhands/agent_server/vscode_extensions *
+recursive-include praxis-agent-server/openhands/agent_server/vscode_extensions *

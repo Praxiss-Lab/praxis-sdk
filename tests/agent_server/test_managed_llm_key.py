@@ -119,17 +119,18 @@ def test_scopes_to_managed_base_url(monkeypatch):
 @pytest.mark.parametrize("persisted", [False, True])
 def test_canonical_managed_provider_refreshes(monkeypatch, persisted):
     monkeypatch.setenv(REFRESH_URL_ENV, REFRESH_URL)
-    monkeypatch.setenv(REFRESH_BASE_URLS_ENV, "https://llm-proxy.app.all-hands.dev")
+    monkeypatch.setenv(REFRESH_BASE_URLS_ENV, MANAGED_BASE_URL)
     llm = LLM(
-        model="openhands/deepseek-v4.1-flash",
+        model="litellm_proxy/deepseek-v4.1-flash",
         api_key=SecretStr("stale_key"),
+        base_url=MANAGED_BASE_URL,
         usage_id="managed",
     )
     if persisted:
         llm = LLM.model_validate_json(
             llm.model_dump_json(context={"expose_secrets": True})
         )
-    assert llm.base_url is None
+    assert llm.base_url == MANAGED_BASE_URL
     assert register_managed_llm_key_refresh(_agent(llm)) == 1
     keys = []
 

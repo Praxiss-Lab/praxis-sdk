@@ -5,7 +5,7 @@ when the WebSocket callback is delayed and run() returns before events are
 delivered to the client.
 
 This is a regression test for the issue observed in PR #1829:
-https://github.com/OpenHands/software-agent-sdk/actions/runs/21364607784/job/61492749827?pr=1829#step:7:5709
+https://github.com/Praxiss-Lab/praxis-sdk/actions/runs/21364607784/job/61492749827?pr=1829#step:7:5709
 
 Run with: uv run pytest tests/cross/test_event_loss_repro.py -v
 """

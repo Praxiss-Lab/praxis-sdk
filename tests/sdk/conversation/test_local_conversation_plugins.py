@@ -1226,7 +1226,7 @@ class TestPluginMcpSecretsExpansion:
     These tests verify that secrets injected via the REST API are correctly
     used for MCP config variable expansion (${VAR} syntax).
 
-    See: https://github.com/OpenHands/software-agent-sdk/issues/2872
+    See: https://github.com/Praxiss-Lab/praxis-sdk/issues/2872
     """
 
     def test_plugin_mcp_secrets_without_defaults(self, tmp_path: Path, basic_agent):

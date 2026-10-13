@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping improve the OpenHands Software Agent SDK.
+Thank you for helping improve the Praxis SDK.
 
 This repo is a foundation. We want the SDK to stay stable and extensible so that many
 applications can build on it safely.
@@ -11,7 +11,7 @@ Downstream applications we actively keep in mind:
 - [OpenHands Enterprise](https://github.com/OpenHands/OpenHands/blob/main/enterprise/README.md) (client)
 
 The SDK itself has a Python interface. In addition, the
-[agent-server](https://docs.openhands.dev/sdk/guides/agent-server/overview) is the
+[agent-server](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs/guides/agent-server/overview) is the
 REST/WebSocket server component that exposes the SDK for remote execution and integrations.
 Changes should keep both interfaces stable and consistent.
 
@@ -38,7 +38,7 @@ We welcome all contributions, big or small, to improve or extend the software ag
 
 You may find that occasionally we are opinionated about several things:
 
-- **OpenHands SDK is its own thing**: its downstream are client applications.
+- **Praxis SDK is its own thing**: its downstream are client applications.
 - **Prefer interfaces over special cases**: if a client needs something, add or improve a
   clean, reusable interface/extension point instead of adding a shortcut.
 - **Extensibility over one-off patches**: design features so multiple clients can adopt them
@@ -75,7 +75,7 @@ through the shape of a clean interface.
 This file is mostly about principles. For the mechanics, please see:
 - [AGENTS.md](AGENTS.md) for AI agents
 - [DEVELOPMENT.md](DEVELOPMENT.md) for humans
-- [openhands-sdk/openhands/sdk/subagent/AGENTS.md](openhands-sdk/openhands/sdk/subagent/AGENTS.md) for file-based subagent discovery, precedence, and task handoff conventions
+- [praxis-sdk/openhands/sdk/subagent/AGENTS.md](praxis-sdk/openhands/sdk/subagent/AGENTS.md) for file-based subagent discovery, precedence, and task handoff conventions
 - `examples/01_standalone_sdk/41_task_tool_set.py` for delegating work to registered subagents with resume support
 - `examples/01_standalone_sdk/42_file_based_subagents.py` for programmatic `AgentDefinition` registration
 

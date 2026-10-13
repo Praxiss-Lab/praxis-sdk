@@ -58,7 +58,7 @@ tools = [
 #       system_prompt_kwargs={"cli_mode": True, "repo": "my-project"},
 #   )
 #
-# See: https://docs.openhands.dev/sdk/guides/skill#customizing-system-prompts
+# See: https://github.com/Praxiss-Lab/praxis-sdk/tree/main/praxis-sdk/openhands/sdk/context/agent_context.py
 agent_context = AgentContext(
     skills=[
         Skill(

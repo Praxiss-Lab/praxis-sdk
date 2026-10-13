@@ -1,6 +1,6 @@
 """Tests for the deferred-init / dormant-mode flow.
 
-Background: https://github.com/OpenHands/software-agent-sdk/issues/2523
+Background: https://github.com/Praxiss-Lab/praxis-sdk/issues/2523
 """
 
 from __future__ import annotations

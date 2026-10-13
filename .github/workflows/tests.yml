@@ -43,7 +43,7 @@ jobs:
 
                   # Detect test files hiding inside source packages instead of tests/
                   # Excludes */testing/* dirs (testing utilities, not runnable tests)
-                  stray=$(find openhands-sdk openhands-tools openhands-workspace openhands-agent-server \
+                  stray=$(find praxis-sdk praxis-tools praxis-workspace praxis-agent-server \
                     \( -name 'test_*.py' -o -name '*_test.py' \) \
                     -not -path '*/testing/*' \
                     2>/dev/null || true)
@@ -98,7 +98,7 @@ jobs:
                   # coverage collection. --forked prevents coverage from child processes.
                   CI=true uv run python -m pytest -vvs \
                     -n auto \
-                    --cov=openhands-sdk \
+                    --cov=praxis-sdk \
                     --cov-report=term-missing \
                     --cov-fail-under=0 \
                     --cov-config=pyproject.toml \
@@ -180,7 +180,7 @@ jobs:
                   # when running in parallel (shared /tmp paths, subprocess management)
                   CI=true uv run python -m pytest -vvs \
                     --forked \
-                    --cov=openhands-tools \
+                    --cov=praxis-tools \
                     --cov-report=term-missing \
                     --cov-fail-under=0 \
                     --cov-config=pyproject.toml \
@@ -231,7 +231,7 @@ jobs:
                   # Browser/file-editor e2e and terminal shell assumptions remain
                   # tracked in #2986 and #2988.
                   uv run python -m pytest -vvs `
-                    --cov=openhands-tools `
+                    --cov=praxis-tools `
                     --cov-report=term-missing `
                     --cov-fail-under=0 `
                     --cov-config=pyproject.toml `
@@ -284,7 +284,7 @@ jobs:
                   # coverage collection. --forked prevents coverage from child processes.
                   CI=true uv run python -m pytest -vvs \
                     -n auto \
-                    --cov=openhands-agent-server \
+                    --cov=praxis-agent-server \
                     --cov-report=term-missing \
                     --cov-fail-under=0 \
                     --cov-config=pyproject.toml \
@@ -358,7 +358,7 @@ jobs:
                   rm -f .coverage
                   CI=true uv run python -m pytest -vvs \
                     -n auto \
-                    --cov=openhands-workspace \
+                    --cov=praxis-workspace \
                     --cov-report=term-missing \
                     --cov-fail-under=0 \
                     --cov-config=pyproject.toml \

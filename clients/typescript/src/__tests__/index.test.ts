@@ -1,6 +1,6 @@
 import { Conversation, Agent, Workspace, RemoteConversation, RemoteWorkspace } from '../index';
 
-describe('OpenHands Agent Server TypeScript Client', () => {
+describe('Praxis Agent Server TypeScript Client', () => {
   describe('Exports', () => {
     it('should export Conversation', () => {
       expect(Conversation).toBeDefined();

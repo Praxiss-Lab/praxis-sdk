@@ -263,7 +263,7 @@ class TestRedactUrlCredentialsInText:
 class TestRedactTextSecretsDictKeys:
     """Dict-entry redaction is case-insensitive, like is_secret_key.
 
-    Regression tests for https://github.com/OpenHands/software-agent-sdk/issues/4505
+    Regression tests for https://github.com/Praxiss-Lab/praxis-sdk/issues/4505
     """
 
     def test_redacts_lowercase_and_mixed_case_dict_keys(self):

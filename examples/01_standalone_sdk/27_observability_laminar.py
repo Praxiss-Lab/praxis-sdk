@@ -2,7 +2,7 @@
 Observability & Laminar example
 
 This example demonstrates enabling OpenTelemetry tracing with Laminar in the
-OpenHands SDK. Set LMNR_PROJECT_API_KEY and run the script to see traces.
+Praxis SDK. Set LMNR_PROJECT_API_KEY and run the script to see traces.
 """
 
 import os

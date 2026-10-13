@@ -149,7 +149,7 @@ def test_pinned_cache_entry_never_expires():
     )
 
     fake_skill = Skill(name="pinned-skill", content="pinned content")
-    cache_key = ("https://github.com/OpenHands/extensions", "v1.0.0", None)
+    cache_key = ("https://example.test/skills", "v1.0.0", None)
 
     _invalidate_public_skills_cache()
     _seed_cache(
@@ -161,7 +161,9 @@ def test_pinned_cache_entry_never_expires():
     )
 
     with patch("openhands.sdk.skills.skill.update_skills_repository") as mock_update:
-        result = load_public_skills(ref="v1.0.0", marketplace_path=None)
+        result = load_public_skills(
+            repo_url="https://example.test/skills", ref="v1.0.0", marketplace_path=None
+        )
         mock_update.assert_not_called()
 
     assert len(result) == 1
@@ -180,7 +182,7 @@ def test_mutable_cache_entry_expires_after_ttl():
     )
 
     fake_skill = Skill(name="stale-skill", content="stale content")
-    cache_key = ("https://github.com/OpenHands/extensions", "main", None)
+    cache_key = ("https://example.test/skills", "main", None)
 
     _invalidate_public_skills_cache()
     _seed_cache(
@@ -193,5 +195,7 @@ def test_mutable_cache_entry_expires_after_ttl():
 
     with patch("openhands.sdk.skills.skill.update_skills_repository") as mock_update:
         mock_update.return_value = None  # simulates transient failure
-        load_public_skills(ref="main", marketplace_path=None)
+        load_public_skills(
+            repo_url="https://example.test/skills", ref="main", marketplace_path=None
+        )
         mock_update.assert_called_once()

@@ -2,7 +2,7 @@
 """
 Datadog Debugging Example
 
-This example demonstrates how to use the OpenHands agent to debug errors
+This example demonstrates how to use the Praxis agent to debug errors
 logged in Datadog.
 The agent will:
 1. Query Datadog logs to understand the error using curl commands
@@ -543,7 +543,7 @@ def create_debugging_prompt(
 def main():
     """Main function to run the Datadog debugging example."""
     parser = argparse.ArgumentParser(
-        description="Debug errors from Datadog logs using OpenHands agent",
+        description="Debug errors from Datadog logs using Praxis agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )

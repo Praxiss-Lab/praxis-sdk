@@ -90,7 +90,7 @@ def generate_description(
     if name:
         return f"Skill: {name}"[:1024]
 
-    return "A skill for OpenHands agent."
+    return "A skill for Praxis agent."
 
 
 def convert_legacy_skill(

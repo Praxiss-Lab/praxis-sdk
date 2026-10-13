@@ -121,7 +121,7 @@ The script:
 ### Prerequisites
 
 - Docker installed and running
-- OpenHands SDK installed
+- Praxis SDK installed
 - `LLM_API_KEY` environment variable set
 
 ### Steps
@@ -249,13 +249,13 @@ with DockerDevWorkspace(
 ## Related Documentation
 
 - [Standalone Custom Tools Example](../../01_standalone_sdk/02_custom_tools.py)
-- [Tool Definition API](../../../openhands-sdk/openhands/sdk/tool/)
-- [Agent Server API](../../../openhands-agent-server/)
-- [Dynamic Tool Registration](https://github.com/OpenHands/software-agent-sdk/pull/1129)
+- [Tool Definition API](../../../praxis-sdk/openhands/sdk/tool/)
+- [Agent Server API](../../../praxis-agent-server/)
+- [Dynamic Tool Registration](https://github.com/Praxiss-Lab/praxis-sdk/pull/1129)
 
 ## Questions?
 
 If you have questions or run into issues:
-1. Check the [SDK documentation](https://docs.all-hands.dev/sdk/)
-2. Review existing tools in `openhands-tools/`
-3. Open an issue on [GitHub](https://github.com/OpenHands/software-agent-sdk/issues)
+1. Check the [SDK documentation](https://github.com/Praxiss-Lab/praxis-sdk/tree/main/docs)
+2. Review existing tools in `praxis-tools/`
+3. Open an issue on [GitHub](https://github.com/Praxiss-Lab/praxis-sdk/issues)

@@ -1,7 +1,7 @@
 /**
- * OpenHands Agent Server TypeScript Client
+ * Praxis Agent Server TypeScript Client
  *
- * A TypeScript client library for the OpenHands Agent Server API that mirrors
+ * A TypeScript client library for the Praxis Agent Server API that mirrors
  * the structure and functionality of the Python SDK.
  */
 
@@ -219,7 +219,7 @@ export type {
   ConversationType,
 } from './conversation/base';
 
-// ACP provider registry (mirrors openhands-sdk; see scripts/validate-acp-providers.mjs)
+// ACP provider registry (mirrors praxis-sdk; see scripts/validate-acp-providers.mjs)
 export { ACP_PROVIDERS, ACP_SETTINGS_KEYS, getAcpProvider } from './models/acp';
 export type { ACPModelOption, ACPProviderInfo, ACPProviderKey } from './models/acp';
 export type {
@@ -229,7 +229,7 @@ export type {
   ACPModelInfo,
 } from './models/acp-model-discovery';
 
-// Agent profile types (mirrors openhands-sdk agent_profile.py + resolver.py)
+// Agent profile types (mirrors praxis-sdk agent_profile.py + resolver.py)
 export type {
   AgentKind,
   ACPServerKind,

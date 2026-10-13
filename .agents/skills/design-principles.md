@@ -1,11 +1,11 @@
 ---
 name: design-principles
-description: Core architectural design principles of the OpenHands Software Agent SDK. Reference when making architectural decisions, reviewing PRs that change agent/tool/state boundaries, or evaluating whether a proposed change aligns with V1 design goals.
+description: Core architectural design principles of the Praxis SDK. Reference when making architectural decisions, reviewing PRs that change agent/tool/state boundaries, or evaluating whether a proposed change aligns with V1 design goals.
 ---
 
 # SDK Design Principles
 
-Reference: <https://docs.openhands.dev/sdk/arch/design>
+Reference: <https://github.com/Praxiss-Lab/praxis-sdk/tree/main/.agents/skills/design-principles.md>
 
 ## Quick Summary
 

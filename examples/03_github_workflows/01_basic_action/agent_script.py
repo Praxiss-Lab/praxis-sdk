@@ -2,7 +2,7 @@
 """
 Example: Task Runner
 
-This script runs OpenHands agent for an arbitrary task. It accepts a
+This script runs Praxis agent for an arbitrary task. It accepts a
 prompt either as a string or from a file/URL and executes the task.
 Designed for use with GitHub Actions workflows.
 
@@ -75,9 +75,7 @@ def load_prompt(prompt_location: str) -> str:
 
 def main():
     """Run the task with the provided prompt."""
-    parser = argparse.ArgumentParser(
-        description="Run OpenHands agent for arbitrary tasks"
-    )
+    parser = argparse.ArgumentParser(description="Run Praxis agent for arbitrary tasks")
     parser.add_argument(
         "prompt_location",
         nargs="?",

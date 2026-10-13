@@ -2253,7 +2253,7 @@ class TestACPAgentStep:
     def test_step_retires_its_stream_on_the_turn_finish_action(self, tmp_path):
         """An ACP turn's streamed text lands in the FinishAction, not a message.
 
-        See https://github.com/OpenHands/software-agent-sdk/issues/4682.
+        See https://github.com/Praxiss-Lab/praxis-sdk/issues/4682.
         """
         agent = _make_agent()
         conversation = self._make_conversation_with_message(tmp_path)
@@ -9168,8 +9168,10 @@ class TestACPFileSecretMaterialisation:
         mock_warn.assert_not_called()
         conn.new_session.assert_called_once()
 
-    def test_terminal_only_auth_without_seeded_file_warns(self, tmp_path):
-        agent = _make_agent()
+    def test_terminal_only_auth_without_seeded_file_warns(self, tmp_path, monkeypatch):
+        # Model absence explicitly; operator auth files must not affect this unit case.
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        agent = _make_agent(acp_file_secrets=[])
         state = self._state(tmp_path)
         conn = self._make_conn(
             agent_name="pi-acp",

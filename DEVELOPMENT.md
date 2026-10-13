@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-git clone https://github.com/OpenHands/software-agent-sdk.git
+git clone https://github.com/Praxiss-Lab/praxis-sdk.git
 cd software-agent-sdk
 make build
 ```
@@ -34,10 +34,10 @@ uv run pytest tests/tools/               # Tools tests only
 
 ```
 software-agent-sdk/
-├── openhands-sdk/          # Core SDK package
-├── openhands-tools/        # Built-in tools
-├── openhands-workspace/    # Workspace management
-├── openhands-agent-server/ # Agent server
+├── praxis-sdk/          # Core SDK package
+├── praxis-tools/        # Built-in tools
+├── praxis-workspace/    # Workspace management
+├── praxis-agent-server/ # Agent server
 ├── examples/               # Usage examples
 └── tests/                  # Test suites
 ```
@@ -57,10 +57,10 @@ For questions, join our [Slack community](https://openhands.dev/joinslack).
 the first `user` message.**
 
 The canonical enforcement lives in `Agent.init_state()`
-(`openhands-sdk/openhands/sdk/agent/agent.py`): it guarantees the `SystemPromptEvent`
+(`praxis-sdk/openhands/sdk/agent/agent.py`): it guarantees the `SystemPromptEvent`
 sits at the head of the event stream (index 0/1) and raises `AssertionError` if a user
 `MessageEvent` appears before it. `LLMConvertibleEvent.events_to_messages()`
-(`openhands-sdk/openhands/sdk/event/base.py`) projects the event stream to messages in
+(`praxis-sdk/openhands/sdk/event/base.py`) projects the event stream to messages in
 order, preserving the system lead-in on the main agent loop.
 
 This applies to **all** standalone LLM calls, not just the agent loop: condensers, goal

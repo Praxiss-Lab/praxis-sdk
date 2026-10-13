@@ -1,6 +1,6 @@
 # Release Automation Workflows
 
-This document describes the automated release workflows for the OpenHands Software Agent SDK.
+This document describes the automated release workflows for the Praxis SDK.
 
 ## Overview
 
@@ -16,7 +16,7 @@ Publisher workflows do not listen for GitHub release events. This avoids relying
 
 ### Step 1: Trigger the Prepare Release Workflow
 
-1. Go to the [Actions tab](https://github.com/OpenHands/software-agent-sdk/actions)
+1. Go to the [Actions tab](https://github.com/Praxiss-Lab/praxis-sdk/actions)
 2. Select **"Prepare Release"** workflow from the left sidebar
 3. Click **"Run workflow"** button
 4. Enter the version number (e.g., `1.2.3`) - must be in format `X.Y.Z`
@@ -50,7 +50,7 @@ Merging the release PR runs **create-release.yml**, which:
 - explicitly dispatches versioned agent-server image builds against tag `vX.Y.Z`;
 - explicitly dispatches release binaries against tag `vX.Y.Z`.
 
-Each publisher validates that its checked-out package version matches the requested version before publishing. Monitor the dispatched workflows in the [Actions tab](https://github.com/OpenHands/software-agent-sdk/actions).
+Each publisher validates that its checked-out package version matches the requested version before publishing. Monitor the dispatched workflows in the [Actions tab](https://github.com/Praxiss-Lab/praxis-sdk/actions).
 
 ### Step 4: Release Binaries + Docker Smoke Test (Automated)
 
@@ -63,7 +63,7 @@ Each publisher validates that its checked-out package version matches the reques
 - ✅ Generates a combined `SHA256SUMS` and attaches the binaries and
   `openapi.json` to the GitHub release on release/manual runs
 - ✅ Verifies that the multi-arch Docker manifest
-  `ghcr.io/openhands/agent-server:<image-tag>-<variant>` published by
+  `ghcr.io/praxiss-lab/praxis-agent-server:<image-tag>-<variant>` published by
   `server.yml` covers both `linux/amd64` and `linux/arm64` for every variant
   (`python`, `java`, `golang`)
 - ✅ Pulls each variant on each architecture with `--platform=linux/<arch>`,
@@ -100,7 +100,7 @@ If the matching manifest is already in GHCR, the wait step exits immediately.
 
 After successful PyPI publication, the workflow will automatically create PRs to update SDK versions in downstream repositories:
 
-- **[automation](https://github.com/OpenHands/automation)** - Updates `openhands-sdk` and `openhands-workspace` versions. Opened with a `fix:` title so the repo's release-please cuts a patch release, publishing an `openhands-automation` build pinned to this SDK (which the agent-canvas `sdk-version-sync` check requires).
+- **[automation](https://github.com/OpenHands/automation)** - Updates `praxis-sdk` and `praxis-workspace` versions. Opened with a `fix:` title so the repo's release-please cuts a patch release, publishing an `openhands-automation` build pinned to this SDK (which the agent-canvas `sdk-version-sync` check requires).
 - **TypeScript client (`clients/typescript`)** - Normally a no-op: the release PR already pins the client. It only opens a PR in this repository if the client is behind the release. It waits for the exact GHCR image and release `openapi.json`, updates `config.agentServerImage`, regenerates the checked-in transport types, and includes an API-change summary.
 
 These PRs will:

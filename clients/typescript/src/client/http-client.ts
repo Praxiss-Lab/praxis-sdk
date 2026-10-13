@@ -1,5 +1,6 @@
+import { assertSelfHostedEndpoint } from './cloud-endpoint-policy';
 /**
- * HTTP client for OpenHands Agent Server API
+ * HTTP client for Praxis Agent Server API
  */
 
 import type { ValidationError as AgentServerValidationError } from '../generated/agent-server-schema';
@@ -251,6 +252,7 @@ export class HttpClient {
     }
 
     try {
+      assertSelfHostedEndpoint(url.toString());
       const response = await fetch(url.toString(), requestInit);
 
       const isAcceptable =
